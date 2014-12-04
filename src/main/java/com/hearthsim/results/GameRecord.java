@@ -67,8 +67,15 @@ public interface GameRecord {
 	 */
 	public int getHeroArmor(int playerId, int turn, int currentPlayerId);
 	
-	
-	
+	/**
+	 * Get the minions on a side of the board
+	 * 
+	 * @param playerId The id of the player for which to return the data
+	 * @param turn Turn number
+	 * @param currentPlayerId The id of the player that just played a turn
+	 * @return
+	 */
+	public JSONObject getBoardSide(int playerId, int turn, int currentPlayerId);
 	
 	
 	/**
