@@ -248,6 +248,10 @@
         "class": "com.hearthsim.card.minion.concrete.DalaranMage"
     },
     {
+        "name": "Damaged Golem",
+        "class": "com.hearthsim.card.minion.concrete.DamagedGolem"
+    }, 
+    {
         "name": "Dark Iron Dwarf",
         "class": "com.hearthsim.card.minion.concrete.DarkIronDwarf"
     },
@@ -430,6 +434,10 @@
     {
         "name": "Harvest Golem",
         "class": "com.hearthsim.card.minion.concrete.HarvestGolem"
+    },
+    {
+        "name": "Haunted Creeper",
+        "class": "com.hearthsim.card.minion.concrete.HauntedCreeper"
     },
     {
         "name": "Healing Touch",
@@ -644,6 +652,10 @@
         "class": "com.hearthsim.card.minion.concrete.NoviceEngineer"
     },
     {
+        "name": "Nerubian",
+        "class": "com.hearthsim.card.minion.concrete.Nerubian"
+    },
+    {
         "name": "Nerubian Egg",
         "class": "com.hearthsim.card.minion.concrete.NerubianEgg"
     },
@@ -802,6 +814,10 @@
     {
         "name": "Spectral Knight",
         "class": "com.hearthsim.card.minion.concrete.SpectralKnight"
+    },
+    {
+        "name": "Spectral Spider",
+        "class": "com.hearthsim.card.minion.concrete.SpectralSpider"
     },
     {
         "name": "Spellbreaker",
