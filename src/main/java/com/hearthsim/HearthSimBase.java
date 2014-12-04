@@ -122,17 +122,16 @@ public abstract class HearthSimBase {
 	public void run() throws HSException, IOException, InterruptedException {
         long simStartTime = System.currentTimeMillis();
 
-        Path outputFilePath = FileSystems.getDefault().getPath(rootPath_.toString(), gameResultFileName_);
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFilePath.toString()), "utf-8"));
-
 		ThreadQueue tQueue = new ThreadQueue(numThreads_);
 		for (int i = 0; i < numSims_; ++i) {
+			Path outputFilePath = FileSystems.getDefault().getPath(rootPath_.toString(), gameResultFileName_ + "-" + i);
+			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFilePath.toString()), "utf-8"));
+
 			GameThread gThread = new GameThread(i, writer);
 			tQueue.queue(gThread);
 		}
 
 		tQueue.runQueue();
-		writer.close();
 
         long simEndTime = System.currentTimeMillis();
         double  simDeltaTimeSeconds = (simEndTime - simStartTime) / 1000.0;
@@ -162,14 +161,17 @@ public abstract class HearthSimBase {
 				GameResult res = runSingleGame(gameId_);
 
 				if (writer_ != null) {
+					//This doesn't need to be in a synchronized block, as each thread has it's own writer now.
 					synchronized(writer_) {
 						GameResultSummary grs = new GameResultSummary(res);
-						writer_.write(grs.toJSON().toString() + "\n");
+						writer_.write(grs.toJSON().toString(4) + "\n");
 						writer_.flush();
 					}
 				}
 				synchronized(lockObject) {
 					log.info("game " + gameId_ + ", player " + res.winnerPlayerIndex_ + " wins");
+					writer_.flush();
+					writer_.close();
 					for (HSGameEndEventListener listener : gameEndListeners_) {
 						listener.gameEnded(res);
 					}
