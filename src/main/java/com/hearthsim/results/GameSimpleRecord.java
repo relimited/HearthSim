@@ -110,12 +110,8 @@ public class GameSimpleRecord implements GameRecord {
 		//defensive programming!
 		MinionList minions = null;
 		
-		if(board_.containsKey(turn)){
-			if(board_.get(turn).size() > currentPlayerId){
-				if(board_.get(turn).get(currentPlayerId).containsKey(playerId)){
-					minions = board_.get(turn).get(currentPlayerId).get(playerId);
-				}
-			}
+		if(board_.containsKey(turn) && board_.get(turn).size() > currentPlayerId && board_.get(turn).get(currentPlayerId).containsKey(playerId)){
+		    minions = board_.get(turn).get(currentPlayerId).get(playerId);
 		}
 		
 		if(minions == null){
