@@ -62,6 +62,11 @@ public class GameSimpleRecord implements GameRecord {
 			e.printStackTrace();
 		}
 
+        if(fullSideInformation.size() < currentPlayerId){
+        	//add a blank element
+        	fullSideInformation.add(null);
+        }
+        
         fullSideInformation.add(currentPlayerId, boardSides);
         board_.put(turn, fullSideInformation);
         
