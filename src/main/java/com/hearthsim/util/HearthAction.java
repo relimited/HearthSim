@@ -73,11 +73,13 @@ public class HearthAction {
 				Minion placementTarget = boardState.data_.getCharacter(targetPlayerSide, targetCharacterIndex_);
 				toRet = minion.useUntargetableBattlecry(placementTarget, toRet, deckPlayer0, deckPlayer1, true);
 			}
+			break;
 			case TARGETABLE_BATTLECRY: {
 				Minion minion = boardState.data_.getCharacter(actionPerformerPlayerSide, cardOrCharacterIndex_);
 				Minion battlecryTarget = boardState.data_.getCharacter(targetPlayerSide, targetCharacterIndex_);
 				toRet = minion.useTargetableBattlecry(targetPlayerSide, battlecryTarget, toRet, deckPlayer0, deckPlayer1);
 			}
+			break;
 		}
 		return toRet;
 	}

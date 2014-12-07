@@ -11,9 +11,12 @@ import com.hearthsim.exception.HSInvalidPlayerIndexException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
+import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.MinionList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GameSimpleRecord implements GameRecord {
@@ -23,7 +26,10 @@ public class GameSimpleRecord implements GameRecord {
 	byte[][][] numCards_;
 	byte[][][] heroHealth_;
 	byte[][][] heroArmor_;
+	List<Map<Integer, List<HearthActionBoardPair>>> state_;
+	
 	Map<Integer, List<Map<Integer, MinionList>>> board_;
+	Map<Integer, List<List<HearthAction>>> actions_;
 	
 	public GameSimpleRecord() {
 		this(50);
@@ -36,7 +42,10 @@ public class GameSimpleRecord implements GameRecord {
 		heroHealth_ = new byte[2][maxTurns][2];
 		heroArmor_ = new byte[2][maxTurns][2];
 		
+		state_ = new ArrayList<Map<Integer, List<HearthActionBoardPair>>>();
+		
 		board_ = new HashMap<Integer, List<Map<Integer, MinionList>>>();
+		actions_ = new HashMap<Integer, List<List<HearthAction>>>();
 	}
 	
 	@Override
@@ -46,29 +55,68 @@ public class GameSimpleRecord implements GameRecord {
         int currentPlayerId = playerModel.getPlayerId();
         int waitingPlayerId = board.modelForSide(activePlayerSide.getOtherPlayer()).getPlayerId();
         
+        //This handles getting a board side on a turn from a player perspective
         List<Map<Integer, MinionList>> fullSideInformation;
         if(board_.get(turn) != null){
         	fullSideInformation = board_.get(turn);
         }else{
         	fullSideInformation = new ArrayList<Map<Integer, MinionList>>();
         }
-        
         HashMap<Integer, MinionList> boardSides = new HashMap<Integer, MinionList>();
-        
         try {
 			boardSides.put(currentPlayerId, board.getMinions(activePlayerSide));
 			boardSides.put(waitingPlayerId, board.getMinions(activePlayerSide.getOtherPlayer()));
 		} catch (HSInvalidPlayerIndexException e) {
 			e.printStackTrace();
 		}
-
         if(fullSideInformation.size() < currentPlayerId){
-        	//add a blank element
-        	fullSideInformation.add(null);
+        	//add a blank element in this list (we only have data from the other side.)
+        	fullSideInformation.add(new HashMap<Integer, MinionList>());
         }
         
         fullSideInformation.add(currentPlayerId, boardSides);
         board_.put(turn, fullSideInformation);
+        
+        List<List<HearthAction>> actionsTakenByPlayer = new  ArrayList<List<HearthAction>>();
+        List<HearthAction> actions = new ArrayList<HearthAction>();
+        
+        if(plays != null){
+        	for(HearthActionBoardPair act : plays){
+        		actions.add(act.action);
+        	}
+        }
+        if(actionsTakenByPlayer.size() < currentPlayerId){
+        	//add a blank element in this list (no data from the other side)
+        	actionsTakenByPlayer.add(new ArrayList<HearthAction>());
+        }
+        actionsTakenByPlayer.add(currentPlayerId, actions);
+        actions_.put(turn, actionsTakenByPlayer);
+        
+        //New and improved state logging
+        Map<Integer, List<HearthActionBoardPair>> turnInformation;
+        if(state_.size() <= turn || state_.get(turn) == null){
+        	turnInformation = new HashMap<Integer, List<HearthActionBoardPair>>();
+        }else{
+        	turnInformation = state_.get(turn);
+        }
+        
+        List<HearthActionBoardPair> actionLog;
+        if(turnInformation.containsKey(currentPlayerId)){
+        	actionLog = turnInformation.get(currentPlayerId);
+        	actionLog.addAll(plays);
+        	turnInformation.put(currentPlayerId, actionLog);
+        }else{
+        	actionLog = plays;
+        	turnInformation.put(currentPlayerId, actionLog);
+        }
+        
+        if(state_.size() != 0 && state_.size() > turn){
+        	//replace
+        	state_.remove(turn);
+        	state_.add(turn, turnInformation);
+        }else{
+        	state_.add(turn, turnInformation);
+        }
         
         numMinions_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getNumMinions();
         numMinions_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getNumMinions();
@@ -115,7 +163,9 @@ public class GameSimpleRecord implements GameRecord {
 		//defensive programming!
 		MinionList minions = null;
 		
-		if(board_.containsKey(turn) && board_.get(turn).size() > currentPlayerId && board_.get(turn).get(currentPlayerId).containsKey(playerId)){
+		if(board_.containsKey(turn) && board_.get(turn).size() > currentPlayerId && 
+				board_.get(turn).get(currentPlayerId) != null && 
+				board_.get(turn).get(currentPlayerId).containsKey(playerId)){
 		    minions = board_.get(turn).get(currentPlayerId).get(playerId);
 		}
 		
@@ -135,8 +185,122 @@ public class GameSimpleRecord implements GameRecord {
 			json.put("stealthed", minion.getStealthed());
 		}
 		
+		return json;		
+	}
+	
+	public JSONObject getActions(int playerId, int turn, int currentPlayerId){
+		JSONObject json = new JSONObject();
+		//defensive programming!
+		
+		List<HearthAction> actions = null;
+		if(actions_.containsKey(turn) && actions_.get(turn).size() > currentPlayerId &&
+				actions_.get(turn).get(currentPlayerId) != null){
+			actions = actions_.get(turn).get(currentPlayerId);
+		}
+		
+		if(actions == null){
+			return null;
+		}
+		
+		for(HearthAction act : actions){
+			if(act != null){
+				if(act.verb_ != null){
+					json.put("verb", act.verb_.toString());
+				}
+				json.put("target index", act.targetCharacterIndex_);
+				if(act.actionPerformerPlayerSide != null){
+					json.put("performed by", act.actionPerformerPlayerSide.name());
+				}
+				
+			}
+		}
 		return json;
+	}
+	
+	public JSONObject getTurn(int playerId, int turn){
+		JSONObject json = new JSONObject();
+		List<HearthActionBoardPair> states = state_.get(turn).get(playerId);
+		
+		if(states == null){
+			return json;
+		}
+		for(int i = 0; i < states.size(); i++){
+			HearthActionBoardPair state = states.get(i);
 			
+			HearthAction act = state.action;
+			BoardModel board = state.board;
+			
+			JSONObject actJSON = new JSONObject();
+			JSONObject boardJSON = new JSONObject();
+			
+			if(act != null){
+				actJSON.put("verb", act.verb_.toString());
+				try {
+					if(turn != 0 || i != 0){
+						//actJSON.put("target", states.get(i-1).board.getCharacter(states.get(i-1).board., index))
+					}else{
+						actJSON.put("target_index", act.targetCharacterIndex_);
+						actJSON.put("instigator_index", act.cardOrCharacterIndex_);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} //catch (HSInvalidPlayerIndexException e) {
+					//e.printStackTrace();
+				//}
+				json.put("action", actJSON);
+			}else{
+				json.put("action", "null");
+			}
+			
+			if(board != null){
+				try {
+					MinionList p0Minions = board.getMinions(board.getPlayerByIndex(0));
+					MinionList p1Minions = board.getMinions(board.getPlayerByIndex(1));
+					
+					JSONArray performerMinionsJSON = new JSONArray();
+					for(Minion minion : p0Minions){
+						JSONObject minionJSON = new JSONObject();
+						minionJSON.put("name", minion.getName());
+						minionJSON.put("attack", minion.getAttack());
+						minionJSON.put("health", minion.getHealth());
+						minionJSON.put("taunt", minion.getTaunt());
+						minionJSON.put("divine shield", minion.getDivineShield());
+						minionJSON.put("wind fury", minion.getWindfury());
+						minionJSON.put("charge", minion.getCharge());
+						minionJSON.put("frozen", minion.getFrozen());
+						minionJSON.put("stealthed", minion.getStealthed());
+						performerMinionsJSON.put(minionJSON);
+					}
+					
+					JSONArray targetMinionsJSON = new JSONArray();
+					for(Minion minion : p1Minions){
+						JSONObject minionJSON = new JSONObject();
+						minionJSON.put("name", minion.getName());
+						minionJSON.put("attack", minion.getAttack());
+						minionJSON.put("health", minion.getHealth());
+						minionJSON.put("taunt", minion.getTaunt());
+						minionJSON.put("divine shield", minion.getDivineShield());
+						minionJSON.put("wind fury", minion.getWindfury());
+						minionJSON.put("charge", minion.getCharge());
+						minionJSON.put("frozen", minion.getFrozen());
+						minionJSON.put("stealthed", minion.getStealthed());
+						targetMinionsJSON.put(minionJSON);
+					}
+					
+					boardJSON.put("p0_minions", performerMinionsJSON);
+					boardJSON.put("p1_minions", targetMinionsJSON);
+					
+					json.put("board", boardJSON);
+					
+				} catch (HSInvalidPlayerIndexException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				json.put("board", "null");
+			}
+		}
+		return json;
 	}
 	@Override
 	public JSONObject toJSON() {

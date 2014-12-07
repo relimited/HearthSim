@@ -104,7 +104,6 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 
 			// charge model score
 			this.scorer.setMyChargeWeight(pFile.getDouble("w_charge", 0.0));
-
 			this.scorer.setManaWeight(pFile.getDouble("w_mana", 0.1));
 
 			useSparseBoardStateFactory_ = pFile.getBoolean("use_sparse_board_state_factory", true);
@@ -157,6 +156,8 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 			if(curMove instanceof StopNode) {
 				HearthTreeNode allEffectsDone = ((StopNode)curMove).finishAllEffects(playerModel0.getDeck(),
 						playerModel1.getDeck());
+				//set the action that generated the allEffectsDone node.
+				//allEffectsDone.setAction(curMove.getAction());
 				List<HearthActionBoardPair> nextMoves = this.playTurn(turn, allEffectsDone.data_);
 				if (nextMoves.size() > 0) {
 					for( HearthActionBoardPair actionBoard : nextMoves) {

@@ -77,6 +77,20 @@ public interface GameRecord {
 	 */
 	public JSONObject getBoardSide(int playerId, int turn, int currentPlayerId);
 	
+	/**
+	 * Get Actions played
+	 * 
+	 * @param playerId The id of the player for which to return the data
+	 * @param turn Turn number
+	 * @param currentPlayerId The id of the player that just played a turn
+	 * @return
+	 */
+	public JSONObject getActions(int playerId, int turn, int currentPlayerId);
+	
+	/**
+	 * Get a streight log of all things on a turn 
+	 */
+	public JSONObject getTurn(int playerId, int turn);
 	
 	/**
 	 * Returns the JSON representation of this record

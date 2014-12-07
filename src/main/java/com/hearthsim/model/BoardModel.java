@@ -152,6 +152,9 @@ public class BoardModel implements DeepCopyable<BoardModel> {
 
     public Minion getCharacter(PlayerSide playerSide, int index) throws HSInvalidPlayerIndexException {
         PlayerModel playerModel = modelForSide(playerSide);
+        if(index < 0 || index - 1 > playerModel.getMinions().size()){
+        	return null;
+        }
         return index == 0 ? playerModel.getHero() : playerModel.getMinions().get(index - 1);
     }
 

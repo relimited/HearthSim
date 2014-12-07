@@ -93,4 +93,13 @@ public class GameDetailedRecord implements GameRecord {
 		return null;
 	}
 
+	public JSONObject getActions(int playerId, int turn, int currentPlayerId){
+		return null;
+	}
+
+	@Override
+	public JSONObject getTurn(int playerId, int turn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

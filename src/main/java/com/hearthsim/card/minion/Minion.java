@@ -651,6 +651,11 @@ public class Minion extends Card {
 		if(targetMinionIndex >= 0) {
 			node = this.useTargetableBattlecry_core(side, side.getPlayer(node).getMinions().get(targetMinionIndex),
 					node, deckPlayer0, deckPlayer1);
+			//add in battlecry action logging
+			//int summonedCardIndex = this instanceof Hero ? 0 : PlayerSide.CURRENT_PLAYER.getPlayer(boardState).getMinions()
+					//.indexOf(this) + 1;
+			
+			//node.setAction(new HearthAction(Verb.TARGETABLE_BATTLECRY, side.getOtherPlayer(), summonedCardIndex, side, targetMinionIndex));
 		} else if(targetMinion instanceof Hero) {
 			node = this.useTargetableBattlecry_core(side, side.getPlayer(node).getHero(), node, deckPlayer0,
 					deckPlayer1);
@@ -762,6 +767,10 @@ public class Minion extends Card {
 			return null;
 
 		HearthTreeNode toRet = boardState;
+		//TODO: bind an action to the idea of putting a minion into play, summoning or otherwise
+		//if(toRet != null){
+			//toRet.setAction(new HearthAction(Verb.USE_CARD, targetSide.getOtherPlayer(), , targetSide, ));
+		//}
 		toRet = this
 				.summonMinion_core(targetSide, targetMinion, toRet, deckPlayer0, deckPlayer1, singleRealizationOnly);
 
@@ -854,6 +863,7 @@ public class Minion extends Card {
 			Deck deckPlayer0, Deck deckPlayer1, boolean singleRealizationOnly) throws HSException {
 		HearthTreeNode toRet = this.placeMinion(targetSide, targetMinion, boardState, deckPlayer0, deckPlayer1,
 				singleRealizationOnly);
+		
 		if(!charge_) {
 			hasAttacked_ = true;
 		}
