@@ -1,0 +1,10 @@
+num_simulations           =  1 
+num_threads               =  1 
+
+output_file               =   resultZoo.hsres
+
+deckListFilePath0         =       zoo0.hsdeck
+deckListFilePath1         =       zoo1.hsdeck
+
+aiParamFilePath0          =       ai0.hsai
+aiParamFilePath1          =       ai1.hsai

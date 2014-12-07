@@ -1,0 +1,1377 @@
+{
+    "p0": [
+        {"turn 0": {}},
+        {"turn 1": {
+            "action": "null",
+            "board": {
+                "p1_minions": [],
+                "p0_minions": [{
+                    "charge": false,
+                    "attack": 1,
+                    "name": "Voidwalker",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": true,
+                    "wind fury": false
+                }]
+            }
+        }},
+        {"turn 2": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 2
+            },
+            "board": {
+                "p1_minions": [],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Voidwalker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 3": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 4
+            },
+            "board": {
+                "p1_minions": [],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Haunted Creeper",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": true,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Undertaker",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 4": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 5
+            },
+            "board": {
+                "p1_minions": [],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Dark Iron Dwarf",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 5": {
+            "action": {
+                "target_index": 0,
+                "verb": "ATTACK",
+                "instigator_index": 5
+            },
+            "board": {
+                "p1_minions": [{
+                    "charge": false,
+                    "attack": 2,
+                    "name": "Harvest Golem",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 6": {
+            "action": "null",
+            "board": {
+                "p1_minions": [{
+                    "charge": false,
+                    "attack": 3,
+                    "name": "Harvest Golem",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": true,
+                    "wind fury": false
+                }],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Voidwalker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 7": {
+            "action": {
+                "target_index": 0,
+                "verb": "ATTACK",
+                "instigator_index": 3
+            },
+            "board": {
+                "p1_minions": [{
+                    "charge": false,
+                    "attack": 1,
+                    "name": "Master Swordsmith",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }],
+                "p0_minions": [
+                    {
+                        "charge": true,
+                        "attack": 5,
+                        "name": "Doomguard",
+                        "health": 5,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 8": {
+            "action": "null",
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Nerubian Egg",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Voidwalker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Undertaker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Acolyte of Pain",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 0,
+                        "name": "Nerubian Egg",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 9": {
+            "action": {
+                "target_index": 3,
+                "verb": "ATTACK",
+                "instigator_index": 3
+            },
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Nerubian",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Undertaker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Abusive Sergeant",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Dark Iron Dwarf",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Nerubian",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 10": {
+            "action": "null",
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Acolyte of Pain",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Ironbeak Owl",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Nerubian",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Harvest Golem",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Acolyte of Pain",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }}
+    ],
+    "p1": [
+        {"turn 0": {}},
+        {"turn 1": {
+            "action": "null",
+            "board": {
+                "p1_minions": [{
+                    "charge": false,
+                    "attack": 1,
+                    "name": "Voidwalker",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": true,
+                    "wind fury": false
+                }],
+                "p0_minions": [{
+                    "charge": false,
+                    "attack": 2,
+                    "name": "Leper Gnome",
+                    "health": 1,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }]
+            }
+        }},
+        {"turn 2": {
+            "action": "null",
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Voidwalker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [{
+                    "charge": false,
+                    "attack": 1,
+                    "name": "Acolyte of Pain",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }]
+            }
+        }},
+        {"turn 3": {
+            "action": "null",
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Haunted Creeper",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": true,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Ironbeak Owl",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": true,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 4": {
+            "action": "null",
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [{
+                    "charge": false,
+                    "attack": 2,
+                    "name": "Harvest Golem",
+                    "health": 3,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }]
+            }
+        }},
+        {"turn 5": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 2
+            },
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Defender of Argus",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Harvest Golem",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 6": {
+            "action": {
+                "target_index": 3,
+                "verb": "ATTACK",
+                "instigator_index": 3
+            },
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Spectral Spider",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Argent Squire",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Undertaker",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Defender of Argus",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 5,
+                        "name": "Harvest Golem",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 7": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 4
+            },
+            "board": {
+                "p1_minions": [{
+                    "charge": false,
+                    "attack": 2,
+                    "name": "Leper Gnome",
+                    "health": 1,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Nerubian Egg",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Voidwalker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Undertaker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 8": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 5
+            },
+            "board": {
+                "p1_minions": [{
+                    "charge": false,
+                    "attack": 0,
+                    "name": "Nerubian Egg",
+                    "health": 1,
+                    "divine shield": false,
+                    "frozen": false,
+                    "stealthed": false,
+                    "taunt": false,
+                    "wind fury": false
+                }],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Nerubian",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Voidwalker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": true,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Undertaker",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Leper Gnome",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 9": {
+            "action": {
+                "target_index": 1,
+                "verb": "ATTACK",
+                "instigator_index": 5
+            },
+            "board": {
+                "p1_minions": [],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Acolyte of Pain",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Ironbeak Owl",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Nerubian",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }},
+        {"turn 10": {
+            "action": {
+                "target_index": 0,
+                "verb": "ATTACK",
+                "instigator_index": 4
+            },
+            "board": {
+                "p1_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 3,
+                        "name": "Harvest Golem",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Acolyte of Pain",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ],
+                "p0_minions": [
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Acolyte of Pain",
+                        "health": 3,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Haunted Creeper",
+                        "health": 2,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": true,
+                        "attack": 5,
+                        "name": "Doomguard",
+                        "health": 7,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Ironbeak Owl",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 4,
+                        "name": "Nerubian",
+                        "health": 4,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    },
+                    {
+                        "charge": false,
+                        "attack": 1,
+                        "name": "Master Swordsmith",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }
+                ]
+            }
+        }}
+    ]
+}
