@@ -227,6 +227,17 @@ public class GameSimpleRecord implements GameRecord {
 		if(states == null){
 			return enclosingObj;
 		}
+		
+		enclosingObj.put("currentPlayerHealth", heroHealth_[playerId][turn][playerId]);
+		enclosingObj.put("currentPlayerArmor", heroArmor_[playerId][turn][playerId]);
+		if(playerId == 0){
+			enclosingObj.put("opponentPlayerHealth", heroHealth_[1][turn][1]);
+			enclosingObj.put("opponentPlayerArmor", heroArmor_[1][turn][1]);
+		}else{
+			enclosingObj.put("opponentPlayerHealth", heroHealth_[0][turn][0]);
+			enclosingObj.put("opponentPlayerArmor", heroArmor_[0][turn][0]);
+		}
+		
 		JSONArray statesJSON = new JSONArray();
 		for(int i = 0; i < states.size(); i++){
 			JSONObject json = new JSONObject();
@@ -270,8 +281,32 @@ public class GameSimpleRecord implements GameRecord {
 							actJSON.put("target_index", act.targetCharacterIndex_);
 							actJSON.put("performer_index", act.cardOrCharacterIndex_);
 						}
-					}else{
-						actJSON.put("non-attack", "true");
+					}else if(act.verb_ == Verb.USE_CARD){
+						if(turn != 0 && i != 0){
+							if(act.targetCharacterIndex_ < states.get(i-1).board.getMinions(act.targetPlayerSide).size() + 1){
+								actJSON.put("target", states.get(i-1).board.getCharacter(act.targetPlayerSide, act.targetCharacterIndex_).getName());
+							}else{
+								actJSON.put("target_index", act.targetCharacterIndex_);
+							}
+							if(act.cardOrCharacterIndex_ < states.get(i-1).board.getNumCards_hand(act.actionPerformerPlayerSide)){
+								actJSON.put("performer", states.get(i-1).board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+							}else{
+								actJSON.put("performer_index", act.cardOrCharacterIndex_);
+							}
+						}else if(turn != 0 && i == 0){
+							HearthActionBoardPair previousTurnState = state_.get(turn - 1).get(playerId).get(state_.get(turn - 1).get(playerId).size() - 1);
+							if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
+								actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName());
+							}else{
+								actJSON.put("target_index", act.targetCharacterIndex_);
+							}
+						
+							if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
+								actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+							}else{
+								actJSON.put("performer_index", act.cardOrCharacterIndex_);
+							}
+						}
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

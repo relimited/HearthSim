@@ -9,6 +9,8 @@ import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
+import com.hearthsim.util.HearthAction;
+import com.hearthsim.util.HearthAction.Verb;
 
 public class ChildNodeCreatorBase implements ChildNodeCreator {
 
@@ -91,7 +93,8 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 					targetMinion = boardStateNode.data_.getCurrentPlayerCharacter(targetIndex);
 
 					if(card.canBeUsedOn(PlayerSide.CURRENT_PLAYER, targetMinion, boardStateNode.data_)) {
-						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+						newState = new HearthTreeNode(boardStateNode.data_.deepCopy(), new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, 
+								cardIndex, PlayerSide.CURRENT_PLAYER, targetIndex));
 						copiedTargetMinion = newState.data_.getCurrentPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
 						newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState,
@@ -107,7 +110,8 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 					targetMinion = boardStateNode.data_.getWaitingPlayerCharacter(targetIndex);
 
 					if(card.canBeUsedOn(PlayerSide.WAITING_PLAYER, targetMinion, boardStateNode.data_)) {
-						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+						newState = new HearthTreeNode(boardStateNode.data_.deepCopy(), new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER,
+								cardIndex, PlayerSide.WAITING_PLAYER, targetIndex));
 						copiedTargetMinion = newState.data_.getWaitingPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
 						newState = copiedCard.useOn(PlayerSide.WAITING_PLAYER, copiedTargetMinion, newState,

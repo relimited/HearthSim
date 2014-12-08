@@ -161,17 +161,13 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 				List<HearthActionBoardPair> nextMoves = this.playTurn(turn, allEffectsDone.data_);
 				if (nextMoves.size() > 0) {
 					for(HearthActionBoardPair actionBoard : nextMoves) {
-						log.debug("Adding action after allEffectsDone: " + actionBoard.action.verb_.name());
 						retList.add(actionBoard);
 					}
 				} else {
-					log.debug("Adding action: " + allEffectsDone.getAction().verb_.name());
 					retList.add(new HearthActionBoardPair(allEffectsDone.getAction(), allEffectsDone.data_));
 				}
 				break;
 			} else {
-				
-				log.debug("Adding action: " + curMove.getAction().verb_.name());
 				retList.add(new HearthActionBoardPair(curMove.getAction(), curMove.data_));
 			}
 		}

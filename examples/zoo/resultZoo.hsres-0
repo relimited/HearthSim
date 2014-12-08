@@ -1,0 +1,2472 @@
+{
+    "p0": [
+        {"turn 0": {}},
+        {"turn 1": {
+            "opponentPlayerHealth": 30,
+            "currentPlayerHealth": 30,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [{
+                "action": "null",
+                "board": {
+                    "currentPlayerMinions": [{
+                        "charge": false,
+                        "attack": 2,
+                        "name": "Abusive Sergeant",
+                        "health": 1,
+                        "divine shield": false,
+                        "frozen": false,
+                        "stealthed": false,
+                        "taunt": false,
+                        "wind fury": false
+                    }],
+                    "opposingPlayerMinions": []
+                }
+            }]
+        }},
+        {"turn 2": {
+            "opponentPlayerHealth": 29,
+            "currentPlayerHealth": 30,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                }
+            ]
+        }},
+        {"turn 3": {
+            "opponentPlayerHealth": 29,
+            "currentPlayerHealth": 30,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Voidwalker",
+                            "health": 3,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": true,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Undertaker",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Voidwalker",
+                            "health": 3,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": true,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Undertaker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Voidwalker",
+                            "health": 3,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": true,
+                            "wind fury": false
+                        }]
+                    }
+                }
+            ]
+        }},
+        {"turn 4": {
+            "opponentPlayerHealth": 29,
+            "currentPlayerHealth": 30,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 0,
+                            "name": "Nerubian Egg",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Acolyte of Pain",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Acolyte of Pain",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Acolyte of Pain",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Nerubian Egg",
+                        "verb": "ATTACK",
+                        "target": "Voidwalker"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Acolyte of Pain",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        }},
+        {"turn 5": {
+            "opponentPlayerHealth": 20,
+            "currentPlayerHealth": 30,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Nerubian",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Dark Iron Dwarf",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Nerubian",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Dark Iron Dwarf",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Nerubian",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Dark Iron Dwarf",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                }
+            ]
+        }},
+        {"turn 6": {
+            "opponentPlayerHealth": 15,
+            "currentPlayerHealth": 24,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Doomguard",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        }},
+        {"turn 7": {
+            "opponentPlayerHealth": 11,
+            "currentPlayerHealth": 22,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Argent Squire",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Harvest Golem",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        }},
+        {"turn 8": {
+            "opponentPlayerHealth": 0,
+            "currentPlayerHealth": 20,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Haunted Creeper",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Defender of Argus",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Haunted Creeper",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Argent Squire",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Haunted Creeper",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        }}
+    ],
+    "p1": [
+        {"turn 0": {}},
+        {"turn 1": {
+            "opponentPlayerHealth": 30,
+            "currentPlayerHealth": 30,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 2,
+                            "name": "Abusive Sergeant",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 2,
+                            "name": "Abusive Sergeant",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": []
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": []
+                    }
+                }
+            ]
+        }},
+        {"turn 2": {
+            "opponentPlayerHealth": 30,
+            "currentPlayerHealth": 29,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 3,
+                                "name": "Knife Juggler",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 3,
+                                "name": "Knife Juggler",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 3,
+                            "name": "Knife Juggler",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Knife Juggler",
+                        "verb": "ATTACK",
+                        "target": "Knife Juggler"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Voidwalker",
+                            "health": 3,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": true,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": []
+                    }
+                }
+            ]
+        }},
+        {"turn 3": {
+            "opponentPlayerHealth": 30,
+            "currentPlayerHealth": 29,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Voidwalker",
+                            "health": 3,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": true,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Undertaker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Acolyte of Pain",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 0,
+                            "name": "Nerubian Egg",
+                            "health": 2,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Voidwalker",
+                        "verb": "ATTACK",
+                        "target": "Nerubian Egg"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Acolyte of Pain",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 0,
+                            "name": "Nerubian Egg",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                }
+            ]
+        }},
+        {"turn 4": {
+            "opponentPlayerHealth": 30,
+            "currentPlayerHealth": 29,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 1,
+                            "name": "Voidwalker",
+                            "health": 1,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": true,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Voidwalker",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Voidwalker",
+                        "verb": "ATTACK",
+                        "target": "Dark Iron Dwarf"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Dark Iron Dwarf",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Nerubian",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                }
+            ]
+        }},
+        {"turn 5": {
+            "opponentPlayerHealth": 30,
+            "currentPlayerHealth": 20,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [{
+                            "charge": false,
+                            "attack": 4,
+                            "name": "Dark Iron Dwarf",
+                            "health": 4,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Nerubian",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Dark Iron Dwarf",
+                        "verb": "ATTACK",
+                        "target": "Nerubian"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": true,
+                            "attack": 5,
+                            "name": "Doomguard",
+                            "health": 7,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Dark Iron Dwarf",
+                        "verb": "ATTACK",
+                        "target": "Gul'dan"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [{
+                            "charge": true,
+                            "attack": 5,
+                            "name": "Doomguard",
+                            "health": 7,
+                            "divine shield": false,
+                            "frozen": false,
+                            "stealthed": false,
+                            "taunt": false,
+                            "wind fury": false
+                        }]
+                    }
+                }
+            ]
+        }},
+        {"turn 6": {
+            "opponentPlayerHealth": 24,
+            "currentPlayerHealth": 15,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 7,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Doomguard",
+                        "verb": "ATTACK",
+                        "target": "Doomguard"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 4,
+                                "name": "Dark Iron Dwarf",
+                                "health": 4,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": true,
+                                "attack": 5,
+                                "name": "Doomguard",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": {
+                        "performer": "Dark Iron Dwarf",
+                        "verb": "ATTACK",
+                        "target": "Doomguard"
+                    },
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Argent Squire",
+                                "health": 1,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        }},
+        {"turn 7": {
+            "opponentPlayerHealth": 22,
+            "currentPlayerHealth": 11,
+            "currentPlayerArmor": 0,
+            "opponentPlayerArmor": 0,
+            "states": [
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Haunted Creeper",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                },
+                {
+                    "action": "null",
+                    "board": {
+                        "currentPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Leper Gnome",
+                                "health": 1,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 0,
+                                "name": "Nerubian Egg",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 1,
+                                "name": "Haunted Creeper",
+                                "health": 2,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ],
+                        "opposingPlayerMinions": [
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Defender of Argus",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Argent Squire",
+                                "health": 2,
+                                "divine shield": true,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": true,
+                                "wind fury": false
+                            },
+                            {
+                                "charge": false,
+                                "attack": 2,
+                                "name": "Harvest Golem",
+                                "health": 3,
+                                "divine shield": false,
+                                "frozen": false,
+                                "stealthed": false,
+                                "taunt": false,
+                                "wind fury": false
+                            }
+                        ]
+                    }
+                }
+            ]
+        }},
+        {"turn 8": {}}
+    ]
+}
