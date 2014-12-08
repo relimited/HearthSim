@@ -8,6 +8,8 @@ import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class KnifeJuggler extends Minion {
+	private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+
 	public KnifeJuggler() {
 		super();
 		
@@ -27,7 +29,7 @@ public class KnifeJuggler extends Minion {
 			try {
 				toRet = targetCharacter.takeDamage((byte)1, otherPlayerSide.getOtherPlayer(), otherPlayerSide, toRet, deckPlayer0, deckPlayer1, false, false);
 			} catch (HSException e) {
-				
+				log.error(e.getMessage());
 			}
 		}
 		return super.minionSummonEvent(thisMinionPlayerSide, summonedMinionPlayerSide, summonedMinion, toRet, deckPlayer0, deckPlayer1);
