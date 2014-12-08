@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.qos.logback.classic.Logger;
+
+import com.hearthsim.HearthSimMain;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSInvalidPlayerIndexException;
@@ -21,6 +24,8 @@ import org.json.JSONObject;
 
 public class GameSimpleRecord implements GameRecord {
 
+	final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GameSimpleRecord.class);
+	
 	int maxTurns_;
 	byte[][][] numMinions_;
 	byte[][][] numCards_;
@@ -218,13 +223,15 @@ public class GameSimpleRecord implements GameRecord {
 	}
 	
 	public JSONObject getTurn(int playerId, int turn){
-		JSONObject json = new JSONObject();
+		JSONObject enclosingObj = new JSONObject();
 		List<HearthActionBoardPair> states = state_.get(turn).get(playerId);
 		
 		if(states == null){
-			return json;
+			return enclosingObj;
 		}
+		JSONArray statesJSON = new JSONArray();
 		for(int i = 0; i < states.size(); i++){
+			JSONObject json = new JSONObject();
 			HearthActionBoardPair state = states.get(i);
 			
 			HearthAction act = state.action;
@@ -236,17 +243,39 @@ public class GameSimpleRecord implements GameRecord {
 			if(act != null){
 				actJSON.put("verb", act.verb_.toString());
 				try {
-					if(turn != 0 || i != 0){
-						//actJSON.put("target", states.get(i-1).board.getCharacter(states.get(i-1).board., index))
+					if(turn != 0 && i != 0){
+						if(act.targetCharacterIndex_ < states.get(i-1).board.getMinions(act.targetPlayerSide).size() + 1){
+							actJSON.put("target", states.get(i-1).board.getCharacter(act.targetPlayerSide, act.targetCharacterIndex_).getName());
+						}else{
+							actJSON.put("target_index", act.targetCharacterIndex_);
+						}
+						if(act.cardOrCharacterIndex_ < states.get(i-1).board.getMinions(act.actionPerformerPlayerSide).size() + 1){
+							actJSON.put("performer", states.get(i-1).board.getCharacter(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+						}else{
+							actJSON.put("performer_index", act.cardOrCharacterIndex_);
+						}
+					}else if(turn != 0 && i == 0){
+						HearthActionBoardPair previousTurnState = state_.get(turn - 1).get(playerId).get(state_.get(turn - 1).get(playerId).size() - 1);
+						if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
+							actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName());
+						}else{
+							actJSON.put("target_index", act.targetCharacterIndex_);
+						}
+						
+						if(act.cardOrCharacterIndex_ < previousTurnState.board.getMinions(act.actionPerformerPlayerSide).size() + 1){
+							actJSON.put("performer", previousTurnState.board.getCharacter(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+						}else{
+							actJSON.put("performer_index", act.cardOrCharacterIndex_);
+						}
 					}else{
 						actJSON.put("target_index", act.targetCharacterIndex_);
-						actJSON.put("instigator_index", act.cardOrCharacterIndex_);
+						actJSON.put("performer_index", act.cardOrCharacterIndex_);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
-				} //catch (HSInvalidPlayerIndexException e) {
-					//e.printStackTrace();
-				//}
+				} catch (HSInvalidPlayerIndexException e) {
+					e.printStackTrace();
+				}
 				json.put("action", actJSON);
 			}else{
 				json.put("action", "null");
@@ -287,8 +316,8 @@ public class GameSimpleRecord implements GameRecord {
 						targetMinionsJSON.put(minionJSON);
 					}
 					
-					boardJSON.put("p0_minions", performerMinionsJSON);
-					boardJSON.put("p1_minions", targetMinionsJSON);
+					boardJSON.put("currentPlayerMinions", performerMinionsJSON);
+					boardJSON.put("opposingPlayerMinions", targetMinionsJSON);
 					
 					json.put("board", boardJSON);
 					
@@ -299,8 +328,11 @@ public class GameSimpleRecord implements GameRecord {
 			}else{
 				json.put("board", "null");
 			}
+			
+			statesJSON.put(json);
 		}
-		return json;
+		enclosingObj.put("states", statesJSON);
+		return enclosingObj;
 	}
 	@Override
 	public JSONObject toJSON() {

@@ -6,6 +6,7 @@ import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthActionBoardPair;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public interface GameRecord {

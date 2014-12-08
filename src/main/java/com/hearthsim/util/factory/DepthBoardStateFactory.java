@@ -139,6 +139,7 @@ public class DepthBoardStateFactory extends BoardStateFactoryBase {
 				// it this way "breaks" the best score chain and makes it harder to isolate and test
 				// scoring. It effectively "bubbles down" the tree but it isn't sent through when
 				// creating children.
+				
 				if(child instanceof CardDrawNode) {
 					tmpScore += ((CardDrawNode)child).cardDrawScore(deckPlayer0_, ai);
 				}

@@ -28,7 +28,7 @@ public class RandomEffectNode extends StopNode {
 	
 	@Override
 	public HearthTreeNode finishAllEffects(Deck deckPlayer0, Deck deckPlayer1) throws HSException {
-		return action_.perform(new HearthTreeNode(this.data_, this.action, this.score_, this.depth_, this.children_, this.numNodesTried_), deckPlayer0, deckPlayer1);
+		return action_.perform(new HearthTreeNode(this.data_, this.action_, this.score_, this.depth_, this.children_, this.numNodesTried_), deckPlayer0, deckPlayer1);
 	}
 
 	@Override

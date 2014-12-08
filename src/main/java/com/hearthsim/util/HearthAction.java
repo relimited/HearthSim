@@ -37,6 +37,9 @@ public class HearthAction {
 	
 	public HearthAction(Verb verb, PlayerSide actionPerformerPlayerSide, int cardOrCharacterIndex, PlayerSide targetPlayerSide, int targetCharacterIndex, PlayerSide battlecryTargetPlayerSide, int battlecryTargetCharacterIndex) {
 		verb_ = verb;
+		if(verb != Verb.ATTACK){
+			int j = 0;
+		}
 		this.actionPerformerPlayerSide = actionPerformerPlayerSide;
 		cardOrCharacterIndex_ = cardOrCharacterIndex;
 

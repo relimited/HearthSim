@@ -159,7 +159,7 @@ public abstract class HearthSimBase {
 		public void run() {
 			try {
 				GameResult res = runSingleGame(gameId_);
-
+				
 				if (writer_ != null) {
 					//This doesn't need to be in a synchronized block, as each thread has it's own writer now.
 					synchronized(writer_) {
