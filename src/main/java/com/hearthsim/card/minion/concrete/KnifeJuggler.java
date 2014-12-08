@@ -22,7 +22,7 @@ public class KnifeJuggler extends Minion {
 		
 		if(thisMinionPlayerSide == summonedMinionPlayerSide) {
 			PlayerSide otherPlayerSide = thisMinionPlayerSide.getOtherPlayer();
-			int index = (int)(Math.random()*( otherPlayerSide.getPlayer(toRet).getNumCharacters() + 1));
+			int index = (int)(Math.random()*( otherPlayerSide.getPlayer(toRet).getNumCharacters() ));
 			Minion targetCharacter = toRet.data_.getCharacter(otherPlayerSide, index);
 			try {
 				toRet = targetCharacter.takeDamage((byte)1, otherPlayerSide.getOtherPlayer(), otherPlayerSide, toRet, deckPlayer0, deckPlayer1, false, false);
