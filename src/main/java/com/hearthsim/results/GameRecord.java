@@ -2,12 +2,11 @@ package com.hearthsim.results;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthActionBoardPair;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public interface GameRecord {
 	

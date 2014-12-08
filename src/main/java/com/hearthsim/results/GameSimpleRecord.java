@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.qos.logback.classic.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.hearthsim.HearthSimMain;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSInvalidPlayerIndexException;
@@ -15,12 +16,9 @@ import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthAction;
+import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.MinionList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class GameSimpleRecord implements GameRecord {
 
@@ -243,33 +241,37 @@ public class GameSimpleRecord implements GameRecord {
 			if(act != null){
 				actJSON.put("verb", act.verb_.toString());
 				try {
-					if(turn != 0 && i != 0){
-						if(act.targetCharacterIndex_ < states.get(i-1).board.getMinions(act.targetPlayerSide).size() + 1){
-							actJSON.put("target", states.get(i-1).board.getCharacter(act.targetPlayerSide, act.targetCharacterIndex_).getName());
-						}else{
-							actJSON.put("target_index", act.targetCharacterIndex_);
-						}
-						if(act.cardOrCharacterIndex_ < states.get(i-1).board.getMinions(act.actionPerformerPlayerSide).size() + 1){
-							actJSON.put("performer", states.get(i-1).board.getCharacter(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
-						}else{
-							actJSON.put("performer_index", act.cardOrCharacterIndex_);
-						}
-					}else if(turn != 0 && i == 0){
-						HearthActionBoardPair previousTurnState = state_.get(turn - 1).get(playerId).get(state_.get(turn - 1).get(playerId).size() - 1);
-						if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
-							actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName());
-						}else{
-							actJSON.put("target_index", act.targetCharacterIndex_);
-						}
+					if(act.verb_ == Verb.ATTACK){
+						if(turn != 0 && i != 0){
+							if(act.targetCharacterIndex_ < states.get(i-1).board.getMinions(act.targetPlayerSide).size() + 1){
+								actJSON.put("target", states.get(i-1).board.getCharacter(act.targetPlayerSide, act.targetCharacterIndex_).getName());
+							}else{
+								actJSON.put("target_index", act.targetCharacterIndex_);
+							}
+							if(act.cardOrCharacterIndex_ < states.get(i-1).board.getMinions(act.actionPerformerPlayerSide).size() + 1){
+								actJSON.put("performer", states.get(i-1).board.getCharacter(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+							}else{
+								actJSON.put("performer_index", act.cardOrCharacterIndex_);
+							}
+						}else if(turn != 0 && i == 0){
+							HearthActionBoardPair previousTurnState = state_.get(turn - 1).get(playerId).get(state_.get(turn - 1).get(playerId).size() - 1);
+							if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
+								actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName());
+							}else{
+								actJSON.put("target_index", act.targetCharacterIndex_);
+							}
 						
-						if(act.cardOrCharacterIndex_ < previousTurnState.board.getMinions(act.actionPerformerPlayerSide).size() + 1){
-							actJSON.put("performer", previousTurnState.board.getCharacter(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+							if(act.cardOrCharacterIndex_ < previousTurnState.board.getMinions(act.actionPerformerPlayerSide).size() + 1){
+								actJSON.put("performer", previousTurnState.board.getCharacter(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName());
+							}else{
+								actJSON.put("performer_index", act.cardOrCharacterIndex_);
+							}
 						}else{
+							actJSON.put("target_index", act.targetCharacterIndex_);
 							actJSON.put("performer_index", act.cardOrCharacterIndex_);
 						}
 					}else{
-						actJSON.put("target_index", act.targetCharacterIndex_);
-						actJSON.put("performer_index", act.cardOrCharacterIndex_);
+						actJSON.put("non-attack", "true");
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -280,6 +282,7 @@ public class GameSimpleRecord implements GameRecord {
 			}else{
 				json.put("action", "null");
 			}
+			
 			
 			if(board != null){
 				try {

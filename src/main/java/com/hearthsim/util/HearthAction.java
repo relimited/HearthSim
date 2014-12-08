@@ -37,9 +37,6 @@ public class HearthAction {
 	
 	public HearthAction(Verb verb, PlayerSide actionPerformerPlayerSide, int cardOrCharacterIndex, PlayerSide targetPlayerSide, int targetCharacterIndex, PlayerSide battlecryTargetPlayerSide, int battlecryTargetCharacterIndex) {
 		verb_ = verb;
-		if(verb != Verb.ATTACK){
-			int j = 0;
-		}
 		this.actionPerformerPlayerSide = actionPerformerPlayerSide;
 		cardOrCharacterIndex_ = cardOrCharacterIndex;
 
@@ -52,6 +49,7 @@ public class HearthAction {
 
 	public HearthTreeNode perform(HearthTreeNode boardState, Deck deckPlayer0, Deck deckPlayer1) throws HSException {
 		HearthTreeNode toRet = boardState;
+		
 		switch(verb_) {
 			case USE_CARD: {
 				Card card = boardState.data_.getCard_hand(actionPerformerPlayerSide, cardOrCharacterIndex_);
