@@ -93,13 +93,13 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 					targetMinion = boardStateNode.data_.getCurrentPlayerCharacter(targetIndex);
 
 					if(card.canBeUsedOn(PlayerSide.CURRENT_PLAYER, targetMinion, boardStateNode.data_)) {
-						newState = new HearthTreeNode(boardStateNode.data_.deepCopy(), new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, 
-								cardIndex, PlayerSide.CURRENT_PLAYER, targetIndex));
+						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
 						copiedTargetMinion = newState.data_.getCurrentPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
 						newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState,
 								deckPlayer0_, deckPlayer1_, false);
 						if(newState != null) {
+							newState.setAction(new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, targetIndex));
 							nodes.add(newState);
 						}
 					}
@@ -110,13 +110,13 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 					targetMinion = boardStateNode.data_.getWaitingPlayerCharacter(targetIndex);
 
 					if(card.canBeUsedOn(PlayerSide.WAITING_PLAYER, targetMinion, boardStateNode.data_)) {
-						newState = new HearthTreeNode(boardStateNode.data_.deepCopy(), new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER,
-								cardIndex, PlayerSide.WAITING_PLAYER, targetIndex));
+						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
 						copiedTargetMinion = newState.data_.getWaitingPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
 						newState = copiedCard.useOn(PlayerSide.WAITING_PLAYER, copiedTargetMinion, newState,
 								deckPlayer0_, deckPlayer1_, false);
 						if(newState != null) {
+							newState.setAction(new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, targetIndex));
 							nodes.add(newState);
 						}
 					}
