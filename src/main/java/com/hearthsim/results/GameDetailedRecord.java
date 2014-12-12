@@ -87,12 +87,6 @@ public class GameDetailedRecord implements GameRecord {
 		return boards_.get(playerID).get(turn);
 	}
 
-	@Override
-	public JSONObject getBoardSide(int playerId, int turn, int currentPlayerId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public JSONObject getActions(int playerId, int turn, int currentPlayerId){
 		return null;
 	}

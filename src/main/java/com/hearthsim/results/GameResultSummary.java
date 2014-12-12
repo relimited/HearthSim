@@ -50,25 +50,7 @@ public class GameResultSummary {
 			tj.put("p0_h", result_.record_.getHeroHealth(0, i, 0));
 			tj.put("p1_h", result_.record_.getHeroHealth(1, i, 0));
 			
-			//For new board logging
-			JSONObject side = result_.record_.getBoardSide(0, i, 0);
-			if(side != null){
-				tj.put("p0_board",side);
-			}
-			side = result_.record_.getBoardSide(1, i, 0);
-			if(side != null){
-				tj.put("p1_board", side);
-			}
 			
-			//Action logging
-			JSONObject actions = result_.record_.getActions(0, i, 0);
-			if(actions != null){
-				tj.put("p0_actions", actions);
-			}
-			actions = result_.record_.getActions(1, i, 0);
-			if(actions != null){
-				tj.put("p1_actions", actions);
-			}
 			p0.put(tj);
 		}
 		
@@ -82,25 +64,7 @@ public class GameResultSummary {
 			tj.put("p0_h", result_.record_.getHeroHealth(0, i, 1));
 			tj.put("p1_h", result_.record_.getHeroHealth(1, i, 1));
 			
-			//For new board logging
-			JSONObject side = result_.record_.getBoardSide(0, i, 1);
-			if(side != null){
-				tj.put("p0_board",side);
-			}
-			side = result_.record_.getBoardSide(1, i, 1);
-			if(side != null){
-				tj.put("p1_board", side);
-			}
 			
-			//Action logging
-			JSONObject actions = result_.record_.getActions(0, i, 1);
-			if(actions != null){
-				tj.put("p0_actions", actions);
-			}
-			actions = result_.record_.getActions(1, i, 1);
-			if(actions != null){
-				tj.put("p1_actions", actions);
-			}
 			p1.put(tj);
 		}
 

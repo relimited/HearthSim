@@ -17,7 +17,7 @@ import com.hearthsim.util.tree.HearthTreeNode;
 public class HearthAction {
 	
 	public enum Verb {
-		USE_CARD, HERO_ABILITY, ATTACK, UNTARGETABLE_BATTLECRY, TARGETABLE_BATTLECRY
+		USE_CARD, HERO_ABILITY, ATTACK, UNTARGETABLE_BATTLECRY, TARGETABLE_BATTLECRY, PLAY_MINION
 	}
 		
 	public final Verb verb_;
