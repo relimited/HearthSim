@@ -94,6 +94,7 @@ public class Game {
 		boardModel.getWaitingPlayer().setDeckPos(4);
 		
 		GameRecord record = new GameSimpleRecord();
+		record.setFirstPlayer(boardModel.getIndexOfPlayer(PlayerSide.CURRENT_PLAYER));
 
 		record.put(0, PlayerSide.CURRENT_PLAYER, boardModel.deepCopy(), null);
 		record.put(0, PlayerSide.CURRENT_PLAYER, boardModel.flipPlayers().deepCopy(), null);

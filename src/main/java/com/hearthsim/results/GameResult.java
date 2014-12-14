@@ -19,7 +19,5 @@ public class GameResult {
 		winnerPlayerIndex_ = winnerPlayerIndex;
 		gameDuration_ = gameDuration;
 		record_ = record;
-		
-		record.setFirstPlayer(firstPlayerIndex);
 	}
 }
