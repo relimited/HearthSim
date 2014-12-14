@@ -163,8 +163,9 @@ public abstract class HearthSimBase {
 					//This doesn't need to be in a synchronized block, as each thread has it's own writer now.
 					synchronized(writer_) {
 						GameResultSummary grs = new GameResultSummary(res);
-						writer_.write("{\"game\":" + gameId_ + ",\"winner\":" + res.winnerPlayerIndex_);
+						writer_.write("{\"game\":" + gameId_ + ",\"winner\":" + res.winnerPlayerIndex_ + ", \"rounds\":");
 						writer_.write(grs.toImprovedJSON().toString(4) + "\n");
+						writer_.write("}");
 						writer_.flush();
 					}
 				}
