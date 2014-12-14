@@ -1,0 +1,10 @@
+num_simulations           =  1000 
+num_threads               =  1000 
+
+output_file               =   resultZooAggroTempo.hsres
+
+deckListFilePath0         =       zoo0.hsdeck
+deckListFilePath1         =       zoo1.hsdeck
+
+aiParamFilePath0          =       aggro0.hsai
+aiParamFilePath1          =       tempo1.hsai

@@ -1,0 +1,10 @@
+num_simulations           =  1000 
+num_threads               =  1000 
+
+output_file               =   resultZooControlControl.hsres
+
+deckListFilePath0         =       zoo0.hsdeck
+deckListFilePath1         =       zoo1.hsdeck
+
+aiParamFilePath0          =       control0.hsai
+aiParamFilePath1          =       control1.hsai
