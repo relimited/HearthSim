@@ -26,6 +26,8 @@ public class GameSimpleRecord implements GameRecord {
 	final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GameSimpleRecord.class);
 	
 	int maxTurns_;
+	int firstPlayer;
+	
 	byte[][][] numMinions_;
 	byte[][][] numCards_;
 	byte[][][] heroHealth_;
@@ -133,7 +135,11 @@ public class GameSimpleRecord implements GameRecord {
 		if(turn != 0){
 			previousTurn = state_.get(turn-1).get(playerId);
 			int opponentId = playerId == 0 ? 1 : 0;
-			opponentPreviousTurn = state_.get(turn - 1).get(opponentId);
+			if(playerId != firstPlayer){
+				opponentPreviousTurn = state_.get(turn - 1).get(opponentId);
+			}else{
+				opponentPreviousTurn = state_.get(turn).get(opponentId);
+			}
 		}
 		
 		if(states == null){
@@ -383,6 +389,11 @@ public class GameSimpleRecord implements GameRecord {
 	public JSONObject toJSON() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setFirstPlayer(int firstPlayerId) {
+		firstPlayer = firstPlayerId;
 	}
 
 }

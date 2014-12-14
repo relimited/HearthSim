@@ -54,7 +54,7 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 					newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState, deckPlayer0_,
 							deckPlayer1_, false);
 					if(newState != null) {
-						newState.setAction(new HearthAction(Verb.PLAY_MINION, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, cardPlacementIndex));
+						//newState.setAction(new HearthAction(Verb.PLAY_MINION, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, cardPlacementIndex));
 						nodes.add(newState);
 					}
 				}
