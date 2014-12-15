@@ -33,6 +33,7 @@ public class GameSimpleRecord implements GameRecord {
 	byte[][][] heroHealth_;
 	byte[][][] heroArmor_;
 	List<Map<Integer, List<HearthActionBoardPair>>> state_;
+	List<BoardModel> boardStateOnTurn;
 	
 	BoardModel turn0Model;		//special place to store information on turn 0, which normally gets ignored.
 	
@@ -48,7 +49,7 @@ public class GameSimpleRecord implements GameRecord {
 		heroArmor_ = new byte[2][maxTurns][2];
 		
 		state_ = new ArrayList<Map<Integer, List<HearthActionBoardPair>>>();
-		
+		boardStateOnTurn = new ArrayList<BoardModel>();
 	}
 	
 	@Override
