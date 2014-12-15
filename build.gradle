@@ -5,9 +5,22 @@ apply plugin: 'jacoco'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: "groovy"
+apply plugin: 'application'
 
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDir 'src/main/java'
+mainClassName = 'com.hearthsim.HearthSimMain'
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.0.2'
+  }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 task(runGui, dependsOn: 'classes', type: JavaExec) {
     main = 'com.hearthsim.gui.HearthSim'
@@ -22,6 +35,7 @@ task(runSim, dependsOn: 'classes', type: JavaExec) {
 
 repositories {
     jcenter()
+    mavenCentral()
     maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
