@@ -102,6 +102,7 @@ public abstract class HearthSimBase {
 		PlayerModel playerModel0 = new PlayerModel(0, "player0", hero0, deck0);
 		PlayerModel playerModel1 = new PlayerModel(1, "player1", hero1, deck1);
 
+		//DEBUGGING
 		Game game = new Game(playerModel0, playerModel1, ai0, ai1, shufflePlayOrder);
 		return game.runGame();
 	}
@@ -163,9 +164,9 @@ public abstract class HearthSimBase {
 					//This doesn't need to be in a synchronized block, as each thread has it's own writer now.
 					synchronized(writer_) {
 						GameResultSummary grs = new GameResultSummary(res);
-						writer_.write("{\"game\":" + gameId_ + ",\"winner\":" + res.winnerPlayerIndex_ + ", \"rounds\":");
+						writer_.write("{\"game\":" + gameId_ + ",\"winner\":" + res.winnerPlayerIndex_ + ", \"wentFirst\":" + res.firstPlayerIndex_ + ", \"rounds\":");
 						writer_.write(grs.toImprovedJSON().toString(4) + "\n");
-						writer_.write("}");
+						writer_.write("\n}");
 						writer_.flush();
 					}
 				}

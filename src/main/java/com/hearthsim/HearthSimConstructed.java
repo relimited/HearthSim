@@ -56,7 +56,7 @@ public class HearthSimConstructed extends HearthSimBase {
 		//------------------------------------------------------------------------
 		ArtificialPlayer ai0 = new BruteForceSearchAI(this.aiParamFilePath0_);
 		ArtificialPlayer ai1 = new BruteForceSearchAI(this.aiParamFilePath1_);
-		
+		 //gameId % 2
 		return super.runSingleGame(ai0, hero0, deck0, ai1, hero1, deck1, gameId % 2);
 	}
 }

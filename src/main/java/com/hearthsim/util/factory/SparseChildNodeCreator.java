@@ -48,13 +48,13 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 				// actually place the card now
 				targetMinion = boardStateNode.data_.getCurrentPlayerCharacter(cardPlacementIndex);
 				if(card.canBeUsedOn(PlayerSide.CURRENT_PLAYER, targetMinion, boardStateNode.data_)) {
-					newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+					newState = new HearthTreeNode(boardStateNode.data_.deepCopy(), new HearthAction(Verb.PLAY_MINION, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, cardPlacementIndex));
 					copiedTargetMinion = newState.data_.getCurrentPlayerCharacter(cardPlacementIndex);
 					copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
 					newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState, deckPlayer0_,
 							deckPlayer1_, false);
 					if(newState != null) {
-						newState.setAction(new HearthAction(Verb.PLAY_MINION, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, cardPlacementIndex));
+						//newState.setAction(new HearthAction(Verb.PLAY_MINION, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, cardPlacementIndex));
 						nodes.add(newState);
 					}
 				}

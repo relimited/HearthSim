@@ -73,6 +73,11 @@ public interface GameRecord {
 	public JSONObject getTurn(int playerId, int turn);
 	
 	/**
+	 * Set which player went first
+	 */
+	public void setFirstPlayer(int firstPlayerId);
+	
+	/**
 	 * Returns the JSON representation of this record
 	 * @return
 	 */

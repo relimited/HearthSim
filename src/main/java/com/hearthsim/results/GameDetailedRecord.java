@@ -96,4 +96,10 @@ public class GameDetailedRecord implements GameRecord {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void setFirstPlayer(int firstPlayerId) {
+		// TODO Auto-generated method stub
+		
+	}
 }

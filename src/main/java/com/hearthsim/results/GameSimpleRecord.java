@@ -26,14 +26,16 @@ public class GameSimpleRecord implements GameRecord {
 	final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GameSimpleRecord.class);
 	
 	int maxTurns_;
+	int firstPlayer;
+	
 	byte[][][] numMinions_;
 	byte[][][] numCards_;
 	byte[][][] heroHealth_;
 	byte[][][] heroArmor_;
 	List<Map<Integer, List<HearthActionBoardPair>>> state_;
+	List<BoardModel> boardStateOnTurn;
 	
-	Map<Integer, List<Map<Integer, MinionList>>> board_;
-	Map<Integer, List<List<HearthAction>>> actions_;
+	BoardModel turn0Model;		//special place to store information on turn 0, which normally gets ignored.
 	
 	public GameSimpleRecord() {
 		this(50);
@@ -47,9 +49,7 @@ public class GameSimpleRecord implements GameRecord {
 		heroArmor_ = new byte[2][maxTurns][2];
 		
 		state_ = new ArrayList<Map<Integer, List<HearthActionBoardPair>>>();
-		
-		board_ = new HashMap<Integer, List<Map<Integer, MinionList>>>();
-		actions_ = new HashMap<Integer, List<List<HearthAction>>>();
+		boardStateOnTurn = new ArrayList<BoardModel>();
 	}
 	
 	@Override
@@ -60,6 +60,11 @@ public class GameSimpleRecord implements GameRecord {
         int waitingPlayerId = board.modelForSide(activePlayerSide.getOtherPlayer()).getPlayerId();
         
         //New and improved state logging
+        if(turn == 0){
+        	turn0Model = board; //we need to capture the state at turn 0 to have a snowballs chance in hell of being able to log turn 1 correctly
+        }
+        
+        //standard logging strategy
         Map<Integer, List<HearthActionBoardPair>> turnInformation;
         if(state_.size() <= turn || state_.get(turn) == null){
         	turnInformation = new HashMap<Integer, List<HearthActionBoardPair>>();
@@ -133,7 +138,11 @@ public class GameSimpleRecord implements GameRecord {
 		if(turn != 0){
 			previousTurn = state_.get(turn-1).get(playerId);
 			int opponentId = playerId == 0 ? 1 : 0;
-			opponentPreviousTurn = state_.get(turn - 1).get(opponentId);
+			if(playerId == firstPlayer){
+				opponentPreviousTurn = state_.get(turn - 1).get(opponentId);
+			}else{
+				opponentPreviousTurn = state_.get(turn).get(opponentId);
+			}
 		}
 		
 		if(states == null){
@@ -239,32 +248,59 @@ public class GameSimpleRecord implements GameRecord {
 								actJSON.put("performer_index", act.cardOrCharacterIndex_);
 							}
 						}else if(turn != 0 && i == 0){
+							boolean skip_log = false;
+							
 							HearthActionBoardPair previousTurnState = null;
-							if(previousTurn == null){
-								previousTurn = state_.get(i).get(playerId);
-								if(previousTurn != null){
-									previousTurnState = previousTurn.get(previousTurn.size() - 1);
+							//if this is turn 1, we need to try and get indexes from the special turn 0 var
+							if(turn == 1){
+								skip_log = true;
+								
+								if(act.targetCharacterIndex_ < this.turn0Model.getMinions(act.targetPlayerSide).size() + 1){
+									actJSON.put("target", this.turn0Model.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName() + 
+											"-" + this.turn0Model.getIndexOfPlayer(act.targetPlayerSide));
 								}else{
-									//was completely unable to get previous turn information, which includes subbing out the current turn
 									actJSON.put("target_index", act.targetCharacterIndex_);
-									actJSON.put("performer_index", act.cardOrCharacterIndex_);
-									break;
 								}
-							}else{
-								previousTurnState = previousTurn.get(previousTurn.size() - 1);
-							}
-							if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
-								actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName() + 
-										"-" + previousTurnState.board.getIndexOfPlayer(act.targetPlayerSide));
-							}else{
-								actJSON.put("target_index", act.targetCharacterIndex_);
-							}
 						
-							if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
-								actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
-										"-" + previousTurnState.board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-							}else{
-								actJSON.put("performer_index", act.cardOrCharacterIndex_);
+								if(act.cardOrCharacterIndex_ < this.turn0Model.getNumCards_hand(act.actionPerformerPlayerSide)){
+									actJSON.put("performer", this.turn0Model.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
+											"-" + this.turn0Model.getIndexOfPlayer(act.actionPerformerPlayerSide));
+								}else{
+									actJSON.put("performer_index", act.cardOrCharacterIndex_);
+								}
+							}
+							
+							//otherwise try to get indexes from previous logging
+							if(!skip_log){
+								if(previousTurn == null){
+									previousTurn = state_.get(turn).get(playerId);
+									if(previousTurn != null){
+										previousTurnState = previousTurn.get(previousTurn.size() - 1);
+									}else{
+										//was completely unable to get previous turn information, which includes subbing out the current turn
+										skip_log = true;
+										actJSON.put("target_index", act.targetCharacterIndex_);
+										actJSON.put("performer_index", act.cardOrCharacterIndex_);
+									}
+								}else{
+									previousTurnState = previousTurn.get(previousTurn.size() - 1);
+								}
+							}
+							
+							if(!skip_log){
+								if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
+									actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName() + 
+											"-" + previousTurnState.board.getIndexOfPlayer(act.targetPlayerSide));
+								}else{
+									actJSON.put("target_index", act.targetCharacterIndex_);
+								}
+						
+								if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
+									actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
+											"-" + previousTurnState.board.getIndexOfPlayer(act.actionPerformerPlayerSide));
+								}else{
+									actJSON.put("performer_index", act.cardOrCharacterIndex_);
+								}
 							}
 						}
 					}else if(act.verb_ == Verb.PLAY_MINION){
@@ -277,24 +313,38 @@ public class GameSimpleRecord implements GameRecord {
 								actJSON.put("performer_index", act.cardOrCharacterIndex_);
 							}
 						}else if(turn != 0 && i == 0){
-							HearthActionBoardPair previousTurnState = null;
-							if(previousTurn == null){
-								previousTurn = state_.get(i).get(playerId);
-								if(previousTurn != null){
-									previousTurnState = previousTurn.get(previousTurn.size() - 1);
-								}else{
-									//was completely unable to get previous turn information, which includes subbing out the current turn
-									actJSON.put("performer_index", act.cardOrCharacterIndex_);
-									break;
-								}
-							}else{
-								previousTurnState = previousTurn.get(previousTurn.size() - 1);
+							boolean skip_log = false;
+							
+							//Turn 1 is stupid
+							if(turn == 1){
+								skip_log = true;
+								actJSON.put("performer", board.getMinion(act.targetPlayerSide, act.targetCharacterIndex_).getName() + 
+										"-" + board.getIndexOfPlayer(act.actionPerformerPlayerSide));
 							}
-							if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
-								actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
-										"-" + previousTurnState.board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-							}else{
-								actJSON.put("performer_index", act.cardOrCharacterIndex_);
+							HearthActionBoardPair previousTurnState = null;
+							
+							if(!skip_log){
+								if(previousTurn == null){
+									previousTurn = state_.get(turn).get(playerId);
+									if(previousTurn != null){
+										previousTurnState = previousTurn.get(previousTurn.size() - 1);
+									}else{
+										skip_log = true;
+										//was completely unable to get previous turn information, which includes subbing out the current turn
+										actJSON.put("performer_index", act.cardOrCharacterIndex_);
+									}
+								}else{
+									previousTurnState = previousTurn.get(previousTurn.size() - 1);
+								}
+							}
+							
+							if(!skip_log){
+								if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
+									actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
+											"-" + previousTurnState.board.getIndexOfPlayer(act.actionPerformerPlayerSide));
+								}else{
+									actJSON.put("performer_index", act.cardOrCharacterIndex_);
+								}
 							}
 						}
 					}
@@ -383,6 +433,11 @@ public class GameSimpleRecord implements GameRecord {
 	public JSONObject toJSON() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setFirstPlayer(int firstPlayerId) {
+		firstPlayer = firstPlayerId;
 	}
 
 }
