@@ -166,7 +166,7 @@ public abstract class HearthSimBase {
 						GameResultSummary grs = new GameResultSummary(res);
 						writer_.write("{\"game\":" + gameId_ + ",\"winner\":" + res.winnerPlayerIndex_ + ", \"wentFirst\":" + res.firstPlayerIndex_ + ", \"rounds\":");
 						writer_.write(grs.toImprovedJSON().toString(4) + "\n");
-						writer_.write("\n}");
+						writer_.write("}\n");
 						writer_.flush();
 					}
 				}
