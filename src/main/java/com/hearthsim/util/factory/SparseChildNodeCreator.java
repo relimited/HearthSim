@@ -7,6 +7,8 @@ import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
+import com.hearthsim.util.HearthAction;
+import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class SparseChildNodeCreator extends ChildNodeCreatorBase {
@@ -22,7 +24,6 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 		ArrayList<HearthTreeNode> nodes = new ArrayList<HearthTreeNode>();
 
 		Minion targetMinion = null;
-		Minion copiedTargetMinion = null;
 		Card card = null;
 		Card copiedCard = null;
 		HearthTreeNode newState = null;
@@ -47,10 +48,9 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 				targetMinion = boardStateNode.data_.getCurrentPlayerCharacter(cardPlacementIndex);
 				if(card.canBeUsedOn(PlayerSide.CURRENT_PLAYER, targetMinion, boardStateNode.data_)) {
 					newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
-					copiedTargetMinion = newState.data_.getCurrentPlayerCharacter(cardPlacementIndex);
 					copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
-					newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState, deckPlayer0_,
-							deckPlayer1_, false);
+					newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, cardPlacementIndex, newState, deckPlayer0_,
+							deckPlayer1_);
 					if(newState != null) {
 						nodes.add(newState);
 					}
@@ -63,10 +63,9 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 
 					if(card.canBeUsedOn(PlayerSide.CURRENT_PLAYER, targetMinion, boardStateNode.data_)) {
 						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
-						copiedTargetMinion = newState.data_.getCurrentPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
-						newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState,
-								deckPlayer0_, deckPlayer1_, false);
+						newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, targetIndex, newState,
+								deckPlayer0_, deckPlayer1_);
 						if(newState != null) {
 							nodes.add(newState);
 						}
@@ -79,10 +78,9 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 
 					if(card.canBeUsedOn(PlayerSide.WAITING_PLAYER, targetMinion, boardStateNode.data_)) {
 						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
-						copiedTargetMinion = newState.data_.getWaitingPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
-						newState = copiedCard.useOn(PlayerSide.WAITING_PLAYER, copiedTargetMinion, newState,
-								deckPlayer0_, deckPlayer1_, false);
+						newState = copiedCard.useOn(PlayerSide.WAITING_PLAYER, targetIndex, newState,
+								deckPlayer0_, deckPlayer1_);
 						if(newState != null) {
 							nodes.add(newState);
 						}
@@ -94,6 +92,7 @@ public class SparseChildNodeCreator extends ChildNodeCreatorBase {
 		// If no nodes were created then nothing could be played. If something could be played, we want to explicitly do nothing in its own node.
 		if(!nodes.isEmpty()) {
 			newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+			newState.setAction(new HearthAction(Verb.DO_NOT_USE_CARD));
 			for(Card c : newState.data_.getCurrentPlayerHand()) {
 				c.hasBeenUsed(true);
 			}

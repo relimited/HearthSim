@@ -40,8 +40,8 @@ public class TestArcaneIntellect {
 		}
 
 		Deck deck = new Deck(cards);
-		PlayerModel playerModel0 = new PlayerModel(0, "player0", new TestHero(), deck);
-		PlayerModel playerModel1 = new PlayerModel(1, "player1", new TestHero(), deck);
+		PlayerModel playerModel0 = new PlayerModel((byte)0, "player0", new TestHero(), deck);
+		PlayerModel playerModel1 = new PlayerModel((byte)1, "player1", new TestHero(), deck);
 
 		board = new HearthTreeNode(new BoardModel(playerModel0, playerModel1));
 
@@ -57,7 +57,7 @@ public class TestArcaneIntellect {
 		board.data_.placeMinion(PlayerSide.WAITING_PLAYER, minion2);
 		board.data_.placeMinion(PlayerSide.WAITING_PLAYER, minion3);
 
-		board.data_.getCurrentPlayer().setMana(5);
+		board.data_.getCurrentPlayer().setMana((byte)5);
 	}
 
 	@Test
@@ -72,10 +72,8 @@ public class TestArcaneIntellect {
 
 		Card theCard = board.data_.getCurrentPlayerCardHand(0);
 		HearthTreeNode res;
-		Minion target = null;
 
-		target = board.data_.getCharacter(PlayerSide.CURRENT_PLAYER, 0);
-		res = theCard.useOn(PlayerSide.CURRENT_PLAYER, target, board, deck, null);
+		res = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board, deck, null);
 		assertNotNull(res);
 		assertEquals(res.data_.getNumCards_hand(), 0);
 		assertTrue(res instanceof CardDrawNode);
@@ -109,10 +107,8 @@ public class TestArcaneIntellect {
 
 		Card theCard = board.data_.getCurrentPlayerCardHand(0);
 		HearthTreeNode res;
-		Minion target = null;
 
-		target = board.data_.getCharacter(PlayerSide.CURRENT_PLAYER, 0);
-		res = theCard.useOn(PlayerSide.CURRENT_PLAYER, target, board, deck, null);
+		res = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board, deck, null);
 		assertNotNull(res);
 		assertEquals(res.data_.getNumCards_hand(), 0);
 		assertTrue(res instanceof CardDrawNode);

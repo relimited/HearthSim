@@ -1,8 +1,8 @@
 package com.hearthsim.card.spellcard.concrete;
 
 import com.hearthsim.card.Deck;
-import com.hearthsim.card.minion.Beast;
 import com.hearthsim.card.minion.Minion;
+import com.hearthsim.card.minion.Minion.MinionTribe;
 import com.hearthsim.card.spellcard.SpellDamage;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
@@ -18,11 +18,6 @@ public class KillCommand extends SpellDamage {
 		super((byte)3, (byte)3, hasBeenUsed);
 	}
 
-	@Override
-	public SpellDamage deepCopy() {
-		return new KillCommand(this.hasBeenUsed);
-	}
-	
 	/**
 	 * 
 	 * Use the card on the given target
@@ -48,7 +43,7 @@ public class KillCommand extends SpellDamage {
 	{
 		boolean haveBeast = false;
 		for (final Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(boardState).getMinions()) {
-			haveBeast = haveBeast || minion instanceof Beast;
+			haveBeast = haveBeast || minion.getTribe() == MinionTribe.BEAST;
 		}
 		if (haveBeast)
 			this.damage_ = (byte)5;

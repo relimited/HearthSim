@@ -23,11 +23,6 @@ public class TheCoin extends SpellCard {
 		this(false);
 	}
 
-	@Override
-	public SpellCard deepCopy() {
-		return new TheCoin(this.hasBeenUsed());
-	}
-
 	/**
 	 * 
 	 * Use the card on the given target
@@ -51,8 +46,8 @@ public class TheCoin extends SpellCard {
 	{
 		HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
 		if (toRet != null) {
-			int newMana = toRet.data_.getCurrentPlayer().getMana();
-			newMana = newMana >= 10 ? newMana : newMana + 1;
+			byte newMana = toRet.data_.getCurrentPlayer().getMana();
+			newMana = newMana >= 10 ? newMana : (byte)(newMana + 1);
 			toRet.data_.getCurrentPlayer().setMana(newMana);
 		}
 		return boardState;

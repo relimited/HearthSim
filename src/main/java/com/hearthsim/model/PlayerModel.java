@@ -7,26 +7,28 @@ import com.hearthsim.card.minion.Minion;
 import com.hearthsim.util.DeepCopyable;
 import com.hearthsim.util.IdentityLinkedList;
 import com.hearthsim.util.MinionList;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class PlayerModel implements DeepCopyable<PlayerModel> {
 
     private final String name;
-    private final int playerId; // used for identifying player 0 vs player 1
+    private final byte playerId; // used for identifying player 0 vs player 1
     private final Hero hero;
     private final Deck deck;
     
-    private int mana;
-    private int maxMana;
+    private byte mana;
+    private byte maxMana;
     
-    private int deckPos;
-    private int fatigueDamage;
+    private byte deckPos;
+    private byte fatigueDamage;
     
     private MinionList minions;
     private IdentityLinkedList<Card> hand;
     byte overload;
 
-    public PlayerModel(int playerId, String name, Hero hero, Deck deck) {
+    public PlayerModel(byte playerId, String name, Hero hero, Deck deck) {
     	this.playerId = playerId;
         this.name = name;
         this.hero = hero;
@@ -71,35 +73,35 @@ public class PlayerModel implements DeepCopyable<PlayerModel> {
         return deck;
     }
 
-    public int getMana() {
+    public byte getMana() {
         return mana;
     }
 
-    public void setMana(int mana) {
+    public void setMana(byte mana) {
         this.mana = mana;
     }
 
-    public void addMana(int value) {
+    public void addMana(byte value) {
         this.mana += value;
     }
 
-    public void subtractMana(int value) {
+    public void subtractMana(byte value) {
         this.mana -= value;
     }
 
-	public int getMaxMana() {
+	public byte getMaxMana() {
 		return maxMana;
 	}
 
-	public void setMaxMana(int maxMana) {
+	public void setMaxMana(byte maxMana) {
 		this.maxMana = maxMana;
 	}
 	
-	public void addMaxMana(int value) {
+	public void addMaxMana(byte value) {
 		this.maxMana += value;
 	}
 	
-	public void subtractMaxMana(int value) {
+	public void subtractMaxMana(byte value) {
 		this.maxMana -= value;
 	}
 	
@@ -134,27 +136,27 @@ public class PlayerModel implements DeepCopyable<PlayerModel> {
         this.overload = overload;
     }
     
-    public int getDeckPos() {
+    public byte getDeckPos() {
     	return deckPos;
     }
     
-    public void setDeckPos(int value) {
+    public void setDeckPos(byte value) {
     	deckPos = value;
     }
     
-    public void addDeckPos(int value) {
+    public void addDeckPos(byte value) {
     	deckPos += value;
     }
     
-    public int getFatigueDamage() {
+    public byte getFatigueDamage() {
     	return fatigueDamage;
     }
 
-    public void setFatigueDamage(int value) {
+    public void setFatigueDamage(byte value) {
     	fatigueDamage = value;
     }
     
-    public void addFatigueDamage(int value) {
+    public void addFatigueDamage(byte value) {
     	fatigueDamage += value;
     }
     
@@ -220,7 +222,7 @@ public class PlayerModel implements DeepCopyable<PlayerModel> {
     }
     
     
-    public int getPlayerId() {
+    public byte getPlayerId() {
         return playerId;
     }
 
@@ -281,15 +283,28 @@ public class PlayerModel implements DeepCopyable<PlayerModel> {
         json.put("name", name);
         json.put("playerId", playerId);
         json.put("hero", hero.toJSON());
-        json.put("mana", mana);
-        json.put("maxMana", maxMana);
-        json.put("deckPos", deckPos);
-        json.put("overload", overload);
-        json.put("fatigueDamage", fatigueDamage);
-        json.put("minions", minions);
-        json.put("hand", hand);
-    
+        if(mana != maxMana) json.put("mana", mana);
+        if(maxMana > 0) json.put("maxMana", maxMana);
+		json.put("deckPos", deckPos);
+		if(overload > 0) json.put("overload", overload);
+		if(fatigueDamage > 0) json.put("fatigueDamage", fatigueDamage);
+
+		if(minions.size() > 0) {
+			JSONArray array = new JSONArray();
+			for(Minion minion: minions) {
+				array.put(minion.toJSON());
+			}
+			json.put("minions", array);
+		}
+
+		if(hand.size() > 0) {
+			JSONArray array = new JSONArray();
+			for(Card card: hand) {
+				array.put(card.toJSON());
+			}
+			json.put("hand", array);
+		}
+
         return json;
     }
-
 }

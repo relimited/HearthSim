@@ -31,11 +31,6 @@ public class WildGrowth extends SpellCard {
 	public WildGrowth() {
 		this(false);
 	}
-
-	@Override
-	public SpellCard deepCopy() {
-		return new WildGrowth(this.hasBeenUsed);
-	}
 	
 	/**
 	 * 
@@ -66,7 +61,7 @@ public class WildGrowth extends SpellCard {
 			if (toRet.data_.getCurrentPlayer().getMaxMana() >= 10) {
 				toRet.data_.placeCardHandCurrentPlayer(new ExcessMana());
 			} else {
-				toRet.data_.getCurrentPlayer().addMaxMana(1);
+				toRet.data_.getCurrentPlayer().addMaxMana((byte)1);
 			}
 		}
 		return toRet;

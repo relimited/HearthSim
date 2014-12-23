@@ -1,8 +1,8 @@
 package com.hearthsim.card.spellcard.concrete;
 
 import com.hearthsim.card.Deck;
-import com.hearthsim.card.minion.Demon;
 import com.hearthsim.card.minion.Minion;
+import com.hearthsim.card.minion.Minion.MinionTribe;
 import com.hearthsim.card.spellcard.SpellCard;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
@@ -30,17 +30,12 @@ public class SacrificialPact extends SpellCard {
 	}
 
 	@Override
-	public SpellCard deepCopy() {
-		return new SacrificialPact(this.hasBeenUsed);
-	}
-	
-	@Override
 	public boolean canBeUsedOn(PlayerSide playerSide, Minion minion, BoardModel boardModel) {
 		if(!super.canBeUsedOn(playerSide, minion, boardModel)) {
 			return false;
 		}
 		
-		if (!(minion instanceof Demon)) {
+		if (!(minion.getTribe() == MinionTribe.DEMON)) {
 			return false;
 		}
 			
