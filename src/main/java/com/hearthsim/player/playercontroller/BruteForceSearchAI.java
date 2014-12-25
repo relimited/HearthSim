@@ -24,6 +24,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 	public final static int MAX_THINK_TIME = 20000;
 
 	boolean useSparseBoardStateFactory_ = true;
+	boolean useDuplicateNodePruning = true;
 
 	public WeightedScorer scorer = new WeightedScorer();
 
@@ -107,7 +108,8 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 			this.scorer.setManaWeight(pFile.getDouble("w_mana", 0.1));
 
 			useSparseBoardStateFactory_ = pFile.getBoolean("use_sparse_board_state_factory", true);
-
+			useDuplicateNodePruning = pFile.getBoolean("use_duplicate_node_pruning", true);
+			
 		} catch(HSParamNotFoundException e) {
 			log.error(e.getMessage());
 			System.exit(1);
@@ -122,6 +124,14 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 		useSparseBoardStateFactory_ = value;
 	}
 
+	public boolean getUseDuplicateNodePruning() {
+		return useDuplicateNodePruning;
+	}
+	
+	public void setUseDuplicateNodePruning(boolean value) {
+		useDuplicateNodePruning = value;
+	}
+
 	@Override
 	public List<HearthActionBoardPair> playTurn(int turn, BoardModel board) throws HSException {
 		PlayerModel playerModel0 = board.getCurrentPlayer();
@@ -129,9 +139,9 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 
 		BoardStateFactoryBase factory = null;
 		if(useSparseBoardStateFactory_) {
-			factory = new SparseBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME);
+			factory = new SparseBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME, useDuplicateNodePruning);
 		} else {
-			factory = new DepthBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME);
+			factory = new DepthBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME, useDuplicateNodePruning);
 		}
 		return this.playTurn(turn, board, factory);
 	}
@@ -154,17 +164,20 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 		while(curMove.getChildren() != null) {
 			curMove = curMove.getChildren().get(0);
 			if(curMove instanceof StopNode) {
+				// Add the initial step that created the StopNode
+				retList.add(new HearthActionBoardPair(curMove.getAction(), curMove.data_.deepCopy()));
+				// Force the step to resolve
 				HearthTreeNode allEffectsDone = ((StopNode)curMove).finishAllEffects(playerModel0.getDeck(),
 						playerModel1.getDeck());
-				//set the action that generated the allEffectsDone node.
-				//allEffectsDone.setAction(curMove.getAction());
+				// Add the resolution to action list
+				retList.add(new HearthActionBoardPair(allEffectsDone.getAction(), allEffectsDone.data_.deepCopy()));
+
+				// Continue the turn
 				List<HearthActionBoardPair> nextMoves = this.playTurn(turn, allEffectsDone.data_);
 				if (nextMoves.size() > 0) {
 					for(HearthActionBoardPair actionBoard : nextMoves) {
 						retList.add(actionBoard);
 					}
-				} else {
-					retList.add(new HearthActionBoardPair(allEffectsDone.getAction(), allEffectsDone.data_));
 				}
 				break;
 			} else {
@@ -179,6 +192,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 		BruteForceSearchAI copied = new BruteForceSearchAI();
 		copied.scorer = this.scorer.deepCopy();
 		copied.useSparseBoardStateFactory_ = useSparseBoardStateFactory_;
+		copied.useDuplicateNodePruning = useDuplicateNodePruning;
 		return copied;
 	}
 

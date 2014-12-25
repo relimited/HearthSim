@@ -20,6 +20,7 @@ import com.hearthsim.card.minion.concrete.SenjinShieldmasta;
 import com.hearthsim.card.minion.concrete.ShatteredSunCleric;
 import com.hearthsim.card.minion.concrete.SilverHandRecruit;
 import com.hearthsim.card.minion.concrete.TimberWolf;
+import com.hearthsim.card.spellcard.concrete.AnimalCompanion;
 import com.hearthsim.card.spellcard.concrete.Assassinate;
 import com.hearthsim.card.spellcard.concrete.Frostbolt;
 import com.hearthsim.card.spellcard.concrete.HolySmite;
@@ -58,8 +59,8 @@ public class TestLethal {
 
 		factory = new BreadthBoardStateFactory(this.deck0, this.deck1);
 		startingBoard = new BoardModel();
-		startingBoard.getCurrentPlayer().addMana(10);
-		startingBoard.getCurrentPlayer().addMaxMana(10);
+		startingBoard.getCurrentPlayer().addMana((byte)10);
+		startingBoard.getCurrentPlayer().addMaxMana((byte)10);
 
 		root = new HearthTreeNode(startingBoard);
 		this.ownHero = startingBoard.getCurrentPlayerHero();
@@ -116,7 +117,7 @@ public class TestLethal {
 
 	@Test
 	public void testInnervateSmiteSmite() throws HSException {
-		this.startingBoard.getCurrentPlayer().setMana(0);
+		this.startingBoard.getCurrentPlayer().setMana((byte)0);
 		this.enemyHero.setHealth((byte)3);
 		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new HolySmite());
 		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new Innervate());
@@ -227,6 +228,29 @@ public class TestLethal {
 		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new DarkIronDwarf()); // +2 = 2
 		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new ShatteredSunCleric()); // +2 = 4
 		this.startingBoard.placeMinion(PlayerSide.CURRENT_PLAYER, new ChillwindYeti()); // +1 = 5
+		this.startingBoard.placeMinion(PlayerSide.CURRENT_PLAYER, new ChillwindYeti()); // +1 = 6
+
+		this.factory.addChildLayers(this.root, 6);
+		assertTrue(this.hasLethalAtDepth(this.root, 6));
+	}
+
+	@Test
+	public void testCardRng() throws HSException {
+		this.enemyHero.setHealth((byte)4);
+
+		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new AnimalCompanion()); // +3 (play, rng, attack) = 3
+
+		this.factory.addChildLayers(this.root, 5);
+		assertTrue(this.hasLethalAtDepth(this.root, 3));
+	}
+
+	@Test
+	public void testCardRngComplicated() throws HSException {
+		this.enemyHero.setHealth((byte)4);
+		this.startingBoard.placeMinion(PlayerSide.WAITING_PLAYER, new SenjinShieldmasta());
+
+		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new AnimalCompanion()); // +3 = 3
+		this.startingBoard.placeCardHand(PlayerSide.CURRENT_PLAYER, new ShatteredSunCleric()); // +2 = 5
 		this.startingBoard.placeMinion(PlayerSide.CURRENT_PLAYER, new ChillwindYeti()); // +1 = 6
 
 		this.factory.addChildLayers(this.root, 6);

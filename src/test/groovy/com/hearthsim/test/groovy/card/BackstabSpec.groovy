@@ -4,6 +4,7 @@ import static com.hearthsim.model.PlayerSide.CURRENT_PLAYER
 import static com.hearthsim.model.PlayerSide.WAITING_PLAYER
 import static org.junit.Assert.*
 
+import com.hearthsim.card.minion.concrete.StranglethornTiger
 import com.hearthsim.card.minion.concrete.WarGolem
 import com.hearthsim.card.spellcard.concrete.Backstab
 import com.hearthsim.model.BoardModel
@@ -23,7 +24,7 @@ class BackstabSpec extends CardSpec {
 				mana(0)
 			}
 			waitingPlayer {
-				field([[minion: WarGolem], [minion: WarGolem, health: 3]])
+				field([[minion: WarGolem], [minion: WarGolem, health: 3], [minion: StranglethornTiger]])
 			}
 		}
 
@@ -32,9 +33,8 @@ class BackstabSpec extends CardSpec {
 
 	def "can target undamaged minion"() {
 		def copiedBoard = startingBoard.deepCopy()
-		def target = root.data_.getCharacter(WAITING_PLAYER, 1)
 		def theCard = root.data_.getCurrentPlayerCardHand(0)
-		def ret = theCard.useOn(WAITING_PLAYER, target, root, null, null)
+		def ret = theCard.useOn(WAITING_PLAYER, 1, root, null, null)
 
 		expect:
 		assertEquals(root, ret);
@@ -51,9 +51,19 @@ class BackstabSpec extends CardSpec {
 
 	def "cannot target damaged minion"() {
 		def copiedBoard = startingBoard.deepCopy()
-		def target = root.data_.getCharacter(WAITING_PLAYER, 2)
 		def theCard = root.data_.getCurrentPlayerCardHand(0)
-		def ret = theCard.useOn(WAITING_PLAYER, target, root, null, null)
+		def ret = theCard.useOn(WAITING_PLAYER, 2, root, null, null)
+
+		expect:
+		assertNull(ret);
+
+		assertBoardEquals(copiedBoard, root.data_)
+	}
+	
+	def "follows normal targeting rules"() {
+		def copiedBoard = startingBoard.deepCopy()
+		def theCard = root.data_.getCurrentPlayerCardHand(0)
+		def ret = theCard.useOn(WAITING_PLAYER, 3, root, null, null)
 
 		expect:
 		assertNull(ret);

@@ -2,6 +2,7 @@ package com.hearthsim.card.minion.concrete;
 
 import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
+import com.hearthsim.card.minion.MinionTargetableBattlecry;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
@@ -9,21 +10,18 @@ import com.hearthsim.util.tree.HearthTreeNode;
 import java.util.EnumSet;
 
 
-public class IronforgeRifleman extends Minion {
+public class IronforgeRifleman extends Minion implements MinionTargetableBattlecry {
 	
 	private static final byte BATTLECRY_DAMAGE = 1;
 
 	private static final boolean HERO_TARGETABLE = true;
-	private static final boolean SUMMONED = false;
-	private static final boolean TRANSFORMED = false;
 	private static final byte SPELL_DAMAGE = 0;
 	
 	public IronforgeRifleman() {
         super();
         spellDamage_ = SPELL_DAMAGE;
         heroTargetable_ = HERO_TARGETABLE;
-        summoned_ = SUMMONED;
-        transformed_ = TRANSFORMED;
+
 	}
 	
 	@Override

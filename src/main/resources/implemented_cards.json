@@ -250,7 +250,7 @@
     {
         "name": "Damaged Golem",
         "class": "com.hearthsim.card.minion.concrete.DamagedGolem"
-    }, 
+    },
     {
         "name": "Dark Iron Dwarf",
         "class": "com.hearthsim.card.minion.concrete.DarkIronDwarf"
@@ -300,6 +300,10 @@
         "class": "com.hearthsim.card.spellcard.concrete.DrainLife"
     },
     {
+        "name": "Dread Corsair",
+        "class": "com.hearthsim.card.minion.concrete.DreadCorsair"
+    },
+    {
         "name": "Dread Infernal",
         "class": "com.hearthsim.card.minion.concrete.DreadInfernal"
     },
@@ -322,6 +326,10 @@
     {
         "name": "Elven Archer",
         "class": "com.hearthsim.card.minion.concrete.ElvenArcher"
+    },
+    {
+        "name": "Emperor Cobra",
+        "class": "com.hearthsim.card.minion.concrete.EmperorCobra"
     },
     {
         "name": "Equality",
@@ -396,6 +404,10 @@
         "class": "com.hearthsim.card.minion.concrete.FrostwolfWarlord"
     },
     {
+        "name": "Frothing Berserker",
+        "class": "com.hearthsim.card.minion.concrete.FrothingBerserker"
+    },
+    {
         "name": "Gnomish Inventor",
         "class": "com.hearthsim.card.minion.concrete.GnomishInventor"
     },
@@ -414,6 +426,10 @@
     {
         "name": "Grommash Hellscream",
         "class": "com.hearthsim.card.minion.concrete.GrommashHellscream"
+    },
+    {
+        "name": "Gruul",
+        "class": "com.hearthsim.card.minion.concrete.Gruul"
     },
     {
         "name": "Guardian of Kings",
@@ -490,6 +506,10 @@
     {
         "name": "Hunter's Mark",
         "class": "com.hearthsim.card.spellcard.concrete.HuntersMark"
+    },
+    {
+        "name": "Hyena",
+        "class": "com.hearthsim.card.minion.concrete.Hyena"
     },
     {
         "name": "Injured Blademaster",
@@ -572,6 +592,10 @@
         "class": "com.hearthsim.card.spellcard.concrete.LightningBolt"
     },
     {
+        "name": "Lightwarden",
+        "class": "com.hearthsim.card.minion.concrete.Lightwarden"
+    },
+    {
         "name": "Lightwell",
         "class": "com.hearthsim.card.minion.concrete.Lightwell"
     },
@@ -584,12 +608,24 @@
         "class": "com.hearthsim.card.minion.concrete.LordOfTheArena"
     },
     {
+        "name": "Maexxna",
+        "class": "com.hearthsim.card.minion.concrete.Maexxna"
+    },
+    {
         "name": "Magma Rager",
         "class": "com.hearthsim.card.minion.concrete.MagmaRager"
     },
     {
         "name": "Malygos",
         "class": "com.hearthsim.card.minion.concrete.Malygos"
+    },
+    {
+        "name": "Mana Addict",
+        "class": "com.hearthsim.card.minion.concrete.ManaAddict"
+    },
+    {
+        "name": "Mana Wyrm",
+        "class": "com.hearthsim.card.minion.concrete.ManaWyrm"
     },
     {
         "name": "Mark of the Wild",
@@ -634,6 +670,10 @@
     {
         "name": "Murloc Raider",
         "class": "com.hearthsim.card.minion.concrete.MurlocRaider"
+    },
+    {
+        "name": "Murloc Scout",
+        "class": "com.hearthsim.card.minion.concrete.MurlocScout"
     },
     {
         "name": "Murloc Tidehunter",
@@ -756,6 +796,10 @@
         "class": "com.hearthsim.card.spellcard.concrete.ShadowBolt"
     },
     {
+        "name": "Shade of Naxxramas",
+        "class": "com.hearthsim.card.minion.concrete.ShadeOfNaxxramas"
+    },
+    {
         "name": "Shadow Word: Death",
         "class": "com.hearthsim.card.spellcard.concrete.ShadowWordDeath"
     },
@@ -806,6 +850,10 @@
     {
         "name": "Slam",
         "class": "com.hearthsim.card.spellcard.concrete.Slam"
+    },
+    {
+        "name": "Slime",
+        "class": "com.hearthsim.card.minion.concrete.Slime"
     },
     {
         "name": "Sludge Belcher",
@@ -866,6 +914,10 @@
     {
         "name": "Stranglethorn Tiger",
         "class": "com.hearthsim.card.minion.concrete.StranglethornTiger"
+    },
+    {
+        "name": "Succubus",
+        "class": "com.hearthsim.card.minion.concrete.Succubus"
     },
     {
         "name": "Sunfury Protector",
@@ -1032,7 +1084,7 @@
         "class": "com.hearthsim.card.minion.concrete.BaineBloodhoof"
     },
     {
-        "name": "Mirror Image Minion",
+        "name": "Mirror Image",
         "class": "com.hearthsim.card.minion.concrete.MirrorImageMinion"
     },
     {

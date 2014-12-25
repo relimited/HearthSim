@@ -1,6 +1,7 @@
 package com.hearthsim.card.minion.concrete;
 
 import com.hearthsim.card.Card;
+import com.hearthsim.card.CardPlayBeginInterface;
 import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.spellcard.SpellCard;
@@ -9,19 +10,16 @@ import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
-public class ArchmageAntonidas extends Minion {
+public class ArchmageAntonidas extends Minion implements CardPlayBeginInterface {
 
 	private static final boolean HERO_TARGETABLE = true;
-	private static final boolean SUMMONED = false;
-	private static final boolean TRANSFORMED = false;
 	private static final byte SPELL_DAMAGE = 0;
 	
 	public ArchmageAntonidas() {
         super();
         spellDamage_ = SPELL_DAMAGE;
         heroTargetable_ = HERO_TARGETABLE;
-        summoned_ = SUMMONED;
-        transformed_ = TRANSFORMED;
+
 	}
 	/**
 	 * 
@@ -47,7 +45,7 @@ public class ArchmageAntonidas extends Minion {
 			boolean singleRealizationOnly)
 		throws HSException
 	{
-		HearthTreeNode toRet = super.onCardPlayBegin(thisCardPlayerSide, cardUserPlayerSide, usedCard, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
+		HearthTreeNode toRet = boardState;
 		if (thisCardPlayerSide != PlayerSide.CURRENT_PLAYER)
 			return toRet;
 		if (isInHand_)

@@ -2,23 +2,20 @@ package com.hearthsim.card.minion.concrete;
 
 import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.exception.HSInvalidPlayerIndexException;
+import com.hearthsim.card.minion.MinionDeadInterface;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
-public class FlesheatingGhoul extends Minion {
+public class FlesheatingGhoul extends Minion implements MinionDeadInterface {
 
 	private static final boolean HERO_TARGETABLE = true;
-	private static final boolean SUMMONED = false;
-	private static final boolean TRANSFORMED = false;
 	private static final byte SPELL_DAMAGE = 0;
 	
 	public FlesheatingGhoul() {
         super();
         spellDamage_ = SPELL_DAMAGE;
         heroTargetable_ = HERO_TARGETABLE;
-        summoned_ = SUMMONED;
-        transformed_ = TRANSFORMED;
+
 	}
 	
 	
@@ -41,7 +38,6 @@ public class FlesheatingGhoul extends Minion {
 			HearthTreeNode boardState,
 			Deck deckPlayer0,
 			Deck deckPlayer1)
-		throws HSInvalidPlayerIndexException
 	{
 		this.attack_ += 1;
 		return boardState;

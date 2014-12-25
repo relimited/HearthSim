@@ -1,9 +1,12 @@
 package com.hearthsim.card.minion.concrete;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.hearthsim.card.Deck;
-import com.hearthsim.card.minion.Beast;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
+import com.hearthsim.card.minion.MinionUntargetableBattlecry;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
@@ -12,30 +15,19 @@ import com.hearthsim.util.factory.BoardStateFactoryBase;
 import com.hearthsim.util.tree.HearthTreeNode;
 import com.hearthsim.util.tree.RandomEffectNode;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
-public class StampedingKodo extends Beast {
+public class StampedingKodo extends Minion implements MinionUntargetableBattlecry {
 
 	private static final boolean HERO_TARGETABLE = true;
-	private static final boolean SUMMONED = false;
-	private static final boolean TRANSFORMED = false;
 	private static final byte SPELL_DAMAGE = 0;
 	
 	public StampedingKodo() {
         super();
         spellDamage_ = SPELL_DAMAGE;
         heroTargetable_ = HERO_TARGETABLE;
-        summoned_ = SUMMONED;
-        transformed_ = TRANSFORMED;
+
+        this.tribe = MinionTribe.BEAST;
 	}
 
-	@Override
-	public EnumSet<BattlecryTargetType> getBattlecryTargets() {
-		return EnumSet.of(BattlecryTargetType.NO_TARGET);
-	}
-	
 	/**
 	 * Battlecry: Destroy
 	 */

@@ -1,21 +1,19 @@
 package com.hearthsim.card.minion.concrete;
 
-import com.hearthsim.card.minion.Beast;
+import com.hearthsim.card.minion.Minion;
 import com.hearthsim.event.deathrattle.DeathrattleSummonMinionAction;
 
-public class SavannahHighmane extends Beast {
+public class SavannahHighmane extends Minion {
 
 	private static final boolean HERO_TARGETABLE = true;
-	private static final boolean SUMMONED = false;
-	private static final boolean TRANSFORMED = false;
 	private static final byte SPELL_DAMAGE = 0;
 	
 	public SavannahHighmane() {
         super();
         spellDamage_ = SPELL_DAMAGE;
         heroTargetable_ = HERO_TARGETABLE;
-        summoned_ = SUMMONED;
-        transformed_ = TRANSFORMED;
+
+        this.tribe = MinionTribe.BEAST;
         deathrattleAction_ = new DeathrattleSummonMinionAction(Hyena.class, 2);
 	}
 

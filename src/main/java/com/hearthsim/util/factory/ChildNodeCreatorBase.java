@@ -8,6 +8,8 @@ import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
+import com.hearthsim.util.HearthAction;
+import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.tree.HearthTreeNode;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
@@ -62,6 +64,7 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 		// If no nodes were created then nothing could attack. If something could attack, we want to explicitly do nothing in its own node.
 		if(!nodes.isEmpty()) {
 			newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+			newState.setAction(new HearthAction(Verb.DO_NOT_ATTACK));
 			for(Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(newState).getMinions()) {
 				minion.hasAttacked(true);
 			}
@@ -77,7 +80,6 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 		ArrayList<HearthTreeNode> nodes = new ArrayList<HearthTreeNode>();
 
 		Minion targetMinion = null;
-		Minion copiedTargetMinion = null;
 		Card card = null;
 		Card copiedCard = null;
 		HearthTreeNode newState = null;
@@ -94,10 +96,9 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 
 					if(card.canBeUsedOn(PlayerSide.CURRENT_PLAYER, targetMinion, boardStateNode.data_)) {
 						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
-						copiedTargetMinion = newState.data_.getCurrentPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
-						newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, copiedTargetMinion, newState,
-								deckPlayer0_, deckPlayer1_, false);
+						newState = copiedCard.useOn(PlayerSide.CURRENT_PLAYER, targetIndex, newState,
+								deckPlayer0_, deckPlayer1_);
 						if(newState != null) {
 							newState.setAction(new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, targetIndex));
 							nodes.add(newState);
@@ -111,10 +112,9 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 
 					if(card.canBeUsedOn(PlayerSide.WAITING_PLAYER, targetMinion, boardStateNode.data_)) {
 						newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
-						copiedTargetMinion = newState.data_.getWaitingPlayerCharacter(targetIndex);
 						copiedCard = newState.data_.getCurrentPlayerCardHand(cardIndex);
-						newState = copiedCard.useOn(PlayerSide.WAITING_PLAYER, copiedTargetMinion, newState,
-								deckPlayer0_, deckPlayer1_, false);
+						newState = copiedCard.useOn(PlayerSide.WAITING_PLAYER, targetIndex, newState,
+								deckPlayer0_, deckPlayer1_);
 						if(newState != null) {
 							newState.setAction(new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, cardIndex, PlayerSide.CURRENT_PLAYER, targetIndex));
 							nodes.add(newState);
@@ -127,6 +127,7 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 		// If no nodes were created then nothing could be played. If something could be played, we want to explicitly do nothing in its own node.
 		if(!nodes.isEmpty()) {
 			newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+			newState.setAction(new HearthAction(Verb.DO_NOT_USE_CARD));
 			for(Card c : newState.data_.getCurrentPlayerHand()) {
 				c.hasBeenUsed(true);
 			}
@@ -186,6 +187,7 @@ public class ChildNodeCreatorBase implements ChildNodeCreator {
 		if(!nodes.isEmpty()) {
 			// Case1: Decided not to use the hero ability
 			newState = new HearthTreeNode(boardStateNode.data_.deepCopy());
+			newState.setAction(new HearthAction(Verb.DO_NOT_USE_HEROPOWER));
 			newState.data_.getCurrentPlayerHero().hasBeenUsed(true);
 			nodes.add(newState);
 		}

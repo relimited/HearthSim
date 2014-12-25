@@ -71,17 +71,17 @@ public class BoardModel implements DeepCopyable<BoardModel> {
     }
 
     public BoardModel() {
-    	this(new PlayerModel(0, "player0", new TestHero("hero0", (byte)30), new Deck()),
-    		 new PlayerModel(1, "player1", new TestHero("hero1", (byte)30), new Deck()));
+    	this(new PlayerModel((byte)0, "player0", new TestHero("hero0", (byte)30), new Deck()),
+    		 new PlayerModel((byte)1, "player1", new TestHero("hero1", (byte)30), new Deck()));
     }
 
     public BoardModel(Deck deckPlayer0, Deck deckPlayer1) {
-    	this(new PlayerModel(0, "player0", new TestHero("hero0", (byte)30), deckPlayer0),
-    		 new PlayerModel(1, "player1", new TestHero("hero1", (byte)30), deckPlayer1));
+    	this(new PlayerModel((byte)0, "player0", new TestHero("hero0", (byte)30), deckPlayer0),
+    		 new PlayerModel((byte)1, "player1", new TestHero("hero1", (byte)30), deckPlayer1));
     }
     
     public BoardModel(Hero p0_hero, Hero p1_hero) {
-    	this(new PlayerModel(0, "p0",p0_hero,new Deck()), new PlayerModel(1, "p1",p1_hero,new Deck()));
+    	this(new PlayerModel((byte)0, "p0",p0_hero,new Deck()), new PlayerModel((byte)1, "p1",p1_hero,new Deck()));
     }
     
     public BoardModel(PlayerModel currentPlayerModel, PlayerModel waitingPlayerModel) {
@@ -270,7 +270,7 @@ public class BoardModel implements DeepCopyable<BoardModel> {
         modelForSide(side).placeCardDeck(card);
     }
 
-    public Hero getHero(PlayerSide playerSide) throws HSInvalidPlayerIndexException {
+    public Hero getHero(PlayerSide playerSide) {
         return modelForSide(playerSide).getHero();
     }
 
@@ -290,7 +290,7 @@ public class BoardModel implements DeepCopyable<BoardModel> {
      * @param numCards Number of cards to draw.
      * @throws HSInvalidPlayerIndexException
      */
-    public void drawCardFromWaitingPlayerDeck(int numCards) throws HSInvalidPlayerIndexException {
+    public void drawCardFromWaitingPlayerDeck(int numCards) {
         //This minion is an enemy minion.  Let's draw a card for the enemy.  No need to use a StopNode for enemy card draws.
         for (int indx = 0; indx < numCards; ++indx) {
         	this.getWaitingPlayer().drawNextCardFromDeck();
@@ -298,7 +298,7 @@ public class BoardModel implements DeepCopyable<BoardModel> {
     }
 
     /**
-     * Draw a card from a deck and place it in the hand
+     * Draw a card from a deck and place it in the hand without using a CardDrawNode
      *
      * Note: It is almost always correct to use CardDrawNode instead of this function!!!!
      *
@@ -307,7 +307,6 @@ public class BoardModel implements DeepCopyable<BoardModel> {
      * @throws HSInvalidPlayerIndexException
      */
     public void drawCardFromCurrentPlayerDeck(int numCards) throws HSInvalidPlayerIndexException {
-        //This minion is an enemy minion.  Let's draw a card for the enemy.  No need to use a StopNode for enemy card draws.
         for (int indx = 0; indx < numCards; ++indx) {
         	this.getCurrentPlayer().drawNextCardFromDeck();
         }
@@ -428,7 +427,6 @@ public class BoardModel implements DeepCopyable<BoardModel> {
     	currentPlayer.resetMana();
     	waitingPlayer.resetMana();
     }
-
 
     @Override
     public boolean equals(Object other)

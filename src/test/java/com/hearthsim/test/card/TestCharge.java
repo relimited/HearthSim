@@ -47,8 +47,8 @@ public class TestCharge {
 		}
 	
 		deck = new Deck(cards);
-		board.data_.getCurrentPlayer().setMana(10);
-		board.data_.getCurrentPlayer().setMaxMana(10);
+		board.data_.getCurrentPlayer().setMana((byte)10);
+		board.data_.getCurrentPlayer().setMaxMana((byte)10);
 	}
 		
 	@Test
@@ -56,9 +56,8 @@ public class TestCharge {
 		Charge fb = new Charge();
 		board.data_.placeCardHandCurrentPlayer(fb);
 		
-		Minion target = board.data_.getCharacter(PlayerSide.CURRENT_PLAYER, 1);
 		Card theCard = board.data_.getCurrentPlayerCardHand(0);
-		HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, target, board, deck, null);
+		HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 1, board, deck, null);
 		assertFalse(ret == null);
 		assertEquals(board.data_.getNumCards_hand(), 0);
 		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getNumMinions(), 2);

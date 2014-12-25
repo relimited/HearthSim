@@ -2,7 +2,7 @@ package com.hearthsim.card.minion.concrete;
 
 import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.Murloc;
+import com.hearthsim.card.minion.MinionPlacedInterface;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.exception.HSInvalidPlayerIndexException;
 import com.hearthsim.model.BoardModel;
@@ -10,19 +10,17 @@ import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 
-public class GrimscaleOracle extends Murloc {
+public class GrimscaleOracle extends Minion implements MinionPlacedInterface {
 
 	private static final boolean HERO_TARGETABLE = true;
-	private static final boolean SUMMONED = false;
-	private static final boolean TRANSFORMED = false;
 	private static final byte SPELL_DAMAGE = 0;
 	
 	public GrimscaleOracle() {
         super();
         spellDamage_ = SPELL_DAMAGE;
         heroTargetable_ = HERO_TARGETABLE;
-        summoned_ = SUMMONED;
-        transformed_ = TRANSFORMED;
+
+        this.tribe = MinionTribe.MURLOC;
 	}
 	
 	/**
@@ -51,24 +49,19 @@ public class GrimscaleOracle extends Murloc {
 	{
 		HearthTreeNode toRet = super.placeMinion(targetSide, targetMinion, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
 		if (toRet != null) {
-			
 			for (Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(toRet).getMinions()) {
-				if (minion instanceof Murloc && minion != this) {
+				if (minion.getTribe() == MinionTribe.MURLOC && minion != this) {
 					minion.setAuraAttack((byte)(minion.getAuraAttack() + 1));
 				}
 			}
 			
 			for (Minion minion : PlayerSide.WAITING_PLAYER.getPlayer(toRet).getMinions()) {
-				if (minion instanceof Murloc && minion != this) {
+				if (minion.getTribe() == MinionTribe.MURLOC && minion != this) {
 					minion.setAuraAttack((byte)(minion.getAuraAttack() + 1));
 				}
 			}
-
-			return boardState;
-
-		} else {
-			return null;
 		}
+		return toRet;
 	}
 	
 	/**
@@ -86,12 +79,12 @@ public class GrimscaleOracle extends Murloc {
 	public void silenced(PlayerSide thisPlayerSide, BoardModel boardState) throws HSInvalidPlayerIndexException {
 		if (!silenced_) {
 			for (Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(boardState).getMinions()) {
-				if (minion instanceof Murloc && minion != this) {
+				if (minion.getTribe() == MinionTribe.MURLOC && minion != this) {
 					minion.setAuraAttack((byte)(minion.getAuraAttack() - 1));
 				}
 			}
 			for (Minion minion : PlayerSide.WAITING_PLAYER.getPlayer(boardState).getMinions()) {
-				if (minion instanceof Murloc && minion != this) {
+				if (minion.getTribe() == MinionTribe.MURLOC && minion != this) {
 					minion.setAuraAttack((byte)(minion.getAuraAttack() - 1));
 				}
 			}
@@ -102,9 +95,8 @@ public class GrimscaleOracle extends Murloc {
 	private HearthTreeNode doBuffs(
             Minion targetMinion,
             HearthTreeNode boardState)
-		throws HSInvalidPlayerIndexException
 	{
-        if (!silenced_ && targetMinion instanceof Murloc && targetMinion != this) {
+        if (!silenced_ && targetMinion.getTribe() == MinionTribe.MURLOC && targetMinion != this) {
             targetMinion.setAuraAttack((byte) (targetMinion.getAuraAttack() + 1));
         }
         return boardState;
@@ -118,9 +110,8 @@ public class GrimscaleOracle extends Murloc {
 			HearthTreeNode boardState,
 			Deck deckPlayer0,
 			Deck deckPlayer1)
-		throws HSInvalidPlayerIndexException
 	{
-		HearthTreeNode toRet = super.minionPlacedEvent(thisMinionPlayerSide, summonedMinionPlayerSide, summonedMinion, boardState, deckPlayer0, deckPlayer1);
+		HearthTreeNode toRet = boardState;
 		return this.doBuffs(summonedMinion, toRet);
 	}	
 }

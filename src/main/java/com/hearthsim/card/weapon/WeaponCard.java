@@ -5,44 +5,29 @@ import com.hearthsim.card.Deck;
 import com.hearthsim.card.ImplementedCardList;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSException;
-import com.hearthsim.exception.HSInvalidPlayerIndexException;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public abstract class WeaponCard extends Card {
 
-	byte weaponCharge_;
-	byte weaponDamage_;
+	byte weaponCharge;
+	byte weaponDamage;
 
     public WeaponCard(){
         ImplementedCardList cardList = ImplementedCardList.getInstance();
         ImplementedCardList.ImplementedCard implementedCard = cardList.getCardForClass(this.getClass());
-        weaponCharge_ = (byte) implementedCard.durability;
-        weaponDamage_ = (byte) implementedCard.attack_;
+        weaponCharge = (byte) implementedCard.durability;
+        weaponDamage = (byte) implementedCard.attack_;
         name_ = implementedCard.name_;
         baseManaCost = (byte) implementedCard.mana_;
         isInHand_ = true;
     }
 
 	@Override
-	public Card deepCopy() {
-        WeaponCard weapon = null;
-        try {
-            weapon = getClass().newInstance();
-        } catch (InstantiationException e) {
-            log.error("instantiation error", e);
-        } catch (IllegalAccessException e) {
-            log.error("illegal access error", e);
-        }
-        if (weapon == null) {
-            throw new RuntimeException("unable to instantiate weapon.");
-        }
-        weapon.name_ = name_;
-        weapon.baseManaCost = baseManaCost;
-        weapon.weaponCharge_ = weaponCharge_;
-        weapon.weaponDamage_ = weaponDamage_;
-        weapon.hasBeenUsed = hasBeenUsed;
-
+	public WeaponCard deepCopy() {
+        WeaponCard weapon = (WeaponCard)super.deepCopy();
+        weapon.weaponCharge = weaponCharge;
+        weapon.weaponDamage = weaponDamage;
         return weapon;
 	}
 	
@@ -63,11 +48,11 @@ public abstract class WeaponCard extends Card {
 		   return false;
 		}
 
-		if (this.weaponDamage_ != ((WeaponCard)other).weaponDamage_) {
+		if (this.weaponDamage != ((WeaponCard)other).weaponDamage) {
 			return false;
 		}
 
-		if (this.weaponCharge_ != ((WeaponCard)other).weaponCharge_) {
+		if (this.weaponCharge != ((WeaponCard)other).weaponCharge) {
 			return false;
 		}
 
@@ -77,8 +62,8 @@ public abstract class WeaponCard extends Card {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + weaponCharge_;
-        result = 31 * result + weaponDamage_;
+        result = 31 * result + weaponCharge;
+        result = 31 * result + weaponDamage;
         return result;
     }
 
@@ -123,23 +108,23 @@ public abstract class WeaponCard extends Card {
 		return super.use_core(side, targetMinion, toRet, deckPlayer0, deckPlayer1, singleRealizationOnly);
 	}
 
-    public byte getWeaponCharge_() {
-        return weaponCharge_;
+    public byte getWeaponCharge() {
+        return weaponCharge;
     }
 
-    public void setWeaponCharge_(byte weaponCharge_) {
-        this.weaponCharge_ = weaponCharge_;
+    public void setWeaponCharge_(byte weaponCharge) {
+        this.weaponCharge = weaponCharge;
     }
 
-    public byte getWeaponDamage_() {
-        return weaponDamage_;
+    public byte getWeaponDamage() {
+        return weaponDamage;
     }
 
-    public void setWeaponDamage_(byte weaponDamage_) {
-        this.weaponDamage_ = weaponDamage_;
+    public void setWeaponDamage(byte weaponDamage) {
+        this.weaponDamage = weaponDamage;
     }
 
-    public void onAttack(PlayerSide targetMinionPlayerSide, Minion targetMinion, HearthTreeNode toRet, Deck deckPlayer0, Deck deckPlayer1) throws HSInvalidPlayerIndexException {
+    public void onAttack(PlayerSide targetMinionPlayerSide, Minion targetMinion, HearthTreeNode toRet, Deck deckPlayer0, Deck deckPlayer1) throws HSException {
 
     }
 
