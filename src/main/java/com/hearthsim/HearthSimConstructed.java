@@ -22,35 +22,6 @@ import java.nio.file.Path;
  */
 public class HearthSimConstructed extends HearthSimBase {
 
-<<<<<<< HEAD
-	Path deckListFilePath0_;
-	Path deckListFilePath1_;
-		
-	HearthSimConstructed(Path setupFilePath) throws IOException, HSInvalidCardException, HSInvalidParamFileException, HSParamNotFoundException {
-		super(setupFilePath);
-		ParamFile masterParam = new ParamFile(setupFilePath);
-		deckListFilePath0_ = FileSystems.getDefault().getPath(rootPath_.toString(), masterParam.getString("deckListFilePath0"));
-		deckListFilePath1_ = FileSystems.getDefault().getPath(rootPath_.toString(), masterParam.getString("deckListFilePath1"));
-	}
-	
-	@Override
-	public GameResult runSingleGame(int gameId) throws IOException, HSException {
-	
-		DeckListFile deckList0 = new DeckListFile(deckListFilePath0_);
-		DeckListFile deckList1 = new DeckListFile(deckListFilePath1_);
-
-		Hero hero0 = deckList0.getHero();
-		Hero hero1 = deckList1.getHero();
-
-		Deck deck0 = deckList0.getDeck();
-		Deck deck1 = deckList1.getDeck();
-		
-		ArtificialPlayer ai0 = new BruteForceSearchAI(this.aiParamFilePath0_);
-		ArtificialPlayer ai1 = new BruteForceSearchAI(this.aiParamFilePath1_);
-		 //gameId % 2
-		return super.runSingleGame(ai0, hero0, deck0, ai1, hero1, deck1, gameId % 2);
-	}
-=======
     private Path deckListFilePath0_;
     private Path deckListFilePath1_;
 
@@ -78,5 +49,4 @@ public class HearthSimConstructed extends HearthSimBase {
 
         return super.runSingleGame(ai0, hero0, deck0, ai1, hero1, deck1, gameId % 2);
     }
->>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
 }

@@ -56,7 +56,6 @@ public class GameDetailedRecord implements GameRecord {
         return boardModel.modelForSide(otherPlayer).getHero().getHealth();
     }
 
-<<<<<<< HEAD
 	public JSONObject getActions(int playerId, int turn, int currentPlayerId){
 		return null;
 	}
@@ -72,7 +71,7 @@ public class GameDetailedRecord implements GameRecord {
 		// TODO Auto-generated method stub
 		
 	}
-=======
+
     @Override
     public int getHeroArmor(int playerId, int turn, int currentPlayerId) {
         BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
@@ -107,5 +106,4 @@ public class GameDetailedRecord implements GameRecord {
             return PlayerSide.WAITING_PLAYER;
         }
     }
->>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
 }

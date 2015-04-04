@@ -23,7 +23,7 @@ import java.util.Iterator;
  */
 public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel.CharacterLocation> {
 
-//    private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+    private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
 
     private final PlayerModel currentPlayer;
     private final PlayerModel waitingPlayer;
@@ -199,13 +199,11 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
 
     public Minion getCharacter(PlayerSide playerSide, int index) {
         PlayerModel playerModel = modelForSide(playerSide);
-<<<<<<< HEAD
-        if(index < 0 || index - 1 > playerModel.getMinions().size()){
-        	return null;
-        }
-        return index == 0 ? playerModel.getHero() : playerModel.getMinions().get(index - 1);
+        
+		return playerModel.getCharacter(index);
     }
-
+    /*
+     * Below methods have been depreciated.  Look over the logger and see how to get the relevant information
     public Minion getCurrentPlayerCharacter(int index) {
         return getMinionForCharacter(PlayerSide.CURRENT_PLAYER, index);
     }
@@ -217,11 +215,8 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
     public Minion getMinionForCharacter(PlayerSide playerSide, int index) {
         PlayerModel playerModel = modelForSide(playerSide);
         return index == 0 ? playerModel.getHero() : playerModel.getMinions().get(index - 1);
-=======
-        return playerModel.getCharacter(index);
->>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
     }
-
+	*/
     //-----------------------------------------------------------------------------------
     // Various ways to put a minion onto board
     //-----------------------------------------------------------------------------------

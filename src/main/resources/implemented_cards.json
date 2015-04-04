@@ -681,13 +681,12 @@
         "class": "com.hearthsim.card.minion.concrete.KingKrush"
     },
     {
-<<<<<<< HEAD
+	"name": "King Mukla",
+        "class": "com.hearthsim.card.minion.concrete.KingMukla"
+    },
+    {
         "name": "Knife Juggler",
         "class": "com.hearthsim.card.minion.concrete.KnifeJuggler"
-=======
-        "name": "King Mukla",
-        "class": "com.hearthsim.card.minion.concrete.KingMukla"
->>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
     },
     {
         "name": "Kobold Geomancer",
