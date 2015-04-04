@@ -1,10 +1,8 @@
 package com.hearthsim.results;
 
-import com.hearthsim.exception.HSInvalidPlayerIndexException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthActionBoardPair;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -12,73 +10,53 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class GameDetailedRecord implements GameRecord {
-	
-	ArrayList<TreeMap<Integer, BoardModel>> boards_;
-	
-	public GameDetailedRecord() {
-		boards_ = new ArrayList<TreeMap<Integer, BoardModel>>(2);
-		boards_.add(new TreeMap<Integer, BoardModel>());
-		boards_.add(new TreeMap<Integer, BoardModel>());
-	}
-	
-	@Override
-	public void put(int turn, PlayerSide activePlayerSide, BoardModel board, List<HearthActionBoardPair> plays) {
-        int index = board.getIndexOfPlayer(activePlayerSide);
-        boards_.get(index).put(turn, board);
-	}
-	
-	@Override
-	public int getRecordLength(int playerId) {
-		return boards_.get(playerId).size();
-	}
 
-	@Override
-    public int getNumMinions(int playerId, int turn, int currentPlayerId) {
-        BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
-        PlayerSide playerByIndex = boardModel.getPlayerByIndex(playerId);
-        PlayerSide otherPlayer = playerByIndex.getOtherPlayer();
-        return otherPlayer.getPlayer(boardModel).getNumMinions();
+    private final ArrayList<TreeMap<Integer, BoardModel>> boards_;
+
+    public GameDetailedRecord() {
+        boards_ = new ArrayList<>(2);
+        boards_.add(new TreeMap<>());
+        boards_.add(new TreeMap<>());
     }
 
-	@Override
-	public int getNumCardsInHand(int playerId, int turn, int currentPlayerId) {
-		try {
-            BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
-            PlayerSide playerByIndex = boardModel.getPlayerByIndex(playerId);
-            PlayerSide otherPlayer = playerByIndex.getOtherPlayer();
+    @Override
+    public void put(int turn, PlayerSide activePlayerSide, BoardModel board, List<HearthActionBoardPair> plays) {
+        int index = GameDetailedRecord.getIndexOfPlayer(activePlayerSide);
+        boards_.get(index).put(turn, board);
+    }
 
-            return boardModel.getNumCards_hand(otherPlayer);
-		} catch (HSInvalidPlayerIndexException e) {
-			return 0;
-		}
-	}
+    @Override
+    public int getRecordLength(int playerId) {
+        return boards_.get(playerId).size();
+    }
 
-	@Override
-	public int getHeroHealth(int playerId, int turn, int currentPlayerId) {
+    @Deprecated
+    @Override
+    public int getNumMinions(int playerId, int turn, int currentPlayerId) {
         BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
-        PlayerSide playerByIndex = boardModel.getPlayerByIndex(playerId);
+        PlayerSide playerByIndex = GameDetailedRecord.getPlayerByIndex(playerId);
         PlayerSide otherPlayer = playerByIndex.getOtherPlayer();
-        return boardModel.getHero(otherPlayer).getHealth();
-	}
+        return boardModel.modelForSide(otherPlayer).getNumMinions();
+    }
 
-	@Override
-	public int getHeroArmor(int playerId, int turn, int currentPlayerId) {
+    @Override
+    public int getNumCardsInHand(int playerId, int turn, int currentPlayerId) {
         BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
-        PlayerSide playerByIndex = boardModel.getPlayerByIndex(playerId);
+        PlayerSide playerByIndex = GameDetailedRecord.getPlayerByIndex(playerId);
         PlayerSide otherPlayer = playerByIndex.getOtherPlayer();
-        return boardModel.getHero(otherPlayer).getArmor();
-	}
 
-	@Override
-	public JSONObject toJSON() {
-		JSONObject json = new JSONObject();
-		return json;
-	}
-	
-	public BoardModel get(int turn, int playerID) {
-		return boards_.get(playerID).get(turn);
-	}
+        return boardModel.getNumCards_hand(otherPlayer);
+    }
 
+    @Override
+    public int getHeroHealth(int playerId, int turn, int currentPlayerId) {
+        BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
+        PlayerSide playerByIndex = GameDetailedRecord.getPlayerByIndex(playerId);
+        PlayerSide otherPlayer = playerByIndex.getOtherPlayer();
+        return boardModel.modelForSide(otherPlayer).getHero().getHealth();
+    }
+
+<<<<<<< HEAD
 	public JSONObject getActions(int playerId, int turn, int currentPlayerId){
 		return null;
 	}
@@ -94,4 +72,40 @@ public class GameDetailedRecord implements GameRecord {
 		// TODO Auto-generated method stub
 		
 	}
+=======
+    @Override
+    public int getHeroArmor(int playerId, int turn, int currentPlayerId) {
+        BoardModel boardModel = boards_.get(currentPlayerId).get(turn);
+        PlayerSide playerByIndex = GameDetailedRecord.getPlayerByIndex(playerId);
+        PlayerSide otherPlayer = playerByIndex.getOtherPlayer();
+        return boardModel.modelForSide(otherPlayer).getHero().getArmor();
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        return new JSONObject();
+    }
+
+    public BoardModel get(int turn, int playerID) {
+        return boards_.get(playerID).get(turn);
+    }
+
+    // TODO: remove asap, simply to aid in refactoring
+    private static int getIndexOfPlayer(PlayerSide playerSide) {
+        if (playerSide == PlayerSide.CURRENT_PLAYER){
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    // TODO: remove asap, simply to aid in refactoring
+    private static PlayerSide getPlayerByIndex(int index) {
+        if (index == 0){
+            return PlayerSide.CURRENT_PLAYER;
+        } else {
+            return PlayerSide.WAITING_PLAYER;
+        }
+    }
+>>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
 }

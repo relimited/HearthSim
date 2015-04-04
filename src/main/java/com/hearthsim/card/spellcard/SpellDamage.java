@@ -1,106 +1,93 @@
 package com.hearthsim.card.spellcard;
 
 import com.hearthsim.card.Deck;
+import com.hearthsim.card.ImplementedCardList;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.exception.HSException;
+import com.hearthsim.event.effect.SpellEffectCharacterDamage;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 import org.json.JSONObject;
 
 public class SpellDamage extends SpellCard {
 
-	protected byte damage_;
+    protected byte damage_;
 
-	public SpellDamage(byte baseManaCost, byte damage, boolean hasBeenUsed) {
-		super(baseManaCost, hasBeenUsed);
-		damage_ = damage;
-	}
+    protected SpellEffectCharacterDamage effect;
 
-	public SpellDamage() {
-		super((byte)0, false);
-		damage_ = 0;
-	}
+    public SpellDamage() {
+        super();
+    }
 
-	public byte getAttack() {
-		return damage_;
-	}
+    // damage is set during card import so we need to lazy load this for each card
+    @Override
+    public SpellEffectCharacterDamage getTargetableEffect() {
+        if (this.effect == null) {
+            this.effect = new SpellEffectCharacterDamage(damage_);
+        }
+        return this.effect;
+    }
 
-	@Override
-	public boolean equals(Object other) {
+    @Deprecated
+    public SpellDamage(byte baseManaCost, byte damage, boolean hasBeenUsed) {
+        super(baseManaCost, hasBeenUsed);
+        damage_ = damage;
+    }
 
-		if(!super.equals(other)) {
-			return false;
-		}
+    @Override
+    public void initFromImplementedCard(ImplementedCardList.ImplementedCard implementedCard) {
+        super.initFromImplementedCard(implementedCard);
 
-		if(this.damage_ != ((SpellDamage)other).damage_) {
-			return false;
-		}
+        this.damage_ = (byte) implementedCard.spellEffect;
+    }
 
-		return true;
-	}
+    public byte getAttack() {
+        return damage_;
+    }
 
-	@Override
-	public int hashCode() {
-		int result = super.hashCode();
-		result = 31 * result + damage_;
-		return result;
-	}
+    @Override
+    public boolean equals(Object other) {
 
-	/**
-	 * Attack using this spell
-	 * 
-	 * @param targetMinionPlayerSide
-	 * @param targetMinion The target minion
-	 * @param boardState The BoardState before this card has performed its action. It will be manipulated and returned.
-	 * @param deckPlayer0 The deck of player0
-	 * @return The boardState is manipulated and returned
-	 */
-	public HearthTreeNode attack(PlayerSide targetMinionPlayerSide, Minion targetMinion, HearthTreeNode boardState,
-			Deck deckPlayer0, Deck deckPlayer1) throws HSException {
-		return targetMinion.takeDamage(damage_, PlayerSide.CURRENT_PLAYER, targetMinionPlayerSide, boardState,
-				deckPlayer0, deckPlayer1, true, false);
-	}
+        if (!super.equals(other)) {
+            return false;
+        }
 
-	public HearthTreeNode attackAllMinionsOnSide(PlayerSide targetMinionPlayerSide, HearthTreeNode boardState,
-			Deck deckPlayer0, Deck deckPlayer1) throws HSException {
-		if(boardState != null) {
-			for(Minion minion : targetMinionPlayerSide.getPlayer(boardState).getMinions()) {
-				boardState = this.attack(targetMinionPlayerSide, minion, boardState, deckPlayer0, deckPlayer1);
-			}
-		}
-		return boardState;
-	}
+        if (this.damage_ != ((SpellDamage)other).damage_) {
+            return false;
+        }
 
-	/**
-	 * Use the card on the given target
-	 * This is the core implementation of card's ability
-	 * 
-	 * @param side
-	 * @param boardState The BoardState before this card has performed its action. It will be manipulated and returned.
-	 * @return The boardState is manipulated and returned
-	 */
-	@Override
-	protected HearthTreeNode use_core(PlayerSide side, Minion targetMinion, HearthTreeNode boardState,
-			Deck deckPlayer0, Deck deckPlayer1, boolean singleRealizationOnly) throws HSException {
-		if(this.hasBeenUsed()) {
-			// Card is already used, nothing to do
-			return null;
-		}
+        return true;
+    }
 
-		this.hasBeenUsed(true);
-		HearthTreeNode toRet = boardState;
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + damage_;
+        return result;
+    }
 
-		toRet = this.attack(side, targetMinion, toRet, deckPlayer0, deckPlayer1);
-		toRet.data_.getCurrentPlayer().subtractMana(this.getManaCost(PlayerSide.CURRENT_PLAYER, toRet));
-		toRet.data_.removeCard_hand(this);
+    /**
+     * Attack using this spell
+     *
+     * @param targetMinionPlayerSide
+     * @param targetMinion The target minion
+     * @param boardState The BoardState before this card has performed its action. It will be manipulated and returned.
+     * @return The boardState is manipulated and returned
+     */
+    @Deprecated
+    protected final HearthTreeNode attack(PlayerSide targetMinionPlayerSide, Minion targetMinion, HearthTreeNode boardState) {
+        return this.getTargetableEffect().applyEffect(PlayerSide.CURRENT_PLAYER, this, targetMinionPlayerSide, targetMinion, boardState);
+    }
 
-		return toRet;
-	}
+    @Deprecated
+    public final HearthTreeNode attack(PlayerSide targetMinionPlayerSide, Minion targetMinion, HearthTreeNode boardState,
+                                 Deck deckPlayer0, Deck deckPlayer1) {
+        return this.attack(targetMinionPlayerSide, targetMinion, boardState);
+    }
 
-	@Override
-	public JSONObject toJSON() {
-		JSONObject json = super.toJSON();
-		json.put("type", "SpellDamage");
-		return json;
-	}
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
+        json.put("type", "SpellDamage");
+        return json;
+    }
 }

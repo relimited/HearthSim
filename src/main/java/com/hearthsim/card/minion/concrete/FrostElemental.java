@@ -1,47 +1,42 @@
 package com.hearthsim.card.minion.concrete;
 
-import java.util.EnumSet;
-
-import com.hearthsim.card.Deck;
+import com.hearthsim.card.Card;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.minion.MinionTargetableBattlecry;
-import com.hearthsim.exception.HSException;
+import com.hearthsim.event.CharacterFilterTargetedBattlecry;
+import com.hearthsim.event.effect.CardEffectCharacter;
+import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class FrostElemental extends Minion implements MinionTargetableBattlecry {
 
-    private static final boolean HERO_TARGETABLE = true;
-    private static final byte SPELL_DAMAGE = 0;
+    /**
+     * Battlecry: Freeze a character
+     */
+    private final static CharacterFilterTargetedBattlecry filter = new CharacterFilterTargetedBattlecry() {
+        protected boolean includeEnemyHero() { return true; }
+        protected boolean includeEnemyMinions() { return true; }
+//        protected boolean includeOwnHero() { return true; }
+//        protected boolean includeOwnMinions() { return true; }
+    };
+
+    private final static CardEffectCharacter battlecryAction = CardEffectCharacter.FREEZE;
 
     public FrostElemental() {
         super();
-        spellDamage_ = SPELL_DAMAGE;
-        heroTargetable_ = HERO_TARGETABLE;
     }
 
     /**
      * Let's assume that it is never a good idea to freeze your own character
      */
-	@Override
-	public EnumSet<BattlecryTargetType> getBattlecryTargets() {
-		return EnumSet.of(BattlecryTargetType.ENEMY_HERO, BattlecryTargetType.ENEMY_MINIONS);
-	}
-	
-	/**
-	 * Battlecry: Freeze a character
-	 */
-	@Override
-	public HearthTreeNode useTargetableBattlecry_core(
-			PlayerSide side,
-			Minion targetMinion,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1
-		) throws HSException
-	{
-		targetMinion.setFrozen(true);
-		return boardState;
-	}
+    @Override
+    public boolean canTargetWithBattlecry(PlayerSide originSide, Card origin, PlayerSide targetSide, int targetCharacterIndex, BoardModel board) {
+        return FrostElemental.filter.targetMatches(originSide, origin, targetSide, targetCharacterIndex, board);
+    }
 
+    @Override
+    public HearthTreeNode useTargetableBattlecry_core(PlayerSide originSide, Minion origin, PlayerSide targetSide, int targetCharacterIndex, HearthTreeNode boardState) {
+        return FrostElemental.battlecryAction.applyEffect(originSide, origin, targetSide, targetCharacterIndex, boardState);
+    }
 }

@@ -1,22 +1,23 @@
 package com.hearthsim.card.spellcard.concrete;
 
 import com.hearthsim.card.spellcard.SpellDamage;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
 
 public class ShadowBolt extends SpellDamage {
 
-	public ShadowBolt() {
-		this(false);
-	}
-	
-	public ShadowBolt(boolean hasBeenUsed) {
-		super((byte)3, (byte)4, hasBeenUsed);
+    public ShadowBolt() {
+        super();
+    }
 
-		this.canTargetEnemyHero = false;
-		this.canTargetOwnHero = false;
-	}
-	
-	@Override
-	public SpellDamage deepCopy() {
-		return new ShadowBolt(this.hasBeenUsed);
-	}
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterTargetedSpell.ALL_MINIONS;
+    }
+
+    @Deprecated
+    public ShadowBolt(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
 }

@@ -8,7 +8,6 @@ import com.hearthsim.model.BoardModel
 import com.hearthsim.model.PlayerModel
 import com.hearthsim.test.helpers.BoardModelBuilder
 import com.hearthsim.util.IdentityLinkedList
-import com.hearthsim.util.MinionList
 import org.junit.Assert
 import spock.lang.Specification
 
@@ -26,7 +25,7 @@ class CardSpec extends Specification {
         assertPlayerEquals(oldBoard.waitingPlayer, newBoard.waitingPlayer)
 		assert oldBoard.allMinionsFIFOList_.size() == newBoard.allMinionsFIFOList_.size()
 		for (int indx = 0; indx < oldBoard.allMinionsFIFOList_.size(); ++indx) {
-			assertPlayerEquals(oldBoard.allMinionsFIFOList_.get(indx).getPlayerModel(), newBoard.allMinionsFIFOList_.get(indx).getPlayerModel())
+			assertPlayerEquals(oldBoard.allMinionsFIFOList_.get(indx).getPlayerSide().getPlayer(oldBoard), newBoard.allMinionsFIFOList_.get(indx).getPlayerSide().getPlayer(newBoard))
 			assertMinionEquals(oldBoard.allMinionsFIFOList_.get(indx).getMinion(), newBoard.allMinionsFIFOList_.get(indx).getMinion())
 		}
         assert oldBoard == newBoard //for now, a catch all at the end
@@ -37,9 +36,9 @@ class CardSpec extends Specification {
         assert oldPlayerModel.maxMana == newPlayerModel.maxMana
         assert oldPlayerModel.overload == newPlayerModel.overload
         assert oldPlayerModel.spellDamage == newPlayerModel.spellDamage
-		assert oldPlayerModel.deckPos == newPlayerModel.deckPos
-		assert oldPlayerModel.fatigueDamage == newPlayerModel.fatigueDamage
-		assertHandEquals(oldPlayerModel.hand, newPlayerModel.hand)
+        assert oldPlayerModel.deckPos == newPlayerModel.deckPos
+        assert oldPlayerModel.fatigueDamage == newPlayerModel.fatigueDamage
+        assertHandEquals(oldPlayerModel.hand, newPlayerModel.hand)
         assertHeroEquals(oldPlayerModel.hero, newPlayerModel.hero)
         assertMinionsEqual(oldPlayerModel.minions, newPlayerModel.minions)
         assert oldPlayerModel == newPlayerModel //catch all
@@ -55,15 +54,15 @@ class CardSpec extends Specification {
         assert oldHero == newHero //catch all
     }
 
-	void assertHandEquals(IdentityLinkedList<Card> oldHand, IdentityLinkedList<Card> newHand) {
-		assert oldHand.size == newHand.size
-		for (int indx = 0; indx < oldHand.size; ++indx) {
-			assert oldHand.get(indx).baseManaCost == newHand.get(indx).baseManaCost
-			assert oldHand.get(indx).hasBeenUsed == newHand.get(indx).hasBeenUsed
-			assert oldHand.get(indx).isInHand_ == newHand.get(indx).isInHand_
-			assert oldHand.get(indx) == newHand.get(indx)
-		}
-	}
+    void assertHandEquals(IdentityLinkedList<Card> oldHand, IdentityLinkedList<Card> newHand) {
+        assert oldHand.size == newHand.size
+        for (int indx = 0; indx < oldHand.size; ++indx) {
+            assert oldHand.get(indx).baseManaCost == newHand.get(indx).baseManaCost
+            assert oldHand.get(indx).hasBeenUsed == newHand.get(indx).hasBeenUsed
+            assert oldHand.get(indx).isInHand_ == newHand.get(indx).isInHand_
+            assert oldHand.get(indx) == newHand.get(indx)
+        }
+    }
 
     void assertWeaponEquals(WeaponCard oldWeapon, WeaponCard newWeapon) {
         assert oldWeapon?.weaponCharge == newWeapon?.weaponCharge
@@ -72,31 +71,32 @@ class CardSpec extends Specification {
         assert oldWeapon == newWeapon //catch all
     }
 
-    void assertMinionsEqual(MinionList oldMinions, MinionList newMinions) {
+    void assertMinionsEqual(IdentityLinkedList<Minion> oldMinions, IdentityLinkedList<Minion> newMinions) {
         assert oldMinions.size() == newMinions.size()
         for (int indx = 0; indx < oldMinions.size(); ++indx) {
             Minion oldMinion = oldMinions.get(indx)
             Minion newMinion = newMinions.get(indx)
-			assertMinionEquals(oldMinion, newMinion)
+            assertMinionEquals(oldMinion, newMinion)
         }
     }
-	
-	void assertMinionEquals(Minion oldMinion, Minion newMinion) {
-		assert oldMinion.attack == newMinion.attack
-		assert oldMinion.baseAttack_ == newMinion.baseAttack_
-		assert oldMinion.auraAttack == newMinion.auraAttack
-		assert oldMinion.health == newMinion.health
-		assert oldMinion.baseHealth == newMinion.baseHealth
-		assert oldMinion.auraHealth == newMinion.auraHealth
-		assert oldMinion.charge == newMinion.charge
-		assert oldMinion.taunt == newMinion.taunt
-		assert oldMinion.divineShield == newMinion.divineShield
-		assert oldMinion.frozen == newMinion.frozen
-		assert oldMinion.hasAttacked() == newMinion.hasAttacked()
-		assert oldMinion.heroTargetable == newMinion.heroTargetable
-		assert oldMinion.silenced == newMinion.silenced
-		assert oldMinion.stealthed == newMinion.stealthed
-		assert oldMinion == newMinion //catch all
-	}
-
+    
+    void assertMinionEquals(Minion oldMinion, Minion newMinion) {
+        assert oldMinion.attack == newMinion.attack
+        assert oldMinion.baseAttack_ == newMinion.baseAttack_
+        assert oldMinion.auraAttack == newMinion.auraAttack
+        assert oldMinion.health == newMinion.health
+        assert oldMinion.baseHealth == newMinion.baseHealth
+        assert oldMinion.maxHealth == newMinion.maxHealth
+        assert oldMinion.auraHealth == newMinion.auraHealth
+        assert oldMinion.charge == newMinion.charge
+        assert oldMinion.taunt == newMinion.taunt
+        assert oldMinion.divineShield == newMinion.divineShield
+        assert oldMinion.frozen == newMinion.frozen
+        assert oldMinion.hasAttacked() == newMinion.hasAttacked()
+        assert oldMinion.heroTargetable == newMinion.heroTargetable
+        assert oldMinion.silenced == newMinion.silenced
+        assert oldMinion.stealthed == newMinion.stealthed
+        assert oldMinion.hasBeenUsed == newMinion.hasBeenUsed
+        assert oldMinion == newMinion //catch all
+    }
 }

@@ -1,39 +1,25 @@
 package com.hearthsim.card.minion.concrete;
 
-import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.minion.MinionUntargetableBattlecry;
-import com.hearthsim.exception.HSException;
+import com.hearthsim.event.effect.CardEffectHero;
+import com.hearthsim.event.effect.CardEffectHeroMana;
+import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class Felguard extends Minion implements MinionUntargetableBattlecry {
 
-	private static final boolean HERO_TARGETABLE = true;
-	private static final byte SPELL_DAMAGE = 0;
-	
-	public Felguard() {
+    private final static CardEffectHero effect = new CardEffectHeroMana(0, -1);
+
+    public Felguard() {
         super();
-        spellDamage_ = SPELL_DAMAGE;
-        heroTargetable_ = HERO_TARGETABLE;
+    }
 
-        this.tribe = MinionTribe.DEMON;
-	}
-
-	/**
-	 * Taunt.  Battlecry: Destroy one of your Mana Crystals
-	 */
-	@Override
-	public HearthTreeNode useUntargetableBattlecry_core(
-			Minion minionPlacementTarget,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1,
-			boolean singleRealizationOnly
-		) throws HSException
-	{
-		HearthTreeNode toRet = boardState;
-		toRet.data_.getCurrentPlayer().subtractMaxMana((byte)1);
-		return toRet;
-	}
-	
+    /**
+     * Taunt.  Battlecry: Destroy one of your Mana Crystals
+     */
+    @Override
+    public HearthTreeNode useUntargetableBattlecry_core(int minionPlacementIndex, HearthTreeNode boardState, boolean singleRealizationOnly) {
+        return Felguard.effect.applyEffect(PlayerSide.CURRENT_PLAYER, this, PlayerSide.CURRENT_PLAYER, boardState);
+    }
 }

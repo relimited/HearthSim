@@ -64,6 +64,14 @@
         "class": "com.hearthsim.card.spellcard.concrete.AnimalCompanion"
     },
     {
+        "name": "Annoy-o-Tron",
+        "class": "com.hearthsim.card.minion.concrete.AnnoyOTron"
+    },
+    {
+        "name": "Anub'ar Ambusher",
+        "class": "com.hearthsim.card.minion.concrete.AnubarAmbusher"
+    },
+    {
         "name": "Arathi Weaponsmith",
         "class": "com.hearthsim.card.minion.concrete.ArathiWeaponsmith"
     },
@@ -78,6 +86,10 @@
     {
         "name": "Arcane Intellect",
         "class": "com.hearthsim.card.spellcard.concrete.ArcaneIntellect"
+    },
+    {
+        "name": "Arcane Nullifier X-21",
+        "class": "com.hearthsim.card.minion.concrete.ArcaneNullifierX21"
     },
     {
         "name": "Arcane Shot",
@@ -128,6 +140,10 @@
         "class": "com.hearthsim.card.spellcard.concrete.Backstab"
     },
     {
+        "name": "Bananas",
+        "class": "com.hearthsim.card.spellcard.concrete.Bananas"
+    },
+    {
         "name": "Battle Rage",
         "class": "com.hearthsim.card.spellcard.concrete.BattleRage"
     },
@@ -150,6 +166,10 @@
     {
         "name": "Blessing of Might",
         "class": "com.hearthsim.card.spellcard.concrete.BlessingOfMight"
+    },
+    {
+        "name": "Blizzard",
+        "class": "com.hearthsim.card.spellcard.concrete.Blizzard"
     },
     {
         "name": "Blood Imp",
@@ -196,8 +216,16 @@
         "class": "com.hearthsim.card.minion.concrete.BoulderfistOgre"
     },
     {
+        "name": "Captain Greenskin",
+        "class": "com.hearthsim.card.minion.concrete.CaptainGreenskin"
+    },
+    {
         "name": "Cairne Bloodhoof",
         "class": "com.hearthsim.card.minion.concrete.CairneBloodhoof"
+    },
+    {
+        "name": "Cabal Shadow Priest",
+        "class": "com.hearthsim.card.minion.concrete.CabalShadowPriest"
     },
     {
         "name": "Charge",
@@ -214,6 +242,14 @@
     {
         "name": "Claw",
         "class": "com.hearthsim.card.spellcard.concrete.Claw"
+    },
+    {
+        "name": "Clockwork Giant",
+        "class": "com.hearthsim.card.minion.concrete.ClockworkGiant"
+    },
+    {
+        "name": "Cold Blood",
+        "class": "com.hearthsim.card.spellcard.concrete.ColdBlood"
     },
     {
         "name": "Coldlight Oracle",
@@ -256,6 +292,14 @@
         "class": "com.hearthsim.card.minion.concrete.DarkIronDwarf"
     },
     {
+        "name": "Darkbomb",
+        "class": "com.hearthsim.card.spellcard.concrete.Darkbomb"
+    },
+    {
+        "name": "Dark Cultist",
+        "class": "com.hearthsim.card.minion.concrete.DarkCultist"
+    },
+    {
         "name": "Darkscale Healer",
         "class": "com.hearthsim.card.minion.concrete.DarkscaleHealer"
     },
@@ -264,8 +308,20 @@
         "class": "com.hearthsim.card.spellcard.concrete.DeadlyPoison"
     },
     {
+        "name": "Death's Bite",
+        "class": "com.hearthsim.card.weapon.concrete.DeathsBite"
+    },
+    {
         "name": "Defender of Argus",
         "class": "com.hearthsim.card.minion.concrete.DefenderOfArgus"
+    },
+    {
+        "name": "Defias Bandit",
+        "class": "com.hearthsim.card.minion.concrete.DefiasBandit"
+    },
+    {
+        "name": "Defias Ringleader",
+        "class": "com.hearthsim.card.minion.concrete.DefiasRingleader"
     },
     {
         "name": "Demolisher",
@@ -274,6 +330,10 @@
     {
         "name": "Demonfire",
         "class": "com.hearthsim.card.spellcard.concrete.Demonfire"
+    },
+    {
+        "name": "Demonheart",
+        "class": "com.hearthsim.card.spellcard.concrete.Demonheart"
     },
     {
         "name": "Divine Favor",
@@ -308,6 +368,11 @@
         "class": "com.hearthsim.card.minion.concrete.DreadInfernal"
     },
     {
+        "id": "EX1_165",
+        "name": "Druid of the Claw",
+        "class": "com.hearthsim.card.minion.concrete.DruidOfTheClaw"
+    },
+    {
         "name": "Dust Devil",
         "class": "com.hearthsim.card.minion.concrete.DustDevil"
     },
@@ -324,6 +389,10 @@
         "class": "com.hearthsim.card.minion.concrete.EarthenRingFarseer"
     },
     {
+        "name": "Edwin VanCleef",
+        "class": "com.hearthsim.card.minion.concrete.EdwinVanCleef"
+    },
+    {
         "name": "Elven Archer",
         "class": "com.hearthsim.card.minion.concrete.ElvenArcher"
     },
@@ -334,6 +403,10 @@
     {
         "name": "Equality",
         "class": "com.hearthsim.card.spellcard.concrete.Equality"
+    },
+    {
+        "name": "Eviscerate",
+        "class": "com.hearthsim.card.spellcard.concrete.Eviscerate"
     },
     {
         "name": "Execute",
@@ -372,12 +445,24 @@
         "class": "com.hearthsim.card.minion.concrete.FlameImp"
     },
     {
+        "name": "Flame of Azzinoth",
+        "class": "com.hearthsim.card.minion.concrete.FlameOfAzzinoth"
+    },
+    {
         "name": "Flamestrike",
         "class": "com.hearthsim.card.spellcard.concrete.Flamestrike"
     },
     {
         "name": "Flesheating Ghoul",
         "class": "com.hearthsim.card.minion.concrete.FlesheatingGhoul"
+    },
+    {
+        "name": "Flying Machine",
+        "class": "com.hearthsim.card.minion.concrete.FlyingMachine"
+    },
+    {
+        "name": "Force-Tank MAX",
+        "class": "com.hearthsim.card.minion.concrete.ForceTankMax"
     },
     {
         "name": "Frost Elemental",
@@ -408,6 +493,14 @@
         "class": "com.hearthsim.card.minion.concrete.FrothingBerserker"
     },
     {
+        "name": "Gilblin Stalker",
+        "class": "com.hearthsim.card.minion.concrete.GilblinStalker"
+    },
+    {
+        "name": "Gladiator's Longbow",
+        "class": "com.hearthsim.card.weapon.concrete.GladiatorsLongbow"
+    },
+    {
         "name": "Gnomish Inventor",
         "class": "com.hearthsim.card.minion.concrete.GnomishInventor"
     },
@@ -416,8 +509,16 @@
         "class": "com.hearthsim.card.minion.concrete.Gnoll"
     },
     {
+        "name": "Gnomeregan Infantry",
+        "class": "com.hearthsim.card.minion.concrete.GnomereganInfantry"
+    },
+    {
         "name": "Goldshire Footman",
         "class": "com.hearthsim.card.minion.concrete.GoldshireFootman"
+    },
+    {
+        "name": "Gorehowl",
+        "class": "com.hearthsim.card.weapon.concrete.Gorehowl"
     },
     {
         "name": "Grimscale Oracle",
@@ -504,12 +605,32 @@
         "class": "com.hearthsim.card.spellcard.concrete.Humility"
     },
     {
+        "name": "Hungry Crab",
+        "class": "com.hearthsim.card.minion.concrete.HungryCrab"
+    },
+    {
         "name": "Hunter's Mark",
         "class": "com.hearthsim.card.spellcard.concrete.HuntersMark"
     },
     {
         "name": "Hyena",
         "class": "com.hearthsim.card.minion.concrete.Hyena"
+    },
+    {
+        "name": "Ice Lance",
+        "class": "com.hearthsim.card.spellcard.concrete.IceLance"
+    },
+    {
+        "name": "Illidan Stormrage",
+        "class": "com.hearthsim.card.minion.concrete.IllidanStormrage"
+    },
+    {
+        "name": "Imp",
+        "class": "com.hearthsim.card.minion.concrete.Imp"
+    },
+    {
+        "name": "Imp Master",
+        "class": "com.hearthsim.card.minion.concrete.ImpMaster"
     },
     {
         "name": "Injured Blademaster",
@@ -548,6 +669,10 @@
         "class": "com.hearthsim.card.minion.concrete.JunglePanther"
     },
     {
+        "name": "Kidnapper",
+        "class": "com.hearthsim.card.minion.concrete.Kidnapper"
+    },
+    {
         "name": "Kill Command",
         "class": "com.hearthsim.card.spellcard.concrete.KillCommand"
     },
@@ -556,8 +681,13 @@
         "class": "com.hearthsim.card.minion.concrete.KingKrush"
     },
     {
+<<<<<<< HEAD
         "name": "Knife Juggler",
         "class": "com.hearthsim.card.minion.concrete.KnifeJuggler"
+=======
+        "name": "King Mukla",
+        "class": "com.hearthsim.card.minion.concrete.KingMukla"
+>>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
     },
     {
         "name": "Kobold Geomancer",
@@ -592,6 +722,10 @@
         "class": "com.hearthsim.card.spellcard.concrete.LightningBolt"
     },
     {
+        "name": "Lightspawn",
+        "class": "com.hearthsim.card.minion.concrete.Lightspawn"
+    },
+    {
         "name": "Lightwarden",
         "class": "com.hearthsim.card.minion.concrete.Lightwarden"
     },
@@ -606,6 +740,10 @@
     {
         "name": "Lord of the Arena",
         "class": "com.hearthsim.card.minion.concrete.LordOfTheArena"
+    },
+    {
+        "name": "Lost Tallstrider",
+        "class": "com.hearthsim.card.minion.concrete.LostTallstrider"
     },
     {
         "name": "Maexxna",
@@ -624,12 +762,20 @@
         "class": "com.hearthsim.card.minion.concrete.ManaAddict"
     },
     {
+        "name": "Mana Tide Totem",
+        "class": "com.hearthsim.card.minion.concrete.ManaTideTotem"
+    },
+    {
         "name": "Mana Wyrm",
         "class": "com.hearthsim.card.minion.concrete.ManaWyrm"
     },
     {
         "name": "Mark of the Wild",
         "class": "com.hearthsim.card.spellcard.concrete.MarkOfTheWild"
+    },
+    {
+        "name": "Master of Disguise",
+        "class": "com.hearthsim.card.minion.concrete.MasterOfDisguise"
     },
     {
         "name": "Master Swordsmith",
@@ -642,6 +788,10 @@
     {
         "name": "Mind Control",
         "class": "com.hearthsim.card.spellcard.concrete.MindControl"
+    },
+    {
+        "name": "Mini-Mage",
+        "class": "com.hearthsim.card.minion.concrete.MiniMage"
     },
     {
         "name": "Mirror Image",
@@ -674,6 +824,10 @@
     {
         "name": "Murloc Scout",
         "class": "com.hearthsim.card.minion.concrete.MurlocScout"
+    },
+    {
+        "name": "Murloc Tidecaller",
+        "class": "com.hearthsim.card.minion.concrete.MurlocTidecaller"
     },
     {
         "name": "Murloc Tidehunter",
@@ -712,8 +866,16 @@
         "class": "com.hearthsim.card.minion.concrete.OgreMagi"
     },
     {
+        "name": "Onyxia",
+        "class": "com.hearthsim.card.minion.concrete.Onyxia"
+    },
+    {
         "name": "Pit Lord",
         "class": "com.hearthsim.card.minion.concrete.PitLord"
+    },
+    {
+        "name": "Patient Assassin",
+        "class": "com.hearthsim.card.minion.concrete.PatientAssassin"
     },
     {
         "name": "Polymorph",
@@ -724,8 +886,16 @@
         "class": "com.hearthsim.card.spellcard.concrete.PowerWordShield"
     },
     {
+        "name": "Powermace",
+        "class": "com.hearthsim.card.weapon.concrete.Powermace"
+    },
+    {
         "name": "Priestess of Elune",
         "class": "com.hearthsim.card.minion.concrete.PriestessOfElune"
+    },
+    {
+        "name": "Puddlestomper",
+        "class": "com.hearthsim.card.minion.concrete.Puddlestomper"
     },
     {
         "name": "Pyroblast",
@@ -742,6 +912,10 @@
     {
         "name": "Raid Leader",
         "class": "com.hearthsim.card.minion.concrete.RaidLeader"
+    },
+    {
+        "name": "Rampage",
+        "class": "com.hearthsim.card.spellcard.concrete.Rampage"
     },
     {
         "name": "Ravenholdt Assassin",
@@ -766,6 +940,10 @@
     {
         "name": "Sacrificial Pact",
         "class": "com.hearthsim.card.spellcard.concrete.SacrificialPact"
+    },
+    {
+        "name": "Salty Dog",
+        "class": "com.hearthsim.card.minion.concrete.SaltyDog"
     },
     {
         "name": "Sap",
@@ -824,8 +1002,16 @@
         "class": "com.hearthsim.card.minion.concrete.Shieldbearer"
     },
     {
+        "name": "Shielded Minibot",
+        "class": "com.hearthsim.card.minion.concrete.ShieldedMinibot"
+    },
+    {
         "name": "Shiv",
         "class": "com.hearthsim.card.spellcard.concrete.Shiv"
+    },
+    {
+        "name": "SI:7 Agent",
+        "class": "com.hearthsim.card.minion.concrete.Si7Agent"
     },
     {
         "name": "Silence",
@@ -860,6 +1046,10 @@
         "class": "com.hearthsim.card.minion.concrete.SludgeBelcher"
     },
     {
+        "name": "Soot Spewer",
+        "class": "com.hearthsim.card.minion.concrete.SootSpewer"
+    },
+    {
         "name": "Soulfire",
         "class": "com.hearthsim.card.spellcard.concrete.Soulfire"
     },
@@ -876,8 +1066,16 @@
         "class": "com.hearthsim.card.minion.concrete.Spellbreaker"
     },
     {
+        "name": "Spider Tank",
+        "class": "com.hearthsim.card.minion.concrete.SpiderTank"
+    },
+    {
         "name": "Sprint",
         "class": "com.hearthsim.card.spellcard.concrete.Sprint"
+    },
+    {
+        "name": "Squire",
+        "class": "com.hearthsim.card.minion.concrete.Squire"
     },
     {
         "name": "Stampeding Kodo",
@@ -932,6 +1130,14 @@
         "class": "com.hearthsim.card.spellcard.concrete.Swipe"
     },
     {
+        "name": "Sylvanas Windrunner",
+        "class": "com.hearthsim.card.minion.concrete.SylvanasWindrunner"
+    },
+    {
+        "name": "Target Dummy",
+        "class": "com.hearthsim.card.minion.concrete.TargetDummy"
+    },
+    {
         "name": "Tauren Warrior",
         "class": "com.hearthsim.card.minion.concrete.TaurenWarrior"
     },
@@ -960,6 +1166,10 @@
         "class": "com.hearthsim.card.minion.concrete.TwilightDrake"
     },
     {
+        "name": "Unbound Elemental",
+        "class": "com.hearthsim.card.minion.concrete.UnboundElemental"
+    },
+    {
         "name": "Undertaker",
         "class": "com.hearthsim.card.minion.concrete.Undertaker"
     },
@@ -974,6 +1184,10 @@
     {
         "name": "Violet Teacher",
         "class": "com.hearthsim.card.minion.concrete.VioletTeacher"
+    },
+    {
+        "name": "Void Terror",
+        "class": "com.hearthsim.card.minion.concrete.VoidTerror"
     },
     {
         "name": "Voidwalker",
@@ -994,6 +1208,10 @@
     {
         "name": "Whelp",
         "class": "com.hearthsim.card.minion.concrete.Whelp"
+    },
+    {
+        "name": "Whirling Zap-o-matic",
+        "class": "com.hearthsim.card.minion.concrete.WhirlingZapOMatic"
     },
     {
         "name": "Whirlwind",
@@ -1102,6 +1320,10 @@
     {
         "name": "Truesilver Champion",
         "class": "com.hearthsim.card.weapon.concrete.TruesilverChampion"
+    },
+    {
+        "name": "Twisting Nether",
+        "class": "com.hearthsim.card.spellcard.concrete.TwistingNether"
     },
     {
         "name": "Wicked Knife",

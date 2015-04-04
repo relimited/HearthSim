@@ -1,69 +1,71 @@
 package com.hearthsim.card.spellcard.concrete;
 
-import com.hearthsim.card.Deck;
+import com.hearthsim.card.Card;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.minion.Minion.MinionTribe;
 import com.hearthsim.card.spellcard.SpellCard;
-import com.hearthsim.exception.HSException;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
+import com.hearthsim.event.effect.CardEffectCharacter;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class Demonfire extends SpellCard {
 
-	/**
-	 * Constructor
-	 * 
-	 * @param hasBeenUsed Whether the card has already been used or not
-	 */
-	public Demonfire(boolean hasBeenUsed) {
-		super((byte)2, hasBeenUsed);
-		
-		this.canTargetEnemyHero = false;
-		this.canTargetOwnHero = false;
-	}
+    /**
+     * Constructor
+     *
+     * @param hasBeenUsed Whether the card has already been used or not
+     */
+    @Deprecated
+    public Demonfire(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
 
-	/**
-	 * Constructor
-	 * 
-	 * Defaults to hasBeenUsed = false
-	 */
-	public Demonfire() {
-		this(false);
-	}
+    /**
+     * Constructor
+     *
+     * Defaults to hasBeenUsed = false
+     */
+    public Demonfire() {
+        super();
+    }
 
-	/**
-	 * 
-	 * Use the card on the given target
-	 * 
-	 * Deals 2 damage to a minion.  If it's a friendly Demon, give it +2/+2 instead.
-	 * 
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterTargetedSpell.ALL_MINIONS;
+    }
+
+    /**
+     *
+     * Use the card on the given target
+     *
+     * Deals 2 damage to a minion.  If it's a friendly Demon, give it +2/+2 instead.
+     *
      * @param side
      * @param targetMinion The target minion
      * @param boardState The BoardState before this card has performed its action.  It will be manipulated and returned.
-     * @param deckPlayer0 The deck for player 0
-     * @param deckPlayer1 The deck for player 1
      *
      * @return The boardState is manipulated and returned
-	 */
-	@Override
-	protected HearthTreeNode use_core(
-			PlayerSide side,
-			Minion targetMinion,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1,
-			boolean singleRealizationOnly)
-		throws HSException
-	{		
-		HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
-		if (toRet != null) {
-			if (isCurrentPlayer(side) && targetMinion.getTribe() == MinionTribe.DEMON) {
-				targetMinion.setAttack((byte)(targetMinion.getAttack() + 2));
-				targetMinion.setHealth((byte)(targetMinion.getHealth() + 2));
-			} else {
-				toRet = targetMinion.takeDamage((byte)2, PlayerSide.CURRENT_PLAYER, side, boardState, deckPlayer0, deckPlayer1, true, false);
-			}
-		}
-		return toRet;
-	}
+     */
+    @Override
+    public CardEffectCharacter getTargetableEffect() {
+        if (this.effect == null) {
+            this.effect = new CardEffectCharacter() {
+                @Override
+                public HearthTreeNode applyEffect(PlayerSide originSide, Card origin, PlayerSide targetSide, int targetCharacterIndex, HearthTreeNode boardState) {
+                    Minion targetCharacter = boardState.data_.getCharacter(targetSide, targetCharacterIndex);
+                    if (isCurrentPlayer(targetSide) && targetCharacter.getTribe() == MinionTribe.DEMON) {
+                        targetCharacter.setAttack((byte)(targetCharacter.getAttack() + 2));
+                        targetCharacter.setHealth((byte)(targetCharacter.getHealth() + 2));
+                    } else {
+                        boardState = targetCharacter.takeDamageAndNotify((byte) 2, originSide, targetSide, boardState, true, false);
+                    }
+                    return boardState;
+                }
+            };
+        }
+        return this.effect;
+    }
 }

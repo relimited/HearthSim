@@ -4,16 +4,13 @@ import com.hearthsim.card.spellcard.SpellDamage;
 
 public class ArcaneShot extends SpellDamage {
 
-	public ArcaneShot() {
-		this(false);
-	}
+    public ArcaneShot() {
+        super();
+    }
 
-	public ArcaneShot(boolean hasBeenUsed) {
-		super((byte)1, (byte)2, hasBeenUsed);
-	}
-
-	@Override
-	public SpellDamage deepCopy() {
-		return new ArcaneShot(this.hasBeenUsed);
-	}
+    @Deprecated
+    public ArcaneShot(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
 }

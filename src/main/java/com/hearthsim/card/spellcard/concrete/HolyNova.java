@@ -1,57 +1,71 @@
 package com.hearthsim.card.spellcard.concrete;
 
-import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.spellcard.SpellDamageAoe;
+import com.hearthsim.card.spellcard.SpellDamage;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
+import com.hearthsim.event.effect.CardEffectAoeInterface;
+import com.hearthsim.event.effect.CardEffectCharacter;
 import com.hearthsim.exception.HSException;
+import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
-public class HolyNova extends SpellDamageAoe {
+public class HolyNova extends SpellDamage implements CardEffectAoeInterface {
 
-	private static final byte DAMAGE_AMOUNT = 2;
+    /**
+     * Constructor
+     *
+     * @param hasBeenUsed Whether the card has already been used or not
+     */
+    @Deprecated
+    public HolyNova(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
 
-	/**
-	 * Constructor
-	 * 
-	 * @param hasBeenUsed Whether the card has already been used or not
-	 */
-	public HolyNova(boolean hasBeenUsed) {
-		super((byte)5, DAMAGE_AMOUNT, hasBeenUsed);
-		this.hitsEnemyHero = true;
-		this.hitsEnemyMinions = true;
-	}
+    /**
+     * Constructor
+     * Defaults to hasBeenUsed = false
+     */
+    public HolyNova() {
+        super();
+    }
 
-	/**
-	 * Constructor
-	 * Defaults to hasBeenUsed = false
-	 */
-	public HolyNova() {
-		this(false);
-	}
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterTargetedSpell.OPPONENT;
+    }
 
-	/**
-	 * Use the card on the given target
-	 * Deal 2 damage to all enemy characters and heal all friendly characters by 2
-	 * 
-	 * @param side
-	 * @param boardState The BoardState before this card has performed its action. It will be manipulated and returned.
-	 * @return The boardState is manipulated and returned
-	 */
-	@Override
-	protected HearthTreeNode use_core(PlayerSide side, Minion targetMinion, HearthTreeNode boardState,
-			Deck deckPlayer0, Deck deckPlayer1, boolean singleRealizationOnly) throws HSException {
+    @Override
+    public CardEffectCharacter getAoeEffect() { return this.getTargetableEffect(); }
 
-		HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, deckPlayer0, deckPlayer1,
-				singleRealizationOnly);
+    @Override
+    public CharacterFilter getAoeFilter() {
+        return CharacterFilter.ALL_ENEMIES;
+    }
 
-		if(toRet != null) {
-			toRet = toRet.data_.getCurrentPlayerHero().takeHeal((byte)2, PlayerSide.CURRENT_PLAYER, toRet, deckPlayer0,
-					deckPlayer1);
-			for(Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(toRet).getMinions()) {
-				toRet = minion.takeHeal((byte)2, PlayerSide.CURRENT_PLAYER, toRet, deckPlayer0, deckPlayer1);
-			}
-		}
-		return toRet;
-	}
+    /**
+     * Use the card on the given target
+     * Deal 2 damage to all enemy characters and heal all friendly characters by 2
+     *
+     * @param side
+     * @param boardState The BoardState before this card has performed its action. It will be manipulated and returned.
+     * @return The boardState is manipulated and returned
+     */
+    @Override
+    protected HearthTreeNode use_core(PlayerSide side, Minion targetMinion, HearthTreeNode boardState, boolean singleRealizationOnly) throws HSException {
+
+        HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, singleRealizationOnly);
+
+        if (toRet != null) {
+            PlayerModel currentPlayer = toRet.data_.modelForSide(PlayerSide.CURRENT_PLAYER);
+
+            toRet = currentPlayer.getHero().takeHealAndNotify((byte) 2, PlayerSide.CURRENT_PLAYER, toRet);
+            for (Minion minion : currentPlayer.getMinions()) {
+                toRet = minion.takeHealAndNotify((byte) 2, PlayerSide.CURRENT_PLAYER, toRet);
+            }
+        }
+        return toRet;
+    }
 }

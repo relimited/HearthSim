@@ -1,7 +1,11 @@
 package com.hearthsim.test.groovy.card
 
 import com.hearthsim.card.minion.concrete.Abomination
+import com.hearthsim.card.minion.concrete.BloodfenRaptor
+import com.hearthsim.card.minion.concrete.ChillwindYeti
 import com.hearthsim.card.minion.concrete.ElvenArcher
+import com.hearthsim.card.minion.concrete.RiverCrocolisk
+import com.hearthsim.card.minion.concrete.WarGolem
 import com.hearthsim.model.BoardModel
 import com.hearthsim.test.helpers.BoardModelBuilder
 import com.hearthsim.util.tree.HearthTreeNode
@@ -17,24 +21,14 @@ class ElvenArcherSpec extends CardSpec {
 
     def setup() {
 
-        def minionMana = 2;
-        def attack = 5;
-        def health0 = 3;
-        def health1 = 7;
-
-        def commonField = [
-                [mana: minionMana, attack: attack, maxHealth: health0], //TODO: attack may be irrelevant here
-                [mana: minionMana, attack: attack, health: health1 - 1, maxHealth: health1]
-        ]
-
         startingBoard = new BoardModelBuilder().make {
             currentPlayer {
                 hand([ElvenArcher])
-                field(commonField)
+                field([[minion:BloodfenRaptor],[minion:WarGolem]])
                 mana(7)
             }
             waitingPlayer {
-                field(commonField + [minion: Abomination, health: 1])
+                field([[minion:RiverCrocolisk],[minion:ChillwindYeti],[minion:Abomination, health:1]])
                 mana(4)
             }
         }
@@ -45,7 +39,7 @@ class ElvenArcherSpec extends CardSpec {
 
     def "cannot play for waiting player's side"() {
         def copiedBoard = startingBoard.deepCopy()
-        def theCard = copiedBoard.getCurrentPlayerCardHand(0)
+        def theCard = copiedBoard.getCurrentPlayer().getHand().get(0)
         def ret = theCard.useOn(WAITING_PLAYER, 0, root, null, null)
 
         expect:
@@ -57,8 +51,8 @@ class ElvenArcherSpec extends CardSpec {
     def "playing for current player returns expected child states"() {
         def minionPlayedBoard = startingBoard.deepCopy()
         def copiedRoot = new HearthTreeNode(minionPlayedBoard)
-        def theCard = minionPlayedBoard.getCurrentPlayerCardHand(0);
-        def ret = theCard.useOn(CURRENT_PLAYER, 2, copiedRoot, null, null);
+        def theCard = minionPlayedBoard.getCurrentPlayer().getHand().get(0);
+        def ret = theCard.useOn(CURRENT_PLAYER, 2, copiedRoot);
 
         expect:
         assertFalse(ret == null);
@@ -68,6 +62,7 @@ class ElvenArcherSpec extends CardSpec {
             currentPlayer {
                 playMinion(ElvenArcher)
                 mana(6)
+                numCardsUsed(1)
             }
         }
 
@@ -80,22 +75,22 @@ class ElvenArcherSpec extends CardSpec {
 
         HearthTreeNode child1 = ret.getChildren().get(1);
         assertBoardDelta(minionPlayedBoard, child1.data_) {
-            waitingPlayer {
-                heroHealth(29)
+            currentPlayer {
+                updateMinion(0, [deltaHealth: -1])
             }
         }
 
         HearthTreeNode child2 = ret.getChildren().get(2);
         assertBoardDelta(minionPlayedBoard, child2.data_) {
             currentPlayer {
-                updateMinion(0, [deltaHealth: -1])
+                updateMinion(1, [deltaHealth: -1])
             }
         }
 
         HearthTreeNode child3 = ret.getChildren().get(3);
         assertBoardDelta(minionPlayedBoard, child3.data_) {
-            currentPlayer {
-                updateMinion(1, [deltaHealth: -1])
+            waitingPlayer {
+                heroHealth(29)
             }
         }
 
@@ -119,8 +114,9 @@ class ElvenArcherSpec extends CardSpec {
                 mana(6)
                 removeCardFromHand(ElvenArcher)
                 heroHealth(28)
-                updateMinion(0, [deltaHealth: -2])
                 updateMinion(1, [deltaHealth: -2])
+                removeMinion(0)
+                numCardsUsed(1)
             }
             waitingPlayer {
                 heroHealth(28)

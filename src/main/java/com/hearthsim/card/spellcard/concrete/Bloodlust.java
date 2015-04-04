@@ -1,54 +1,54 @@
 package com.hearthsim.card.spellcard.concrete;
 
-import com.hearthsim.card.Deck;
-import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.spellcard.SpellCard;
-import com.hearthsim.exception.HSException;
-import com.hearthsim.model.PlayerSide;
-import com.hearthsim.util.tree.HearthTreeNode;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
+import com.hearthsim.event.effect.CardEffectAoeInterface;
+import com.hearthsim.event.effect.CardEffectCharacter;
+import com.hearthsim.event.effect.CardEffectCharacterBuffTemp;
 
-public class Bloodlust extends SpellCard {
+public class Bloodlust extends SpellCard implements CardEffectAoeInterface {
 
-	public Bloodlust() {
-		this(false);
-	}
+    private final static CardEffectCharacter effect = new CardEffectCharacterBuffTemp(3);
 
-	public Bloodlust(boolean hasBeenUsed) {
-		super((byte)5, hasBeenUsed);
-		
-		this.canTargetEnemyHero = false;
-		this.canTargetEnemyMinions = false;
-		this.canTargetOwnMinions = false;
-	}
-	
-	/**
-	 * 
-	 * Use the card on the given target
-	 * 
-	 * Give your minions +3 attack for this turn
-	 * 
-	 *
+    public Bloodlust() {
+        super();
+    }
+
+    @Deprecated
+    public Bloodlust(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
+
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterTargetedSpell.SELF;
+    }
+
+    /**
+     *
+     * Use the card on the given target
+     *
+     * Give your minions +3 attack for this turn
+     *
+     *
      *
      * @param side
      * @param boardState The BoardState before this card has performed its action.  It will be manipulated and returned.
      *
      * @return The boardState is manipulated and returned
-	 */
-	@Override
-	protected HearthTreeNode use_core(
-			PlayerSide side,
-			Minion targetMinion,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1,
-			boolean singleRealizationOnly)
-		throws HSException
-	{
-		HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
-		
-		for (Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(toRet).getMinions()) {
-			minion.setExtraAttackUntilTurnEnd((byte)3);
-		}
-		return toRet;
-	}
+     */
+    @Override
+    public CardEffectCharacter getTargetableEffect() {
+        return Bloodlust.effect;
+    }
+
+    @Override
+    public CardEffectCharacter getAoeEffect() { return this.getTargetableEffect(); }
+
+    @Override
+    public CharacterFilter getAoeFilter() {
+        return CharacterFilter.FRIENDLY_MINIONS;
+    }
 }

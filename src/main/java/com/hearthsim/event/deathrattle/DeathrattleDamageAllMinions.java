@@ -1,38 +1,35 @@
 package com.hearthsim.event.deathrattle;
 
-import com.hearthsim.card.Deck;
+import com.hearthsim.card.Card;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.exception.HSException;
+import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class DeathrattleDamageAllMinions extends DeathrattleAction {
 
-	private final byte damage_;
-    
-	public DeathrattleDamageAllMinions(byte damage) {
-		damage_ = damage;
-	}
-	
-	@Override
-	public HearthTreeNode performAction(
-			Minion minion,
-			PlayerSide playerSide,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1) 
-		throws HSException
-	{
-		HearthTreeNode toRet = super.performAction(minion, playerSide, boardState, deckPlayer0, deckPlayer1);
-		if (toRet != null) {
-			for(Minion aMinion : PlayerSide.WAITING_PLAYER.getPlayer(toRet).getMinions()) {
-				toRet = aMinion.takeDamage(damage_, playerSide, PlayerSide.WAITING_PLAYER, toRet, deckPlayer0, deckPlayer1, false, false);
-			}
-			for(Minion aMinion : PlayerSide.CURRENT_PLAYER.getPlayer(toRet).getMinions()) {
-				toRet = aMinion.takeDamage(damage_, playerSide, PlayerSide.CURRENT_PLAYER, toRet, deckPlayer0, deckPlayer1, false, false);
-			}
-		}
-		return toRet;
-	}
+    private final byte damage_;
 
+    public DeathrattleDamageAllMinions(byte damage) {
+        damage_ = damage;
+    }
+
+    @Override
+    public HearthTreeNode performAction(Card origin,
+                                        PlayerSide playerSide,
+                                        HearthTreeNode boardState,
+                                        boolean singleRealizationOnly) {
+        HearthTreeNode toRet = super.performAction(origin, playerSide, boardState, singleRealizationOnly);
+        if (toRet != null) {
+            PlayerModel currentPlayer = toRet.data_.modelForSide(PlayerSide.CURRENT_PLAYER);
+            PlayerModel waitingPlayer = toRet.data_.modelForSide(PlayerSide.WAITING_PLAYER);
+            for (Minion aMinion : waitingPlayer.getMinions()) {
+                toRet = aMinion.takeDamageAndNotify(damage_, playerSide, PlayerSide.WAITING_PLAYER, toRet, false, false);
+            }
+            for (Minion aMinion : currentPlayer.getMinions()) {
+                toRet = aMinion.takeDamageAndNotify(damage_, playerSide, PlayerSide.CURRENT_PLAYER, toRet, false, false);
+            }
+        }
+        return toRet;
+    }
 }

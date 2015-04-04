@@ -1,42 +1,40 @@
 package com.hearthsim.card.minion.concrete;
 
-import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.minion.MinionUntargetableBattlecry;
-import com.hearthsim.exception.HSException;
-import com.hearthsim.model.PlayerSide;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.effect.CardEffectAoeInterface;
+import com.hearthsim.event.effect.CardEffectCharacter;
+import com.hearthsim.event.effect.CardEffectCharacterHeal;
 import com.hearthsim.util.tree.HearthTreeNode;
 
-public class DarkscaleHealer extends Minion implements MinionUntargetableBattlecry {
+public class DarkscaleHealer extends Minion implements MinionUntargetableBattlecry, CardEffectAoeInterface {
 
-	private static final boolean HERO_TARGETABLE = true;
-	private static final byte SPELL_DAMAGE = 0;
-	
-	public DarkscaleHealer() {
+    private static final CardEffectCharacter effect = new CardEffectCharacterHeal(2);
+
+    public DarkscaleHealer() {
         super();
-        spellDamage_ = SPELL_DAMAGE;
-        heroTargetable_ = HERO_TARGETABLE;
+    }
 
-	}
-	
-	/**
-	 * Battlecry: Heals friendly characters for 2
-	 */
-	@Override
-	public HearthTreeNode useUntargetableBattlecry_core(
-			Minion minionPlacementTarget,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1,
-			boolean singleRealizationOnly
-		) throws HSException
-	{
-		HearthTreeNode toRet = boardState;
-		toRet = toRet.data_.getCurrentPlayerHero().takeHeal((byte)2, PlayerSide.CURRENT_PLAYER, toRet, deckPlayer0, deckPlayer1);
-		for (Minion minion : PlayerSide.CURRENT_PLAYER.getPlayer(toRet).getMinions()) {
-			toRet = minion.takeHeal((byte)2, PlayerSide.CURRENT_PLAYER, toRet, deckPlayer0, deckPlayer1);
-		}
-		return toRet;
-	}
-	
+    /**
+     * Battlecry: Heals friendly characters for 2
+     */
+    @Override
+    public HearthTreeNode useUntargetableBattlecry_core(
+            int minionPlacementIndex,
+            HearthTreeNode boardState,
+            boolean singleRealizationOnly
+        ) {
+        return this.effectAllUsingFilter(this.getAoeEffect(), this.getAoeFilter(), boardState);
+    }
+
+    @Override
+    public CardEffectCharacter getAoeEffect() {
+        return DarkscaleHealer.effect;
+    }
+
+    @Override
+    public CharacterFilter getAoeFilter() {
+        return CharacterFilter.ALL_FRIENDLIES;
+    }
 }

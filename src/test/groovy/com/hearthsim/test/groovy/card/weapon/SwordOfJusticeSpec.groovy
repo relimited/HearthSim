@@ -29,10 +29,10 @@ class SwordOfJusticeSpec extends CardSpec{
     def 'removes durability and gives +1/+1 to minion on summon'() {
         def copiedBoard = startingBoard.deepCopy()
         def copiedRoot = new HearthTreeNode(copiedBoard)
-        def swordOfJustice = copiedBoard.getCurrentPlayerCardHand(0);
-        def ret = swordOfJustice.useOn(CURRENT_PLAYER, 0, copiedRoot, null, null);
-        def raptor = copiedBoard.getCurrentPlayerCardHand(0);
-        ret = raptor.useOn(CURRENT_PLAYER, 0, ret, null, null);
+        def swordOfJustice = copiedBoard.getCurrentPlayer().getHand().get(0);
+        def ret = swordOfJustice.useOn(CURRENT_PLAYER, 0, copiedRoot);
+        def raptor = copiedBoard.getCurrentPlayer().getHand().get(0);
+        ret = raptor.useOn(CURRENT_PLAYER, 0, ret);
 
         expect:
         ret != null
@@ -46,6 +46,7 @@ class SwordOfJusticeSpec extends CardSpec{
                 updateMinion(0, [deltaAttack: +1])
                 mana(0)
                 removeCardFromHand(SwordOfJustice)
+                numCardsUsed(2)
             }
         }
 

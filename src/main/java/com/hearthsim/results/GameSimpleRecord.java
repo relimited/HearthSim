@@ -1,5 +1,6 @@
 package com.hearthsim.results;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+=======
+>>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.exception.HSInvalidPlayerIndexException;
@@ -19,10 +22,17 @@ import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.HearthActionBoardPair;
+<<<<<<< HEAD
 import com.hearthsim.util.MinionList;
+=======
+import org.json.JSONObject;
+>>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
+
+import java.util.List;
 
 public class GameSimpleRecord implements GameRecord {
 
+<<<<<<< HEAD
 	final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GameSimpleRecord.class);
 	
 	int maxTurns_;
@@ -54,6 +64,28 @@ public class GameSimpleRecord implements GameRecord {
 	
 	@Override
 	public void put(int turn, PlayerSide activePlayerSide, BoardModel board, List<HearthActionBoardPair> plays) {
+=======
+    final int maxTurns_;
+    final byte[][][] numMinions_;
+    final byte[][][] numCards_;
+    final byte[][][] heroHealth_;
+    final byte[][][] heroArmor_;
+
+    public GameSimpleRecord() {
+        this(50);
+    }
+
+    public GameSimpleRecord(int maxTurns) {
+        maxTurns_ = maxTurns;
+        numMinions_ = new byte[2][maxTurns][2];
+        numCards_ = new byte[2][maxTurns][2];
+        heroHealth_ = new byte[2][maxTurns][2];
+        heroArmor_ = new byte[2][maxTurns][2];
+    }
+
+    @Override
+    public void put(int turn, PlayerSide activePlayerSide, BoardModel board, List<HearthActionBoardPair> plays) {
+>>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
         PlayerModel playerModel = board.modelForSide(activePlayerSide);
 
         int currentPlayerId = playerModel.getPlayerId();
@@ -93,18 +125,19 @@ public class GameSimpleRecord implements GameRecord {
         numMinions_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getNumMinions();
         numMinions_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getNumMinions();
 
-        numCards_[currentPlayerId][turn][currentPlayerId] = (byte)board.getNumCardsHandCurrentPlayer();
-        numCards_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getNumCardsHandWaitingPlayer();
+        numCards_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getHand().size();
+        numCards_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getHand().size();
 
-        Hero currentPlayerHero = board.getCurrentPlayerHero();
+        Hero currentPlayerHero = board.getCurrentPlayer().getHero();
         heroHealth_[currentPlayerId][turn][currentPlayerId] = currentPlayerHero.getHealth();
-        Hero waitingPlayerHero = board.getWaitingPlayerHero();
+        Hero waitingPlayerHero = board.getWaitingPlayer().getHero();
         heroHealth_[currentPlayerId][turn][waitingPlayerId] = waitingPlayerHero.getHealth();
 
         heroArmor_[currentPlayerId][turn][currentPlayerId] = currentPlayerHero.getArmor();
         heroArmor_[currentPlayerId][turn][waitingPlayerId] = waitingPlayerHero.getArmor();
     }
 
+<<<<<<< HEAD
 	@Override
 	public int getRecordLength(int playerId) {
 		return state_.size();
@@ -434,6 +467,38 @@ public class GameSimpleRecord implements GameRecord {
 		// TODO Auto-generated method stub
 		return null;
 	}
+=======
+    @Override
+    public int getRecordLength(int playerId) {
+        return maxTurns_;
+    }
+
+    @Override
+    public int getNumMinions(int playerId, int turn, int currentPlayerId) {
+        return numMinions_[currentPlayerId][turn][playerId];
+    }
+
+    @Override
+    public int getNumCardsInHand(int playerId, int turn, int currentPlayerId) {
+        return numCards_[currentPlayerId][turn][playerId];
+    }
+
+    @Override
+    public int getHeroHealth(int playerId, int turn, int currentPlayerId) {
+        return heroHealth_[currentPlayerId][turn][playerId];
+    }
+
+    @Override
+    public int getHeroArmor(int playerId, int turn, int currentPlayerId) {
+        return heroArmor_[currentPlayerId][turn][playerId];
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+>>>>>>> 0879d456082206ad6cf9a55b903d6321bf76f7dd
 
 	@Override
 	public void setFirstPlayer(int firstPlayerId) {

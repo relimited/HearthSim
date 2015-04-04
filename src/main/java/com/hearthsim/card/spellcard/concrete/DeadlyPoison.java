@@ -1,79 +1,84 @@
 package com.hearthsim.card.spellcard.concrete;
 
-import com.hearthsim.card.Deck;
+import com.hearthsim.card.Card;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.spellcard.SpellCard;
-import com.hearthsim.exception.HSException;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
+import com.hearthsim.event.effect.CardEffectCharacter;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 public class DeadlyPoison extends SpellCard {
 
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param hasBeenUsed Whether the card has already been used or not
-	 */
-	public DeadlyPoison(boolean hasBeenUsed) {
-		super((byte)1, hasBeenUsed);
-		
-		this.canTargetEnemyHero = false;
-		this.canTargetEnemyMinions = false;
-		this.canTargetOwnMinions = false;
-	}
+    private final static CharacterFilter filter = new CharacterFilterTargetedSpell() {
+        @Override
+        protected boolean includeOwnHero() { return true; }
 
-	/**
-	 * Constructor
-	 * 
-	 * Defaults to hasBeenUsed = false
-	 */
-	public DeadlyPoison() {
-		this(false);
-	}
-	
-	@Override
-	public boolean canBeUsedOn(PlayerSide playerSide, Minion minion, BoardModel boardModel) {
-		if(!super.canBeUsedOn(playerSide, minion, boardModel)) {
-			return false;
-		}
+        @Override
+        public boolean targetMatches(PlayerSide originSide, Card origin, PlayerSide targetSide, Minion targetCharacter, BoardModel board) {
+            if (!super.targetMatches(originSide, origin, targetSide, targetCharacter, board)) {
+                return false;
+            }
 
-		if (((Hero)minion).getWeaponCharge() <= 0) {
-			return false;
-		}
-		
-		return true;
-	}
+            if (((Hero)targetCharacter).getWeapon() == null) {
+                return false;
+            }
 
-	/**
-	 * 
-	 * Give your weapon +2 attack
-	 * 
-	 *
+            return true;
+        }
+    };
+
+    /**
+     * Constructor
+     *
+     * @param hasBeenUsed Whether the card has already been used or not
+     */
+    @Deprecated
+    public DeadlyPoison(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
+
+    /**
+     * Constructor
+     *
+     * Defaults to hasBeenUsed = false
+     */
+    public DeadlyPoison() {
+        super();
+    }
+
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return DeadlyPoison.filter;
+    }
+
+    /**
+     *
+     * Give your weapon +2 attack
+     *
+     *
      *
      * @param side
      * @param boardState The BoardState before this card has performed its action.  It will be manipulated and returned.
      *
      * @return The boardState is manipulated and returned
-	 */
-	@Override
-	protected HearthTreeNode use_core(
-			PlayerSide side,
-			Minion targetMinion,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1,
-			boolean singleRealizationOnly)
-		throws HSException
-	{
-		HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
-		if (toRet != null) {
-			Hero hero = (Hero)targetMinion;
-			hero.setAttack((byte)(hero.getAttack() + 2));
-		}
-		return toRet;
-	}
-	
+     */
+    @Override
+    public CardEffectCharacter getTargetableEffect() {
+        if (this.effect == null) {
+            this.effect = new CardEffectCharacter() {
+                @Override
+                public HearthTreeNode applyEffect(PlayerSide originSide, Card origin, PlayerSide targetSide, int targetCharacterIndex, HearthTreeNode boardState) {
+                    Hero hero = (Hero)boardState.data_.getCharacter(targetSide, targetCharacterIndex);
+                    hero.setAttack((byte)(hero.getAttack() + 2));
+                    return boardState;
+                }
+            };
+        }
+        return this.effect;
+    }
 }

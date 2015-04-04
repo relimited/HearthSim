@@ -1,8 +1,12 @@
 package com.hearthsim.card
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import com.hearthsim.card.Card
 import com.hearthsim.card.minion.Hero
 import com.hearthsim.card.minion.Minion
 import com.hearthsim.card.minion.heroes.TestHero
@@ -15,31 +19,31 @@ import groovy.util.logging.Slf4j
 class ImplementedCardList {
 
     private static ImplementedCardList instance
-	
-	static class TypeParser {
-		private static String TYPE_CLASSNAME_PATTERN_SPELL = "spellcard.concrete"
-		private static String TYPE_CLASSNAME_PATTERN_MINION = "minion.concrete"
-		private static String TYPE_CLASSNAME_PATTERN_WEAPON = "weapon.concrete"
-		private static String TYPE_CLASSNAME_PATTERN_HERO = "minion.heroes"
     
-		public static String parse(String classPath) {
-			if (classPath.contains(TYPE_CLASSNAME_PATTERN_HERO))
-				return "Hero"
-			else if (classPath.contains(TYPE_CLASSNAME_PATTERN_MINION))
-				return "Minion"
-			else if (classPath.contains(TYPE_CLASSNAME_PATTERN_WEAPON))
-				return "Weapon"
-			else if (classPath.contains(TYPE_CLASSNAME_PATTERN_SPELL))
-				return "Spell"
-			return "Unknown"
-		}	
-	}
-	
-	private static String MECHANICS_TAUNT = "Taunt";
-	private static String MECHANICS_SHIELD = "Divine Shield";
-	private static String MECHANICS_WINDFURY = "Windfury";
-	private static String MECHANICS_CHARGE = "Charge";
-	private static String MECHANICS_STEALTH = "Stealth";
+    static class TypeParser {
+        private static String TYPE_CLASSNAME_PATTERN_SPELL = "spellcard.concrete"
+        private static String TYPE_CLASSNAME_PATTERN_MINION = "minion.concrete"
+        private static String TYPE_CLASSNAME_PATTERN_WEAPON = "weapon.concrete"
+        private static String TYPE_CLASSNAME_PATTERN_HERO = "minion.heroes"
+    
+        public static String parse(String classPath) {
+            if (classPath.contains(TYPE_CLASSNAME_PATTERN_HERO))
+                return "Hero"
+            else if (classPath.contains(TYPE_CLASSNAME_PATTERN_MINION))
+                return "Minion"
+            else if (classPath.contains(TYPE_CLASSNAME_PATTERN_WEAPON))
+                return "Weapon"
+            else if (classPath.contains(TYPE_CLASSNAME_PATTERN_SPELL))
+                return "Spell"
+            return "Unknown"
+        }    
+    }
+    
+    private static String MECHANICS_TAUNT = "Taunt";
+    private static String MECHANICS_SHIELD = "Divine Shield";
+    private static String MECHANICS_WINDFURY = "Windfury";
+    private static String MECHANICS_CHARGE = "Charge";
+    private static String MECHANICS_STEALTH = "Stealth";
 
     public ArrayList<ImplementedCard> list_;
     public Map<Class<?>, ImplementedCard> map_;
@@ -56,14 +60,21 @@ class ImplementedCardList {
 
     public class ImplementedCard implements Comparable<ImplementedCard> {
 
+        private static final htmlTagPattern = ~/<[a-zA-Z_0-9\/]+?>/
+        private static final overloadPattern = ~/Overload:\s+?\((\d+)\)/
+        private static final spellEffectPattern = ~/\$(\d+) damage/
+        // TODO This regex assumes spell damage is at the beginning of a line because of Ancient Mage
+        private static final spellDamagePattern = ~/^Spell Damage\s+\+(\d+)/
+
         public Class<?> cardClass_;
         public String name_;
         public String type_;
         public String charClass_;
         public String rarity_;
         public String text_;
-		public boolean isHero;
-		public boolean collectible;
+        public String race;
+        public boolean isHero;
+        public boolean collectible;
         public boolean taunt_;
         public boolean divineShield_;
         public boolean windfury_;
@@ -73,6 +84,9 @@ class ImplementedCardList {
         public int attack_;
         public int health_;
         public int durability;
+        public int overload;
+        public int spellDamage;
+        public int spellEffect;
 
         @Override
         public int compareTo(ImplementedCard o) {
@@ -83,12 +97,12 @@ class ImplementedCardList {
             return result;
         }
 
-		public Card createCardInstance() {
-			Constructor<?> ctor;
-			ctor = this.cardClass_.getConstructor();
-			Card card = (Card)ctor.newInstance();
-			return card;
-		}
+        public Card createCardInstance() {
+            Constructor<?> ctor;
+            ctor = this.cardClass_.getConstructor();
+            Card card = (Card)ctor.newInstance();
+            return card;
+        }
     }
 
     ImplementedCardList() {
@@ -104,6 +118,22 @@ class ImplementedCardList {
 
             def className = implementedCardFromJson['class']
             def clazz = Class.forName(className)
+            
+            def cleanedText = cardDefinition.text == null ? '' : ImplementedCard.htmlTagPattern.matcher(cardDefinition.text).replaceAll("")
+            def overload = 0
+            def spellDamage = 0
+            def spellEffect = 0
+            if (!cleanedText.equals('')) {
+                def matcher = ImplementedCard.overloadPattern.matcher(cleanedText)
+                overload = matcher.size() == 1 ? matcher[0][1].toInteger() : 0
+
+                matcher = ImplementedCard.spellDamagePattern.matcher(cleanedText)
+                spellDamage = matcher.size() == 1 ? matcher[0][1].toInteger() : 0
+
+                matcher = ImplementedCard.spellEffectPattern.matcher(cleanedText)
+                spellEffect = matcher.size() == 1 ? matcher[0][1].toInteger() : 0
+            }
+
             def implementedCard = new ImplementedCard(
                     cardClass_: className,
                     name_: cardDefinition.name,
@@ -114,14 +144,19 @@ class ImplementedCardList {
                     attack_: (cardDefinition.attack == null) ? -1 : cardDefinition.attack, //return -1 if it's 0. only if null.
                     health_: (cardDefinition.health == null) ? -1 : cardDefinition.health,
                     durability: (cardDefinition.durability == null) ? -1 : cardDefinition.durability,
-                    taunt_: cardDefinition.mechanics?.contains(ImplementedCardList.MECHANICS_TAUNT) ?: false,
-                    divineShield_: cardDefinition.mechanics?.contains(ImplementedCardList.MECHANICS_SHIELD) ?: false,
-                    windfury_: cardDefinition.mechanics?.contains(ImplementedCardList.MECHANICS_WINDFURY) ?: false,
-                    charge_: cardDefinition.mechanics?.contains(ImplementedCardList.MECHANICS_CHARGE) ?: false,
-                    stealth_: cardDefinition.mechanics?.contains(ImplementedCardList.MECHANICS_STEALTH) ?: false,
-					text_: cardDefinition.text?: '',
-					isHero: Hero.class.isAssignableFrom(clazz),
-					collectible: cardDefinition.collectible?: false,
+                    taunt_: cardDefinition.mechanics?.contains(MECHANICS_TAUNT) ?: false,
+                    divineShield_: cardDefinition.mechanics?.contains(MECHANICS_SHIELD) ?: false,
+                    windfury_: cardDefinition.mechanics?.contains(MECHANICS_WINDFURY) ?: false,
+                    charge_: cardDefinition.mechanics?.contains(MECHANICS_CHARGE) ?: false,
+                    stealth_: cardDefinition.mechanics?.contains(MECHANICS_STEALTH) ?: false,
+                    text_: cardDefinition.text?: '',
+                    isHero: Hero.class.isAssignableFrom(clazz),
+                    collectible: cardDefinition.collectible?: false,
+                    overload: overload,
+                    race: cardDefinition.race,
+                    spellDamage: spellDamage,
+                    spellEffect: spellEffect
+                    
             )
             list_ << implementedCard
 
@@ -137,7 +172,7 @@ class ImplementedCardList {
     public ImplementedCard getCardForClass(Class<?> clazz) {
         def card =map_.get(clazz)
         if (!card) {
-            if ([Minion, TestHero].contains(clazz)) {
+            if ([Card, Minion, TestHero].contains(clazz)) {
                 return null
             } else {
                 throw new RuntimeException("unable to find card for class [$clazz]")
@@ -145,5 +180,15 @@ class ImplementedCardList {
         }
 
         return card;
+    }
+
+    // TODO: could probably be faster
+    public ImplementedCard getCardForName(String name) {
+        for(card in list_) {
+            if(card.name_.compareTo(name) == 0) {
+                return card
+            };
+        }
+        return null;
     }
 }

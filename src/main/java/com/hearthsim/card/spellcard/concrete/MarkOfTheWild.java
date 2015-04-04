@@ -1,66 +1,55 @@
 package com.hearthsim.card.spellcard.concrete;
 
-import com.hearthsim.card.Deck;
-import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.spellcard.SpellCard;
-import com.hearthsim.exception.HSException;
-import com.hearthsim.model.PlayerSide;
-import com.hearthsim.util.tree.HearthTreeNode;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
+import com.hearthsim.event.effect.CardEffectCharacter;
+import com.hearthsim.event.effect.CardEffectCharacterBuffDelta;
 
 public class MarkOfTheWild extends SpellCard {
 
+    private final static CardEffectCharacter effect = new CardEffectCharacterBuffDelta(2, 2, true);
 
-	/**
-	 * Constructor
-	 * 
-	 * @param hasBeenUsed Whether the card has already been used or not
-	 */
-	public MarkOfTheWild(boolean hasBeenUsed) {
-		super((byte)2, hasBeenUsed);
+    /**
+     * Constructor
+     *
+     * @param hasBeenUsed Whether the card has already been used or not
+     */
+    @Deprecated
+    public MarkOfTheWild(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
 
-		this.canTargetEnemyHero = false;
-		this.canTargetOwnHero = false;
-	}
+    /**
+     * Constructor
+     *
+     * Defaults to hasBeenUsed = false
+     */
+    public MarkOfTheWild() {
+        super();
+    }
 
-	/**
-	 * Constructor
-	 * 
-	 * Defaults to hasBeenUsed = false
-	 */
-	public MarkOfTheWild() {
-		this(false);
-	}
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterTargetedSpell.ALL_MINIONS;
+    }
 
-	/**
-	 * 
-	 * Use the card on the given target
-	 * 
-	 * This card heals the target minion up to full health and gives it taunt.  Cannot be used on heroes.
-	 * 
-	 *
+    /**
+     *
+     * Use the card on the given target
+     *
+     * This card heals the target minion up to full health and gives it taunt.  Cannot be used on heroes.
+     *
+     *
      *
      * @param side
      * @param boardState The BoardState before this card has performed its action.  It will be manipulated and returned.
      *
      * @return The boardState is manipulated and returned
-	 */
-	@Override
-	protected HearthTreeNode use_core(
-			PlayerSide side,
-			Minion targetMinion,
-			HearthTreeNode boardState,
-			Deck deckPlayer0,
-			Deck deckPlayer1,
-			boolean singleRealizationOnly)
-		throws HSException
-	{
-		HearthTreeNode toRet = super.use_core(side, targetMinion, boardState, deckPlayer0, deckPlayer1, singleRealizationOnly);
-		if (toRet != null) {
-			targetMinion.setAttack((byte)(targetMinion.getAttack() + 2));
-			targetMinion.setHealth((byte)(targetMinion.getHealth() + 2));
-			targetMinion.setMaxHealth((byte)(targetMinion.getMaxHealth() + 2));
-			targetMinion.setTaunt(true);
-		}
-		return toRet;
-	}
+     */
+    @Override
+    public CardEffectCharacter getTargetableEffect() {
+        return MarkOfTheWild.effect;
+    }
 }

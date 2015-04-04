@@ -67,6 +67,7 @@ class ReferenceCardRegistry {
                         rarity: card.rarity,
                         mechanics: card.mechanics,
                         collectible: card.collectible, //TODO: let's add some tests for these conditions
+                        race: card.race
                 )
             }
 
@@ -89,9 +90,9 @@ class ReferenceCardRegistry {
         cardDefinitions.find { it.name == name && (it.type != 'Hero' || it.collectible) }
     }
 
-	public ReferenceCard cardByNameAndType(String name, String type) {
-		cardDefinitions.find { it.name == name && it.type == type && (it.type != 'Hero' || it.collectible) }
-	}
+    public ReferenceCard cardByNameAndType(String name, String type) {
+        cardDefinitions.find { it.name == name && it.type == type && (it.type != 'Hero' || it.collectible) }
+    }
 
     public List<ReferenceCard> getCollectibles(){
         cardDefinitions.findAll { it.collectible }

@@ -1,27 +1,43 @@
 package com.hearthsim.card.spellcard.concrete;
 
-import com.hearthsim.card.spellcard.SpellDamageAoe;
+import com.hearthsim.card.spellcard.SpellDamage;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterTargetedSpell;
+import com.hearthsim.event.effect.CardEffectAoeInterface;
+import com.hearthsim.event.effect.CardEffectCharacter;
 
-public class Consecration extends SpellDamageAoe {
+public class Consecration extends SpellDamage implements CardEffectAoeInterface {
 
-	private static final byte DAMAGE_AMOUNT = 2;
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param hasBeenUsed Whether the card has already been used or not
-	 */
-	public Consecration(boolean hasBeenUsed) {
-		super((byte)4, DAMAGE_AMOUNT, hasBeenUsed);
-		this.hitsEnemyHero = true;
-	}
+    /**
+     * Constructor
+     *
+     * @param hasBeenUsed Whether the card has already been used or not
+     */
+    @Deprecated
+    public Consecration(boolean hasBeenUsed) {
+        this();
+        this.hasBeenUsed = hasBeenUsed;
+    }
 
-	/**
-	 * Constructor
-	 * 
-	 * Defaults to hasBeenUsed = false
-	 */
-	public Consecration() {
-		this(false);
-	}
+    /**
+     * Constructor
+     *
+     * Defaults to hasBeenUsed = false
+     */
+    public Consecration() {
+        super();
+    }
+
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterTargetedSpell.OPPONENT;
+    }
+
+    @Override
+    public CardEffectCharacter getAoeEffect() { return this.getTargetableEffect(); }
+
+    @Override
+    public CharacterFilter getAoeFilter() {
+        return CharacterFilter.ALL_ENEMIES;
+    }
 }

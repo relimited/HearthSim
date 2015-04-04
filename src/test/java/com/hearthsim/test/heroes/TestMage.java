@@ -1,14 +1,5 @@
 package com.hearthsim.test.heroes;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.hearthsim.card.Card;
-import com.hearthsim.card.Deck;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.minion.concrete.BoulderfistOgre;
@@ -16,151 +7,127 @@ import com.hearthsim.card.minion.concrete.ChillwindYeti;
 import com.hearthsim.card.minion.concrete.FaerieDragon;
 import com.hearthsim.card.minion.heroes.Mage;
 import com.hearthsim.card.minion.heroes.TestHero;
-import com.hearthsim.card.spellcard.concrete.TheCoin;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
+import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TestMage {
 
+    private HearthTreeNode board;
+    private PlayerModel currentPlayer;
+    private PlayerModel waitingPlayer;
 
-	private HearthTreeNode board;
-	private Deck deck;
+    @Before
+    public void setup() throws HSException {
+        board = new HearthTreeNode(new BoardModel(new Mage(), new TestHero()));
+        currentPlayer = board.data_.getCurrentPlayer();
+        waitingPlayer = board.data_.getWaitingPlayer();
 
-	@Before
-	public void setup() throws HSException {
-		board = new HearthTreeNode(new BoardModel(new Mage(), new TestHero()));
+        board.data_.placeMinion(PlayerSide.CURRENT_PLAYER, new ChillwindYeti());
+        board.data_.placeMinion(PlayerSide.CURRENT_PLAYER, new BoulderfistOgre());
 
-		Minion minion0_0 = new ChillwindYeti();
-		Minion minion0_1 = new BoulderfistOgre();
-		Minion minion1_0 = new ChillwindYeti();
-		Minion minion1_1 = new BoulderfistOgre();
-		
-		board.data_.placeCardHandCurrentPlayer(minion0_1);
-		board.data_.placeCardHandCurrentPlayer(minion0_0);
-				
-		board.data_.placeCardHandWaitingPlayer(minion1_1);
-		board.data_.placeCardHandWaitingPlayer(minion1_0);
+        board.data_.placeMinion(PlayerSide.WAITING_PLAYER, new ChillwindYeti());
+        board.data_.placeMinion(PlayerSide.WAITING_PLAYER, new BoulderfistOgre());
 
-		Card cards[] = new Card[10];
-		for (int index = 0; index < 10; ++index) {
-			cards[index] = new TheCoin();
-		}
-	
-		deck = new Deck(cards);
+        currentPlayer.setMana((byte) 8);
+        waitingPlayer.setMana((byte) 8);
+    }
 
-		board.data_.getCurrentPlayer().setMana((byte)11);
-		board.data_.getWaitingPlayer().setMana((byte)11);
-		
-		board.data_.getCurrentPlayer().setMaxMana((byte)8);
-		board.data_.getWaitingPlayer().setMaxMana((byte)8);
-		
-		HearthTreeNode tmpBoard = new HearthTreeNode(board.data_.flipPlayers());
-		tmpBoard.data_.getCurrentPlayerCardHand(0).useOn(PlayerSide.CURRENT_PLAYER, tmpBoard.data_.getCurrentPlayerHero(), tmpBoard, deck, null);
-		tmpBoard.data_.getCurrentPlayerCardHand(0).useOn(PlayerSide.CURRENT_PLAYER, tmpBoard.data_.getCurrentPlayerHero(), tmpBoard, deck, null);
+    @Test
+    public void testHeropowerAgainstOpponent() throws HSException {
+        Hero mage = currentPlayer.getHero();
 
-		board = new HearthTreeNode(tmpBoard.data_.flipPlayers());
-		board.data_.getCurrentPlayerCardHand(0).useOn(PlayerSide.CURRENT_PLAYER, board.data_.getCurrentPlayerHero(), board, deck, null);
-		board.data_.getCurrentPlayerCardHand(0).useOn(PlayerSide.CURRENT_PLAYER, board.data_.getCurrentPlayerHero(), board, deck, null);
+        HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, 0, board);
+        assertEquals(board, ret);
 
-		board.data_.resetMana();
-		board.data_.resetMinions();
-		
-	}
+        assertEquals(currentPlayer.getMana(), 6);
+        assertEquals(waitingPlayer.getHero().getHealth(), 29);
+    }
 
-	@Test
-	public void testHeropowerAgainstOpponent() throws HSException {
-		Minion target = board.data_.getCharacter(PlayerSide.WAITING_PLAYER, 0); // Opponent hero
-		Hero mage = board.data_.getCurrentPlayerHero();
+    @Test
+    public void testHeropowerAgainstMinion() throws HSException {
+        Hero mage = currentPlayer.getHero();
 
-		HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, target, board, deck, null);
-		assertEquals(board, ret);
+        HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, 1, board);
+        assertEquals(board, ret);
 
-		assertEquals(board.data_.getCurrentPlayer().getMana(), 6);
-		assertEquals(board.data_.getWaitingPlayerHero().getHealth(), 29);
-	}
+        assertEquals(currentPlayer.getMana(), 6);
 
-	@Test
-	public void testHeropowerAgainstMinion() throws HSException {
-		Minion target = board.data_.getCharacter(PlayerSide.WAITING_PLAYER, 1); // Yeti
-		Hero mage = board.data_.getCurrentPlayerHero();
+        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 5);
+        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 4);
+        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 7);
+    }
 
-		HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, target, board, deck, null);
-		assertEquals(board, ret);
+    @Test
+    @Ignore("Functionality explicitly disabled")
+    public void testHeropowerAgainstSelf() throws HSException {
+        Hero mage = currentPlayer.getHero();
 
-		assertEquals(board.data_.getCurrentPlayer().getMana(), 6);
+        HearthTreeNode ret = mage.useHeroAbility(PlayerSide.CURRENT_PLAYER, 0, board);
+        assertEquals(board, ret);
 
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(0).getHealth(), 5);
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(1).getHealth(), 7);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(0).getHealth(), 4);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(1).getHealth(), 7);
-	}
+        assertEquals(currentPlayer.getMana(), 6);
+        assertEquals(currentPlayer.getHero().getHealth(), 29);
+    }
 
-	@Test
-	public void testHeropowerAgainstSelf() throws HSException {
-		Minion target = board.data_.getCharacter(PlayerSide.CURRENT_PLAYER, 0); // Self
-		Hero mage = board.data_.getCurrentPlayerHero();
-		
-		HearthTreeNode ret = mage.useHeroAbility(PlayerSide.CURRENT_PLAYER, target, board, deck, null);
-		assertEquals(board, ret);
+    @Test
+    public void testHeropowerAgainstOwnMinion() throws HSException {
+        Hero mage = currentPlayer.getHero();
 
-		assertEquals(board.data_.getCurrentPlayer().getMana(), 6);
-		assertEquals(board.data_.getCurrentPlayerHero().getHealth(), 29);
-	}
+        HearthTreeNode ret = mage.useHeroAbility(PlayerSide.CURRENT_PLAYER, 1, board);
+        assertEquals(board, ret);
 
-	@Test
-	public void testHeropowerAgainstOwnMinion() throws HSException {
-		Minion target = board.data_.getCharacter(PlayerSide.CURRENT_PLAYER, 1); // Yeti
-		Hero mage = board.data_.getCurrentPlayerHero();
+        assertEquals(currentPlayer.getMana(), 6);
 
-		HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, target, board, deck, null);
-		assertEquals(board, ret);
+        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 4);
+        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 5);
+        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 7);
+    }
 
-		assertEquals(board.data_.getCurrentPlayer().getMana(), 6);
+    @Test
+    public void testHeropowerAgainstFaerieMinion() throws HSException {
+        board.data_.placeMinion(PlayerSide.WAITING_PLAYER, new FaerieDragon());
 
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(0).getHealth(), 4);
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(1).getHealth(), 7);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(0).getHealth(), 5);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(1).getHealth(), 7);
-	}
+        Hero mage = currentPlayer.getHero();
 
-	@Test
-	public void testHeropowerAgainstFaerieMinion() throws HSException {
-		board.data_.placeMinion(PlayerSide.WAITING_PLAYER, new FaerieDragon());
+        assertFalse(mage.canBeUsedOn(PlayerSide.WAITING_PLAYER, 3, board.data_));
+        HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, 3, board);
+        assertNull(ret);
 
-		Minion target = board.data_.getCharacter(PlayerSide.WAITING_PLAYER, 3); // Faerie
-		Hero mage = board.data_.getCurrentPlayerHero();
+        assertEquals(currentPlayer.getMana(), 8);
+        assertEquals(waitingPlayer.getMinions().get(2).getHealth(), 2);
+    }
 
-		assertFalse(mage.canBeUsedOn(PlayerSide.WAITING_PLAYER, target, board.data_));
-		HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, target, board, deck, null);
-		assertNull(ret);
+    @Test
+    public void testHeropowerKillsMinion() throws HSException {
+        Minion target = waitingPlayer.getCharacter(1); // Yeti
+        target.setHealth((byte)1);
 
-		assertEquals(board.data_.getCurrentPlayer().getMana(), 8);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(2).getHealth(), 2);
-	}
-	
-	@Test
-	public void testHeropowerKillsMinion() throws HSException {
-		Minion target = board.data_.getCharacter(PlayerSide.WAITING_PLAYER, 1); // Yeti
-		target.setHealth((byte)1);
+        Hero mage = currentPlayer.getHero();
 
-		Hero mage = board.data_.getCurrentPlayerHero();
+        HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, target, board);
+        assertEquals(board, ret);
 
-		HearthTreeNode ret = mage.useHeroAbility(PlayerSide.WAITING_PLAYER, target, board, deck, null);
-		assertEquals(board, ret);
+        assertEquals(currentPlayer.getNumMinions(), 2);
+        assertEquals(waitingPlayer.getNumMinions(), 1);
 
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getNumMinions(), 2);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getNumMinions(), 1);
+        assertEquals(currentPlayer.getMana(), 6);
 
-		assertEquals(board.data_.getCurrentPlayer().getMana(), 6);
+        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 5);
+        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 7);
 
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(0).getHealth(), 5);
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(1).getHealth(), 7);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(0).getHealth(), 7);
-
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(0).getTotalAttack(), 4);
-		assertEquals(PlayerSide.CURRENT_PLAYER.getPlayer(board).getMinions().get(1).getTotalAttack(), 6);
-		assertEquals(PlayerSide.WAITING_PLAYER.getPlayer(board).getMinions().get(0).getTotalAttack(), 6);
-	}
+        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 4);
+        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 6);
+        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 6);
+    }
 }
