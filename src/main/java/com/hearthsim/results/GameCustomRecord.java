@@ -26,9 +26,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class GameSimpleRecord implements GameRecord {
+public class GameCustomRecord implements GameRecord {
 
-	final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GameSimpleRecord.class);
+	final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GameCustomRecord.class);
 	
 	int maxTurns_;
 	int firstPlayer;
@@ -42,11 +42,12 @@ public class GameSimpleRecord implements GameRecord {
 	
 	BoardModel turn0Model;		//special place to store information on turn 0, which normally gets ignored.
 	
-	public GameSimpleRecord() {
+	public GameCustomRecord() {
 		this(50);
 	}
 	
-	public GameSimpleRecord(int maxTurns) {
+	//TODO: update this to have no maximum on turns
+	public GameCustomRecord(int maxTurns) {
 		maxTurns_ = maxTurns;
 		numMinions_ = new byte[2][maxTurns][2];
 		numCards_ = new byte[2][maxTurns][2];
@@ -66,7 +67,7 @@ public class GameSimpleRecord implements GameRecord {
         
         //New and improved state logging
         if(turn == 0){
-        	turn0Model = board; //we need to capture the state at turn 0 to have a snowballs chance in hell of being able to log turn 1 correctly
+        	turn0Model = board; 
         }
         
         //standard logging strategy
@@ -78,6 +79,7 @@ public class GameSimpleRecord implements GameRecord {
         }
         
         List<HearthActionBoardPair> actionLog;
+        
         if(turnInformation.containsKey(currentPlayerId)){
         	actionLog = turnInformation.get(currentPlayerId);
         	actionLog.addAll(plays);
@@ -135,9 +137,14 @@ public class GameSimpleRecord implements GameRecord {
 		return heroArmor_[currentPlayerId][turn][playerId];
 	}
 	
+	/**
+	 * Where most of the magic happens.  Attempt to convert a turn into a JSON file
+	 * A lot of what happens in a turn is based on what happened during the previous turn
+	 */
 	public JSONObject getTurn(int playerId, int turn){
 		JSONObject enclosingObj = new JSONObject();
 		
+		//get the state list for this turn
 		List<HearthActionBoardPair> states = state_.get(turn).get(playerId);
 		List<HearthActionBoardPair> previousTurn = null;
 		List<HearthActionBoardPair> opponentPreviousTurn = null;
@@ -156,30 +163,11 @@ public class GameSimpleRecord implements GameRecord {
 			return enclosingObj;
 		}
 		
-		if(turn != 0){
-			enclosingObj.put("startCurrentPlayerHealth", heroHealth_[playerId][turn - 1][playerId]);
-			enclosingObj.put("startCurrentPlayerArmor", heroArmor_[playerId][turn - 1][playerId]);
-			
-			if(playerId == 0){
-				enclosingObj.put("startOpponentPlayerHealth", heroHealth_[1][turn - 1][1]);
-				enclosingObj.put("startOpponentPlayerArmor", heroArmor_[1][turn - 1][1]);
-			}else{
-				enclosingObj.put("startOpponentPlayerHealth", heroHealth_[0][turn - 1][0]);
-				enclosingObj.put("startOpponentPlayerArmor", heroArmor_[0][turn - 1][0]);
-			}
-		}else{
-			enclosingObj.put("startCurrentPlayerHealth", 30);
-			enclosingObj.put("startCurrentPlayerArmor", 0);
-			
-			if(playerId == 0){
-				enclosingObj.put("startOpponentPlayerHealth", 30);
-				enclosingObj.put("startOpponentPlayerArmor", 0);
-			}else{
-				enclosingObj.put("startOpponentPlayerHealth", 30);
-				enclosingObj.put("startOpponentPlayerArmor", 0);
-			}
-		}
+		//log the starting turn values for health and armor
+		enclosingObj = logTurnStartingValues(enclosingObj, heroHealth_, heroArmor_, playerId, turn);
 		
+		//log the starting board
+		//for turn 0, the board is empty 
 		if(turn != 0 && opponentPreviousTurn != null && !opponentPreviousTurn.isEmpty()){
 			HearthActionBoardPair lastActionBoardPair = opponentPreviousTurn.get(opponentPreviousTurn.size() - 1);
 			enclosingObj.put("startBoard", getBoard(lastActionBoardPair.board, true));
@@ -187,6 +175,7 @@ public class GameSimpleRecord implements GameRecord {
 			enclosingObj.put("startBoard", new JSONObject());
 		}
 		
+		//log the final turn values for health and armor
 		enclosingObj.put("endCurrentPlayerHealth", heroHealth_[playerId][turn][playerId]);
 		enclosingObj.put("endCurrentPlayerArmor", heroArmor_[playerId][turn][playerId]);
 		if(playerId == 0){
@@ -197,173 +186,67 @@ public class GameSimpleRecord implements GameRecord {
 			enclosingObj.put("endOpponentPlayerArmor", heroArmor_[0][turn][0]);
 		}
 		
+		//log the actual turn as states
 		JSONArray statesJSON = new JSONArray();
 		
-		/*
+		//for each state in the state array...
 		for(int i = 0; i < states.size(); i++){
 			JSONObject json = new JSONObject();
 			HearthActionBoardPair state = states.get(i);
 			
+			//get the action for this state
 			HearthAction act = state.action;
+			
+			//get the board for this state
 			BoardModel board = state.board;
 			
 			JSONObject actJSON = new JSONObject();			
 			if(act != null){
-				actJSON.put("verb", act.verb_.toString());
+				//actions can now generate JSON objects that describe them, but we still need to convert the indexes that they present to 
+				//names
+				//Joe is picky.
+				ActionDescription actData = ActionDescription.fromJSON(act.toJSON()); //TODO: this is pretty slow.
+				
+				//log the verb associated with this action
+				actJSON.put("act", actData.verb.toString());
+				
 				try {
-					if(act.verb_ == Verb.ATTACK){
-						if(turn != 0 && i != 0){
-							if(act.targetCharacterIndex_ < states.get(i-1).board.getMinions(act.targetPlayerSide).size() + 1){
-								actJSON.put("target", states.get(i-1).board.getCharacter(act.targetPlayerSide, 
-										act.targetCharacterIndex_).getName() + "-" + act.targetCharacterIndex_);
-							}else{
-								actJSON.put("target_index", act.targetCharacterIndex_);
-							}
-							if(act.cardOrCharacterIndex_ < states.get(i-1).board.getMinions(act.actionPerformerPlayerSide).size() + 1){
-								actJSON.put("performer", states.get(i-1).board.getCharacter(act.actionPerformerPlayerSide, 
-										act.cardOrCharacterIndex_).getName() + "-" + act.cardOrCharacterIndex_);
-							}else{
-								actJSON.put("performer_index", act.cardOrCharacterIndex_);
-							}
-						}else if(turn != 0 && i == 0){
-							HearthActionBoardPair previousTurnState = previousTurn.get(previousTurn.size() - 1);
-							if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
-								actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  
-										act.targetCharacterIndex_).getName() + "-" + act.targetCharacterIndex_);
-							}else{
-								actJSON.put("target_index", act.targetCharacterIndex_);
-							}
+					//due to the fact that we need to do some minion calculation first, lets figure out what our turn relations are, then switch
+					//on the verb.
+					if(turn != 0 && i != 0){
+						//We have a past state to use for this turn
+						//(this is not the first turn and this turn has a previous state to use)
+						BoardModel pastBoardState = states.get(i-1).board;
+						actJSON = recordEvent(actData, actJSON, pastBoardState);
 						
-							if(act.cardOrCharacterIndex_ < previousTurnState.board.getMinions(act.actionPerformerPlayerSide).size() + 1){
-								actJSON.put("performer", previousTurnState.board.getCharacter(act.actionPerformerPlayerSide, 
-										act.cardOrCharacterIndex_).getName() + "-" + act.cardOrCharacterIndex_);
-							}else{
-								actJSON.put("performer_index", act.cardOrCharacterIndex_);
-							}
+					}else if(turn != 0 && i == 0){
+						//we need to look at the preceding turn to get past board state information
+						BoardModel previousTurnState = null;
+						if(turn == 1){
+							//turn 0 data is in a specalized variable
+							previousTurnState = this.turn0Model;
 						}else{
-							actJSON.put("target_index", act.targetCharacterIndex_);
-							actJSON.put("performer_index", act.cardOrCharacterIndex_);
+							//attempt to get previous turn info
+							if(previousTurn != null){
+								//get the last state from the past turn to use for targeting info
+								previousTurnState = previousTurn.get(previousTurn.size() - 1).board;
+							}
 						}
-					}else if(act.verb_ == Verb.USE_CARD){
-						if(turn != 0 && i != 0){
-							if(act.targetCharacterIndex_ < states.get(i-1).board.getMinions(act.targetPlayerSide).size() + 1){
-								actJSON.put("target", states.get(i-1).board.getCharacter(act.targetPlayerSide, 
-										act.targetCharacterIndex_).getName() + "-" + states.get(i-1).board.getIndexOfPlayer(act.targetPlayerSide));
-							}else{
-								actJSON.put("target_index", act.targetCharacterIndex_);
-							}
-							if(act.cardOrCharacterIndex_ < states.get(i-1).board.getNumCards_hand(act.actionPerformerPlayerSide)){
-								actJSON.put("performer", states.get(i-1).board.getCard_hand(act.actionPerformerPlayerSide, 
-										act.cardOrCharacterIndex_).getName() + "-" + states.get(i-1).board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-							}else{
-								actJSON.put("performer_index", act.cardOrCharacterIndex_);
-							}
-						}else if(turn != 0 && i == 0){
-							boolean skip_log = false;
-							
-							HearthActionBoardPair previousTurnState = null;
-							//if this is turn 1, we need to try and get indexes from the special turn 0 var
-							if(turn == 1){
-								skip_log = true;
-								
-								if(act.targetCharacterIndex_ < this.turn0Model.getMinions(act.targetPlayerSide).size() + 1){
-									actJSON.put("target", this.turn0Model.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName() + 
-											"-" + this.turn0Model.getIndexOfPlayer(act.targetPlayerSide));
-								}else{
-									actJSON.put("target_index", act.targetCharacterIndex_);
-								}
 						
-								if(act.cardOrCharacterIndex_ < this.turn0Model.getNumCards_hand(act.actionPerformerPlayerSide)){
-									actJSON.put("performer", this.turn0Model.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
-											"-" + this.turn0Model.getIndexOfPlayer(act.actionPerformerPlayerSide));
-								}else{
-									actJSON.put("performer_index", act.cardOrCharacterIndex_);
-								}
-							}
-							
-							//otherwise try to get indexes from previous logging
-							if(!skip_log){
-								if(previousTurn == null){
-									previousTurn = state_.get(turn).get(playerId);
-									if(previousTurn != null){
-										previousTurnState = previousTurn.get(previousTurn.size() - 1);
-									}else{
-										//was completely unable to get previous turn information, which includes subbing out the current turn
-										skip_log = true;
-										actJSON.put("target_index", act.targetCharacterIndex_);
-										actJSON.put("performer_index", act.cardOrCharacterIndex_);
-									}
-								}else{
-									previousTurnState = previousTurn.get(previousTurn.size() - 1);
-								}
-							}
-							
-							if(!skip_log){
-								if(act.targetCharacterIndex_ < previousTurnState.board.getMinions(act.targetPlayerSide).size() + 1){
-									actJSON.put("target", previousTurnState.board.getCharacter(act.targetPlayerSide,  act.targetCharacterIndex_).getName() + 
-											"-" + previousTurnState.board.getIndexOfPlayer(act.targetPlayerSide));
-								}else{
-									actJSON.put("target_index", act.targetCharacterIndex_);
-								}
+						//FIXME: took out current turn fallbacks.  If we can't get a previous turn, then log indexes
+						if(previousTurnState != null){
+							actJSON = recordEvent(actData, actJSON, previousTurnState);
+						}
 						
-								if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
-									actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
-											"-" + previousTurnState.board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-								}else{
-									actJSON.put("performer_index", act.cardOrCharacterIndex_);
-								}
-							}
-						}
-					}else if(act.verb_ == Verb.PLAY_MINION){
-						actJSON.put("target_index", act.targetCharacterIndex_ + 1);
-						if(turn != 0 && i != 0){
-							if(act.cardOrCharacterIndex_ < states.get(i-1).board.getNumCards_hand(act.actionPerformerPlayerSide)){
-								actJSON.put("performer", states.get(i-1).board.getCard_hand(act.actionPerformerPlayerSide, 
-										act.cardOrCharacterIndex_).getName() + "-" + states.get(i-1).board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-							}else{
-								actJSON.put("performer_index", act.cardOrCharacterIndex_);
-							}
-						}else if(turn != 0 && i == 0){
-							boolean skip_log = false;
-							
-							//Turn 1 is stupid
-							if(turn == 1){
-								skip_log = true;
-								actJSON.put("performer", board.getMinion(act.targetPlayerSide, act.targetCharacterIndex_).getName() + 
-										"-" + board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-							}
-							HearthActionBoardPair previousTurnState = null;
-							
-							if(!skip_log){
-								if(previousTurn == null){
-									previousTurn = state_.get(turn).get(playerId);
-									if(previousTurn != null){
-										previousTurnState = previousTurn.get(previousTurn.size() - 1);
-									}else{
-										skip_log = true;
-										//was completely unable to get previous turn information, which includes subbing out the current turn
-										actJSON.put("performer_index", act.cardOrCharacterIndex_);
-									}
-								}else{
-									previousTurnState = previousTurn.get(previousTurn.size() - 1);
-								}
-							}
-							
-							if(!skip_log){
-								if(act.cardOrCharacterIndex_ < previousTurnState.board.getNumCards_hand(act.actionPerformerPlayerSide)){
-									actJSON.put("performer", previousTurnState.board.getCard_hand(act.actionPerformerPlayerSide, act.cardOrCharacterIndex_).getName() + 
-											"-" + previousTurnState.board.getIndexOfPlayer(act.actionPerformerPlayerSide));
-								}else{
-									actJSON.put("performer_index", act.cardOrCharacterIndex_);
-								}
-							}
-						}
+					}else{
+						//we've got nothing for target data.
+						log.debug("Unable to get targeting info for " + turn + ", " + i);
 					}
+					
 				} catch (JSONException e) {
 					e.printStackTrace();
-				} catch (HSInvalidPlayerIndexException e) {
-					e.printStackTrace();
 				}
+				
 				json.put("action", actJSON);
 			}else{
 				json.put("action", "null");
@@ -380,8 +263,98 @@ public class GameSimpleRecord implements GameRecord {
 			statesJSON.put(json);
 		}
 		enclosingObj.put("states", statesJSON);
-		*/
+		
 		return enclosingObj;
+	}
+	
+	/**
+	 * Get the minions on the board for a particular side
+	 * @param board a board model to extract minions from
+	 * @param side a side to extract minions from
+	 * 
+	 * @return a list of minions, the list can be empty
+	 * 
+	 * TODO I'm assuming that minion placement will be correct in the
+	 
+	private List<Minion> extractMinions(BoardModel board, PlayerSide side){
+		IdentityLinkedList<MinionPlayerPair> minionPlayerPairs = board.getAllMinionsFIFOList();
+		List<Minion> minions = new ArrayList<Minion>(); //using array lists for O(1) indexing
+		for(MinionPlayerPair pair : minionPlayerPairs){
+			if(pair.getPlayerSide() == side){
+				minions.add(pair.getMinion());
+			}
+		}
+		
+		return minions;
+	}
+	*/
+	
+	private JSONObject recordEvent(ActionDescription actData, JSONObject actJSON, BoardModel pastBoardState){
+		if(actData.verb == Verb.ATTACK){
+			actJSON = recordAttack(actData, actJSON, pastBoardState);
+		}else if(actData.verb == Verb.USE_CARD){
+			actJSON = recordUseCard(actData, actJSON, pastBoardState);
+		}else{
+			log.debug(actData.verb.toString() + " currently is unlogged.");
+		}
+		
+		return actJSON;
+	}
+	
+	private JSONObject recordUseCard(ActionDescription actData, JSONObject actJSON, BoardModel pastBoardState) {
+		try{
+			actJSON.put("target", pastBoardState.getCharacter(actData.targetPlayerSide, 
+					actData.targetCharacterIndex).getName() + "-" + actData.targetCharacterIndex);
+		}catch(Exception e){
+			//if that doesn't work, fall back on indexes
+			log.debug(e.toString());
+			log.debug(e.getLocalizedMessage());
+			actJSON.put("target_index", actData.targetCharacterIndex);
+		}
+		
+		try{
+			//So, there is a buggy case (murgh).  If this is the first card, ever, then the t0 stuff bugs out
+			actJSON.put("performer", pastBoardState.getCard_hand(actData.actionPerformerPlayerSide,
+					actData.cardOrCharacterIndex).getName() + "-" + actData.cardOrCharacterIndex);
+		}catch(Exception e){
+			//if that doesn't work, fall back on indexes
+			log.debug(e.toString());
+			log.debug(e.getLocalizedMessage());
+			actJSON.put("performer_index", actData.cardOrCharacterIndex);
+		}
+		
+		return actJSON;
+	}
+
+	/**
+	 * 
+	 * @param actData
+	 * @param actJSON
+	 * @param pastBoardState
+	 * @return
+	 */
+	private JSONObject recordAttack(ActionDescription actData, JSONObject actJSON, BoardModel pastBoardState){
+		try{
+			actJSON.put("target", pastBoardState.getCharacter(actData.targetPlayerSide, 
+					actData.targetCharacterIndex).getName() + "-" + actData.targetCharacterIndex);
+		}catch(Exception e){
+			//if that doesn't work, fall back on indexes
+			log.debug(e.toString());
+			log.debug(e.getLocalizedMessage());
+			actJSON.put("target_index", actData.targetCharacterIndex);
+		}
+		
+		try{
+			actJSON.put("performer", pastBoardState.getCharacter(actData.actionPerformerPlayerSide,
+					actData.cardOrCharacterIndex).getName() + "-" + actData.cardOrCharacterIndex);
+		}catch(Exception e){
+			//if that doesn't work, fall back on indexes
+			log.debug(e.toString());
+			log.debug(e.getLocalizedMessage());
+			actJSON.put("performer_index", actData.cardOrCharacterIndex);
+		}
+		
+		return actJSON;
 	}
 	
 	/**
@@ -444,6 +417,34 @@ public class GameSimpleRecord implements GameRecord {
 		}
 		
 		return ret;
+	}
+	
+	private JSONObject logTurnStartingValues(JSONObject enclosingObj, byte[][][] heroHealth_, byte[][][] heroArmor_, int playerId, int turn){
+		if(turn != 0){
+			enclosingObj.put("startCurrentPlayerHealth", heroHealth_[playerId][turn - 1][playerId]);
+			enclosingObj.put("startCurrentPlayerArmor", heroArmor_[playerId][turn - 1][playerId]);
+			
+			if(playerId == 0){
+				enclosingObj.put("startOpponentPlayerHealth", heroHealth_[1][turn - 1][1]);
+				enclosingObj.put("startOpponentPlayerArmor", heroArmor_[1][turn - 1][1]);
+			}else{
+				enclosingObj.put("startOpponentPlayerHealth", heroHealth_[0][turn - 1][0]);
+				enclosingObj.put("startOpponentPlayerArmor", heroArmor_[0][turn - 1][0]);
+			}
+		}else{
+			enclosingObj.put("startCurrentPlayerHealth", 30);
+			enclosingObj.put("startCurrentPlayerArmor", 0);
+			
+			if(playerId == 0){
+				enclosingObj.put("startOpponentPlayerHealth", 30);
+				enclosingObj.put("startOpponentPlayerArmor", 0);
+			}else{
+				enclosingObj.put("startOpponentPlayerHealth", 30);
+				enclosingObj.put("startOpponentPlayerArmor", 0);
+			}
+		}
+		
+		return enclosingObj;
 	}
 
 	@Override

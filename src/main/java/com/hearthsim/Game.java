@@ -8,6 +8,7 @@ import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.player.playercontroller.ArtificialPlayer;
+import com.hearthsim.results.GameCustomRecord;
 import com.hearthsim.results.GameRecord;
 import com.hearthsim.results.GameResult;
 import com.hearthsim.results.GameSimpleRecord;
@@ -76,7 +77,7 @@ public class Game {
         boardModel.getWaitingPlayer().placeCardHand(new TheCoin());
         boardModel.getWaitingPlayer().setDeckPos((byte)4);
 
-        GameRecord record = new GameSimpleRecord();
+        GameRecord record = new GameCustomRecord();
 
         record.put(0, PlayerSide.CURRENT_PLAYER, boardModel.deepCopy(), null);
         record.put(0, PlayerSide.CURRENT_PLAYER, boardModel.flipPlayers().deepCopy(), null);

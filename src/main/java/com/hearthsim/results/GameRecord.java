@@ -67,7 +67,7 @@ public interface GameRecord {
 	public int getHeroArmor(int playerId, int turn, int currentPlayerId);
 	
 	/**
-	 * Get a streight log of all things on a turn 
+	 * Get a straight log of all things on a turn 
 	 */
 	public JSONObject getTurn(int playerId, int turn);
 	
