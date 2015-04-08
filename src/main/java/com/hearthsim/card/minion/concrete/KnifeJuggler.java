@@ -1,35 +1,34 @@
 package com.hearthsim.card.minion.concrete;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.Card;
-import com.hearthsim.card.CardPlayAfterInterface;
-import com.hearthsim.card.CardPlayBeginInterface;
-import com.hearthsim.card.Deck;
-import com.hearthsim.exception.HSException;
-import com.hearthsim.exception.HSInvalidPlayerIndexException;
-import com.hearthsim.model.PlayerModel;
+import com.hearthsim.card.minion.MinionSummonedInterface;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.effect.CardEffectCharacter;
+import com.hearthsim.event.effect.CardEffectCharacterDamage;
 import com.hearthsim.model.PlayerSide;
-import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.tree.HearthTreeNode;
-import com.hearthsim.util.tree.RandomEffectNode;
 
-public class KnifeJuggler extends Minion implements CardPlayAfterInterface {
-	private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+import java.util.Collection;
 
-	public KnifeJuggler() {
-		super();	
-	}
+public class KnifeJuggler extends Minion implements MinionSummonedInterface {
 
-	@Override
-	public HearthTreeNode onCardPlayResolve(PlayerSide thisCardPlayerSide,
-			PlayerSide cardUserPlayerSide, Card usedCard,
-			HearthTreeNode boardState, boolean singleRealizationOnly) {
-		// TODO Auto-generated method stub
-		// TODO Juggles doesn't do much of anything right now.  Fix that.
-		return null;
-	}
+    private static final CardEffectCharacter effect = new CardEffectCharacterDamage(1);
+
+    private final static CharacterFilter effectFilter = CharacterFilter.ALL_ENEMIES;
+
+    private final static CharacterFilter triggerFilter = CharacterFilter.FRIENDLY_MINIONS;
+
+    public KnifeJuggler() {
+        super();
+    }
+
+    @Override
+    public HearthTreeNode minionSummonEvent(PlayerSide thisMinionPlayerSide, PlayerSide summonedMinionPlayerSide, Minion summonedMinion, HearthTreeNode boardState) {
+        if (!KnifeJuggler.triggerFilter.targetMatches(thisMinionPlayerSide, this, summonedMinionPlayerSide, summonedMinion, boardState.data_)) {
+            return boardState;
+        }
+
+        Collection<HearthTreeNode> rngChildren = this.effectRandomCharacterUsingFilter(KnifeJuggler.effect, null, KnifeJuggler.effectFilter, boardState);
+        return this.createRngNodeWithChildren(boardState, rngChildren);
+    }
 }

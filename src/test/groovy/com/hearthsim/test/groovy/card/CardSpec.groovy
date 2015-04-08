@@ -41,6 +41,7 @@ class CardSpec extends Specification {
         assertHandEquals(oldPlayerModel.hand, newPlayerModel.hand)
         assertHeroEquals(oldPlayerModel.hero, newPlayerModel.hero)
         assertMinionsEqual(oldPlayerModel.minions, newPlayerModel.minions)
+        assert oldPlayerModel.numCardsUsed == newPlayerModel.numCardsUsed
         assert oldPlayerModel == newPlayerModel //catch all
     }
 
@@ -60,6 +61,10 @@ class CardSpec extends Specification {
             assert oldHand.get(indx).baseManaCost == newHand.get(indx).baseManaCost
             assert oldHand.get(indx).hasBeenUsed == newHand.get(indx).hasBeenUsed
             assert oldHand.get(indx).isInHand_ == newHand.get(indx).isInHand_
+            if (oldHand.get(indx) instanceof Minion && newHand.get(indx) instanceof Minion) {
+                assertMinionEquals((Minion)oldHand.get(indx), (Minion)newHand.get(indx))
+            }
+
             assert oldHand.get(indx) == newHand.get(indx)
         }
     }

@@ -86,6 +86,36 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
             return this.index;
         }
 
+        @Override
+        public int hashCode() {
+            int result = playerSide != null ? playerSide.hashCode() : 0;
+            result = 31 * result + index;
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+
+            if (!(o instanceof CharacterLocation)) {
+                return false;
+            }
+
+            CharacterLocation other = (CharacterLocation)o;
+
+            if (other.playerSide != this.playerSide) {
+                return false;
+            }
+
+            if (other.index != this.index) {
+                return false;
+            }
+
+            return true;
+        }
+
         @SuppressWarnings("UnusedDeclaration")
         public JSONObject toJSON() {
             JSONObject json = new JSONObject();
@@ -278,7 +308,6 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
     /**
      * Draw a card from a deck and place it in the hand
      *
-     * @param deck Deck from which to draw.
      * @param numCards Number of cards to draw.
      */
     public void drawCardFromWaitingPlayerDeck(int numCards) {
@@ -293,7 +322,6 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
      *
      * Note: It is almost always correct to use CardDrawNode instead of this function!!!!
      *
-     * @param deck Deck from which to draw.
      * @param numCards Number of cards to draw.
      */
     public void drawCardFromCurrentPlayerDeck(int numCards) {

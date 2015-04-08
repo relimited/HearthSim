@@ -56,6 +56,10 @@
         "class": "com.hearthsim.card.minion.concrete.AncientBrewmaster"
     },
     {
+        "name": "Ancient Watcher",
+        "class": "com.hearthsim.card.minion.concrete.AncientWatcher"
+    },
+    {
         "name": "Angry Chicken",
         "class": "com.hearthsim.card.minion.concrete.AngryChicken"
     },
@@ -208,12 +212,24 @@
         "class": "com.hearthsim.card.minion.concrete.Boar"
     },
     {
+        "name": "Bolvar Fordragon",
+        "class": "com.hearthsim.card.minion.concrete.BolvarFordragon"
+    },
+    {
+        "name": "Bomb Lobber",
+        "class": "com.hearthsim.card.minion.concrete.BombLobber"
+    },
+    {
         "name": "Booty Bay Bodyguard",
         "class": "com.hearthsim.card.minion.concrete.BootyBayBodyguard"
     },
     {
         "name": "Boulderfist Ogre",
         "class": "com.hearthsim.card.minion.concrete.BoulderfistOgre"
+    },
+    {
+        "name": "Brawl",
+        "class": "com.hearthsim.card.spellcard.concrete.Brawl"
     },
     {
         "name": "Captain Greenskin",
@@ -248,6 +264,10 @@
         "class": "com.hearthsim.card.minion.concrete.ClockworkGiant"
     },
     {
+        "name": "Coghammer",
+        "class": "com.hearthsim.card.weapon.concrete.Coghammer"
+    },
+    {
         "name": "Cold Blood",
         "class": "com.hearthsim.card.spellcard.concrete.ColdBlood"
     },
@@ -280,6 +300,10 @@
         "class": "com.hearthsim.card.minion.concrete.CruelTaskmaster"
     },
     {
+        "name": "Cult Master",
+        "class": "com.hearthsim.card.minion.concrete.CultMaster"
+    },
+    {
         "name": "Dalaran Mage",
         "class": "com.hearthsim.card.minion.concrete.DalaranMage"
     },
@@ -306,6 +330,10 @@
     {
         "name": "Deadly Poison",
         "class": "com.hearthsim.card.spellcard.concrete.DeadlyPoison"
+    },
+    {
+        "name": "Deadly Shot",
+        "class": "com.hearthsim.card.spellcard.concrete.DeadlyShot"
     },
     {
         "name": "Death's Bite",
@@ -449,6 +477,10 @@
         "class": "com.hearthsim.card.minion.concrete.FlameOfAzzinoth"
     },
     {
+        "name": "Flamecannon",
+        "class": "com.hearthsim.card.spellcard.concrete.Flamecannon"
+    },
+    {
         "name": "Flamestrike",
         "class": "com.hearthsim.card.spellcard.concrete.Flamestrike"
     },
@@ -499,6 +531,10 @@
     {
         "name": "Gladiator's Longbow",
         "class": "com.hearthsim.card.weapon.concrete.GladiatorsLongbow"
+    },
+    {
+        "name": "Glaivezooka",
+        "class": "com.hearthsim.card.weapon.concrete.Glaivezooka"
     },
     {
         "name": "Gnomish Inventor",
@@ -669,6 +705,10 @@
         "class": "com.hearthsim.card.minion.concrete.JunglePanther"
     },
     {
+        "name": "Junkbot",
+        "class": "com.hearthsim.card.minion.concrete.Junkbot"
+    },
+    {
         "name": "Kidnapper",
         "class": "com.hearthsim.card.minion.concrete.Kidnapper"
     },
@@ -781,12 +821,20 @@
         "class": "com.hearthsim.card.minion.concrete.MasterSwordsmith"
     },
     {
+        "name": "Mekgineer Thermaplugg",
+        "class": "com.hearthsim.card.minion.concrete.MekgineerThermaplugg"
+    },
+    {
         "name": "Mind Blast",
         "class": "com.hearthsim.card.spellcard.concrete.MindBlast"
     },
     {
         "name": "Mind Control",
         "class": "com.hearthsim.card.spellcard.concrete.MindControl"
+    },
+    {
+        "name": "Mind Control Tech",
+        "class": "com.hearthsim.card.minion.concrete.MindControlTech"
     },
     {
         "name": "Mini-Mage",
@@ -909,6 +957,10 @@
         "class": "com.hearthsim.card.minion.concrete.RagingWorgen"
     },
     {
+        "name": "Ragnaros the Firelord",
+        "class": "com.hearthsim.card.minion.concrete.RagnarosTheFirelord"
+    },
+    {
         "name": "Raid Leader",
         "class": "com.hearthsim.card.minion.concrete.RaidLeader"
     },
@@ -961,6 +1013,10 @@
         "class": "com.hearthsim.card.minion.concrete.ScarletCrusader"
     },
     {
+        "name": "Scavenging Hyena",
+        "class": "com.hearthsim.card.minion.concrete.ScavengingHyena"
+    },
+    {
         "name": "Sea Giant",
         "class": "com.hearthsim.card.minion.concrete.SeaGiant"
     },
@@ -985,6 +1041,10 @@
         "class": "com.hearthsim.card.spellcard.concrete.ShadowWordPain"
     },
     {
+        "name": "Shadowboxer",
+        "class": "com.hearthsim.card.minion.concrete.Shadowboxer"
+    },
+    {
         "name": "Shattered Sun Cleric",
         "class": "com.hearthsim.card.minion.concrete.ShatteredSunCleric"
     },
@@ -1005,6 +1065,10 @@
         "class": "com.hearthsim.card.minion.concrete.ShieldedMinibot"
     },
     {
+        "name": "Ship's Cannon",
+        "class": "com.hearthsim.card.minion.concrete.ShipsCannon"
+    },
+    {
         "name": "Shiv",
         "class": "com.hearthsim.card.spellcard.concrete.Shiv"
     },
@@ -1015,6 +1079,10 @@
     {
         "name": "Silence",
         "class": "com.hearthsim.card.spellcard.concrete.Silence"
+    },
+    {
+        "name": "Siltfin Spiritwalker",
+        "class": "com.hearthsim.card.minion.concrete.SiltfinSpiritwalker"
     },
     {
         "name": "Silver Hand Knight",

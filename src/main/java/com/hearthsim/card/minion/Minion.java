@@ -1,7 +1,12 @@
 package com.hearthsim.card.minion;
 
 import com.hearthsim.card.*;
+import com.hearthsim.event.CharacterFilter;
+import com.hearthsim.event.CharacterFilterSummon;
 import com.hearthsim.event.attack.AttackAction;
+import com.hearthsim.event.effect.CardEffectCharacter;
+import com.hearthsim.event.effect.CardEffectCharacterSummon;
+import com.hearthsim.event.effect.CardEffectOnResolveTargetableInterface;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.exception.HSInvalidPlayerIndexException;
 import com.hearthsim.model.BoardModel;
@@ -16,7 +21,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class Minion extends Card implements CardEndTurnInterface, CardStartTurnInterface {
+public class Minion extends Card implements CardEffectOnResolveTargetableInterface, CardEndTurnInterface, CardStartTurnInterface {
 
     public enum MinionTribe {
         NONE,
@@ -79,6 +84,7 @@ public class Minion extends Card implements CardEndTurnInterface, CardStartTurnI
     private boolean destroyOnTurnEnd_;
 
     protected byte spellDamage_;
+    protected boolean cantAttack;
 
     private AttackAction attackAction_;
 
@@ -108,6 +114,7 @@ public class Minion extends Card implements CardEndTurnInterface, CardStartTurnI
             tribe = Minion.StringToMinionTribe(implementedCard.race);
             isInHand_ = true;
             spellDamage_ = (byte) implementedCard.spellDamage;
+            cantAttack = implementedCard.cantAttack;
         }
     }
 
@@ -151,6 +158,7 @@ public class Minion extends Card implements CardEndTurnInterface, CardStartTurnI
 
         stealthed_ = false;
         heroTargetable_ = true;
+        cantAttack = false;
     }
 
     public boolean getTaunt() {
@@ -214,7 +222,7 @@ public class Minion extends Card implements CardEndTurnInterface, CardStartTurnI
     }
 
     public boolean canAttack() {
-        return !this.hasAttacked_ && (this.getTotalAttack()) > 0 && !this.frozen_;
+        return !this.hasAttacked_ && (this.getTotalAttack()) > 0 && !this.frozen_ && !cantAttack;
     }
 
     public void hasAttacked(boolean hasAttacked) {
@@ -525,6 +533,7 @@ public class Minion extends Card implements CardEndTurnInterface, CardStartTurnI
         deathrattleAction_ = null;
         stealthed_ = false;
         heroTargetable_ = true;
+        cantAttack = false;
 
         // Reset the attack and health to base
         this.attack_ = this.baseAttack_;
@@ -631,15 +640,23 @@ public class Minion extends Card implements CardEndTurnInterface, CardStartTurnI
      */
     @Override
     protected HearthTreeNode use_core(PlayerSide side, Minion targetMinion, HearthTreeNode boardState, boolean singleRealizationOnly) throws HSException {
-        if (hasBeenUsed || side == PlayerSide.WAITING_PLAYER || boardState.data_.modelForSide(side).isBoardFull())
+        if (hasBeenUsed || side == PlayerSide.WAITING_PLAYER || boardState.data_.modelForSide(side).isBoardFull()) {
             return null;
+        }
 
         HearthTreeNode toRet = boardState;
-        PlayerModel currentPlayer = toRet.data_.getCurrentPlayer();
-        currentPlayer.subtractMana(this.getManaCost(PlayerSide.CURRENT_PLAYER, boardState.data_));
-        currentPlayer.getHand().remove(this);
-        toRet = this.summonMinion(side, targetMinion, boardState, true, singleRealizationOnly);
+        toRet = super.use_core(side, targetMinion, toRet, singleRealizationOnly);
         return toRet;
+    }
+
+    @Override
+    public CardEffectCharacter getTargetableEffect() {
+        return new CardEffectCharacterSummon(this);
+    }
+
+    @Override
+    public CharacterFilter getTargetableFilter() {
+        return CharacterFilterSummon.ALL_FRIENDLIES;
     }
 
     /**
