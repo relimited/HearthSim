@@ -1,4 +1,4 @@
-package com.hearthsim.test.groovy.card.weapon
+package com.hearthsim.test.groovy.card
 
 import com.hearthsim.card.minion.concrete.*
 import com.hearthsim.card.minion.concrete.BombLobber
