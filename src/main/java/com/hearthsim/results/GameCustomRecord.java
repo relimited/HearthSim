@@ -299,6 +299,8 @@ public class GameCustomRecord implements GameRecord {
 	 * Get the previous state.
 	 * 
 	 * This... this is intense.  Get ready.
+	 * TODO: this needs to get updated.  Essentally, if both players just stop doing things for more than a turn, the model will cry
+	 * 		as it tries to get the last state for the pre-action logging
 	 * @param i
 	 * @param states
 	 * @param turn
