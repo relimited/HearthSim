@@ -1,8 +1,8 @@
 package com.hearthsim.test.heroes;
 
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
 import com.hearthsim.card.minion.Hero;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
 import com.hearthsim.card.minion.heroes.Hunter;
 import com.hearthsim.card.minion.heroes.TestHero;
 import com.hearthsim.exception.HSException;
@@ -58,7 +58,7 @@ public class TestHunter {
 
         assertEquals(currentPlayer.getMana(), 8);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(waitingPlayer.getCharacter(2).getHealth(), 7);
     }
 
     @Test

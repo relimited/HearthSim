@@ -1,7 +1,7 @@
 package com.hearthsim.test;
 
+import com.hearthsim.card.basic.minion.BloodfenRaptor;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.BloodfenRaptor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,35 +21,35 @@ public class TestMinionResetCopy {
     @Test
     public void testResetAttack() {
         copy.setAttack((byte)20);
-        Minion newCopy = copy.createResetCopy();
+        Minion newCopy = (Minion)copy.createResetCopy();
         assertEquals(original, newCopy);
     }
 
     @Test
     public void testResetDivineShield() {
         copy.setDivineShield(true);
-        Minion newCopy = copy.createResetCopy();
+        Minion newCopy = (Minion)copy.createResetCopy();
         assertEquals(original, newCopy);
     }
 
     @Test
     public void testResetHealth() {
         copy.setHealth((byte)20);
-        Minion newCopy = copy.createResetCopy();
+        Minion newCopy = (Minion)copy.createResetCopy();
         assertEquals(original, newCopy);
     }
 
     @Test
     public void testResetSpellDamage() {
         copy.setSpellDamage((byte)20);
-        Minion newCopy = copy.createResetCopy();
+        Minion newCopy = (Minion)copy.createResetCopy();
         assertEquals(original, newCopy);
     }
 
     @Test
     public void testResetWindfury() {
         copy.setWindfury(true);
-        Minion newCopy = copy.createResetCopy();
+        Minion newCopy = (Minion)copy.createResetCopy();
         assertEquals(original, newCopy);
     }
 }

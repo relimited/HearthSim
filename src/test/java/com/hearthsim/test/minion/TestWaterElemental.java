@@ -1,10 +1,10 @@
 package com.hearthsim.test.minion;
 
 import com.hearthsim.card.Card;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.basic.minion.WaterElemental;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
-import com.hearthsim.card.minion.concrete.WaterElemental;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -44,12 +44,12 @@ public class TestWaterElemental {
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(board, ret);
 
-        Minion waterElemental = currentPlayer.getMinions().get(0);
+        Minion waterElemental = currentPlayer.getCharacter(1);
         assertTrue(waterElemental instanceof WaterElemental);
 
         waterElemental.hasAttacked(false); // unset summoning sickness
         waterElemental.attack(PlayerSide.WAITING_PLAYER, 2, board, false);
-        assertTrue(waitingPlayer.getMinions().get(1).getFrozen());
+        assertTrue(waitingPlayer.getCharacter(2).getFrozen());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class TestWaterElemental {
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(board, ret);
 
-        Minion waterElemental = currentPlayer.getMinions().get(0);
+        Minion waterElemental = currentPlayer.getCharacter(1);
         assertTrue(waterElemental instanceof WaterElemental);
 
         waterElemental.hasAttacked(false); // unset summoning sickness

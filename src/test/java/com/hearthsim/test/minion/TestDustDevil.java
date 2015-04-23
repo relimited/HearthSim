@@ -1,10 +1,10 @@
 package com.hearthsim.test.minion;
 
 import com.hearthsim.card.Card;
+import com.hearthsim.card.basic.minion.GoldshireFootman;
+import com.hearthsim.card.classic.minion.common.DustDevil;
+import com.hearthsim.card.classic.minion.rare.AngryChicken;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.AngryChicken;
-import com.hearthsim.card.minion.concrete.DustDevil;
-import com.hearthsim.card.minion.concrete.GoldshireFootman;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -65,17 +65,17 @@ public class TestDustDevil {
 
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getTotalHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalHealth(), 1);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalHealth(), 1);
-        assertEquals(waitingPlayer.getMinions().get(1).getTotalHealth(), 1);
+        assertEquals(currentPlayer.getCharacter(1).getTotalHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(3).getTotalHealth(), 1);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalHealth(), 1);
+        assertEquals(waitingPlayer.getCharacter(2).getTotalHealth(), 1);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 1);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 1);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalAttack(), 3);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 1);
-        assertEquals(waitingPlayer.getMinions().get(1).getTotalAttack(), 1);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 1);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 1);
+        assertEquals(currentPlayer.getCharacter(3).getTotalAttack(), 3);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 1);
+        assertEquals(waitingPlayer.getCharacter(2).getTotalAttack(), 1);
 
         //overloaded for 2, so when resetMana is called, it should set the mana to 5
         board.data_.resetMana();

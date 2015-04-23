@@ -2,6 +2,7 @@ package com.hearthsim.test.helpers
 
 import com.hearthsim.card.Card
 import com.hearthsim.card.minion.Minion
+import com.hearthsim.card.minion.MinionMock
 import com.hearthsim.card.weapon.WeaponCard
 import com.hearthsim.model.BoardModel
 import com.hearthsim.model.PlayerSide
@@ -45,7 +46,7 @@ class BoardModelBuilder {
                 if (it.maxHealth)
                     minion.maxHealth = maxHealth
             } else {
-                minion = new Minion("" + 0, (byte) mana, (byte) attack, (byte) health, (byte) attack, (byte) health, (byte) maxHealth)
+                minion = new MinionMock("" + 0, (byte) mana, (byte) attack, (byte) health, (byte) attack, (byte) health, (byte) maxHealth)
             }
             boardModel.placeMinion(playerSide, minion);
         }
@@ -63,6 +64,7 @@ class BoardModelBuilder {
     }
 
     private updateMinion(Minion minion, Map options) {
+        minion.attack = options.containsKey('attack') ? options.attack : minion.attack;
         minion.attack += options.deltaAttack ? options.deltaAttack : 0;
         minion.extraAttackUntilTurnEnd += options.deltaExtraAttack ? options.deltaExtraAttack : 0;
 
@@ -113,6 +115,11 @@ class BoardModelBuilder {
     private heroHealth(Number health){
         def side = boardModel.modelForSide(playerSide)
         side.hero.health = health
+    }
+
+    private heroArmor(Number armor){
+        def side = boardModel.modelForSide(playerSide)
+        side.hero.armor = armor
     }
 
     private heroAttack(Number attack){
@@ -195,8 +202,12 @@ class BoardModelBuilder {
 
     private weapon(Class<WeaponCard> weaponCard, Closure weaponClosure){
         def side = boardModel.modelForSide(playerSide)
-        side.hero.weapon = weaponCard.newInstance()
-        side.hero.weapon.hasBeenUsed(true)
+        if (weaponCard == null) {
+            side.hero.destroyWeapon();
+        } else {
+            side.hero.weapon = weaponCard.newInstance()
+            side.hero.weapon.hasBeenUsed(true)
+        }
 
         runClosure weaponClosure
     }

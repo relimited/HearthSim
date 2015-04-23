@@ -4,12 +4,12 @@ import com.hearthsim.Game
 import com.hearthsim.card.Card
 import com.hearthsim.card.Deck
 import com.hearthsim.card.ImplementedCardList
-import com.hearthsim.card.minion.Minion
-import com.hearthsim.card.minion.concrete.NoviceEngineer
+import com.hearthsim.card.minion.MinionMock
+import com.hearthsim.card.basic.minion.NoviceEngineer
 import com.hearthsim.card.minion.heroes.TestHero
-import com.hearthsim.card.spellcard.concrete.AnimalCompanion
-import com.hearthsim.card.spellcard.concrete.ArcaneIntellect
-import com.hearthsim.card.spellcard.concrete.Soulfire
+import com.hearthsim.card.basic.spell.AnimalCompanion
+import com.hearthsim.card.basic.spell.ArcaneIntellect
+import com.hearthsim.card.basic.spell.Soulfire
 import com.hearthsim.exception.HSException
 import com.hearthsim.model.PlayerModel
 import com.hearthsim.player.playercontroller.BruteForceSearchAI
@@ -39,8 +39,8 @@ class GameRepeatableSpec extends CardSpec {
             byte attack = minionAttack;
             byte health = minionHealth;
             byte mana = minionMana;
-            cards1_[i] = new Minion("" + i, mana, attack, health, attack, health, health);
-            cards2_[i] = new Minion("" + i, mana, attack, health, attack, health, health);
+            cards1_[i] = new MinionMock("" + i, mana, attack, health, attack, health, health);
+            cards2_[i] = new MinionMock("" + i, mana, attack, health, attack, health, health);
         }
 
         Deck deck1 = new Deck(cards1_);
@@ -71,8 +71,8 @@ class GameRepeatableSpec extends CardSpec {
             byte attack = minionAttack;
             byte health = minionHealth;
             byte mana = minionMana;
-            cards1_.add(new Minion("" + i, mana, attack, health, attack, health, health));
-            cards2_.add(new Minion("" + i, mana, attack, health, attack, health, health));
+            cards1_.add(new MinionMock("" + i, mana, attack, health, attack, health, health));
+            cards2_.add(new MinionMock("" + i, mana, attack, health, attack, health, health));
         }
 
         Deck deck1 = new Deck(cards1_);
@@ -103,8 +103,8 @@ class GameRepeatableSpec extends CardSpec {
             byte attack = minionAttack;
             byte health = minionHealth;
             byte mana = minionMana;
-            cards1_.add(new Minion("" + i, mana, attack, health, attack, health, health));
-            cards2_.add(new Minion("" + i, mana, attack, health, attack, health, health));
+            cards1_.add(new MinionMock("" + i, mana, attack, health, attack, health, health));
+            cards2_.add(new MinionMock("" + i, mana, attack, health, attack, health, health));
         }
 
         Deck deck1 = new Deck(cards1_);

@@ -1,9 +1,9 @@
 package com.hearthsim.test.minion;
 
 import com.hearthsim.card.Card;
-import com.hearthsim.card.minion.concrete.ArcaneGolem;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.classic.minion.rare.ArcaneGolem;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -17,6 +17,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestArcaneGolem {
 
@@ -53,7 +54,9 @@ public class TestArcaneGolem {
     public void testIncreasesEnemyMana() throws HSException {
         Card theCard = currentPlayer.getHand().get(0);
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board);
-        assertEquals(board, ret);
+        assertNotNull(ret);
+        currentPlayer = ret.data_.getCurrentPlayer();
+        waitingPlayer = ret.data_.getWaitingPlayer();
 
         assertEquals(currentPlayer.getHand().size(), 0);
         assertEquals(currentPlayer.getNumMinions(), 3);
@@ -69,7 +72,8 @@ public class TestArcaneGolem {
         waitingPlayer.setMaxMana((byte) 10);
         Card theCard = currentPlayer.getHand().get(0);
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board);
-        assertEquals(board, ret);
+        assertNotNull(ret);
+        waitingPlayer = ret.data_.getWaitingPlayer();
         assertEquals(waitingPlayer.getMana(), 9);
         assertEquals(waitingPlayer.getMaxMana(), 10);
     }

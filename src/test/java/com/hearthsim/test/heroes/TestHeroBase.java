@@ -1,20 +1,19 @@
 package com.hearthsim.test.heroes;
 
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.KoboldGeomancer;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.basic.spell.HolySmite;
+import com.hearthsim.card.basic.weapon.FieryWarAxe;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.KoboldGeomancer;
-import com.hearthsim.card.minion.concrete.RaidLeader;
 import com.hearthsim.card.minion.heroes.TestHero;
-import com.hearthsim.card.spellcard.concrete.HolySmite;
-import com.hearthsim.card.weapon.concrete.FieryWarAxe;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -57,7 +56,7 @@ public class TestHeroBase {
     public void testMinionAttackingHero() throws HSException {
 
         // null case
-        Minion minion = currentPlayer.getMinions().get(0);
+        Minion minion = currentPlayer.getCharacter(1);
         HearthTreeNode ret = minion.attack(PlayerSide.WAITING_PLAYER, 0, board, false);
         assertEquals(board, ret);
 
@@ -70,15 +69,15 @@ public class TestHeroBase {
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 28);
 
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
-        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getHealth(), 7);
+        assertEquals(waitingPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(waitingPlayer.getCharacter(2).getHealth(), 7);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 7);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(waitingPlayer.getMinions().get(1).getTotalAttack(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 7);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(waitingPlayer.getCharacter(2).getTotalAttack(), 7);
     }
 
     @Test
@@ -173,7 +172,7 @@ public class TestHeroBase {
         Hero opponent = waitingPlayer.getHero();
         opponent.setArmor((byte)3);
 
-        Minion minion = currentPlayer.getMinions().get(0);
+        Minion minion = currentPlayer.getCharacter(1);
         HearthTreeNode ret = minion.attack(PlayerSide.WAITING_PLAYER, opponent, board, false);
         assertEquals(board, ret);
 
@@ -182,7 +181,6 @@ public class TestHeroBase {
     }
 
     @Test
-    @Ignore("Existing bug")
     public void testSpellpowerEffectsArmor() throws HSException {
         Hero opponent = waitingPlayer.getHero();
         opponent.setArmor((byte)10);

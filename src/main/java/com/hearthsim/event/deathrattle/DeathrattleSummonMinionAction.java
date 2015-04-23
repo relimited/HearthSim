@@ -17,23 +17,21 @@ public class DeathrattleSummonMinionAction extends DeathrattleAction {
     }
 
     @Override
-    public HearthTreeNode performAction(Card origin,
-                                        PlayerSide playerSide,
-                                        HearthTreeNode boardState,
-                                        boolean singleRealizationOnly) {
+    public HearthTreeNode performAction(Card origin, PlayerSide playerSide, HearthTreeNode boardState, boolean singleRealizationOnly) {
 
         HearthTreeNode toRet = super.performAction(origin, playerSide, boardState, singleRealizationOnly);
         PlayerModel targetPlayer = toRet.data_.modelForSide(playerSide);
 
         int targetIndex = targetPlayer.getNumMinions();
         if (origin instanceof Minion) {
-            targetIndex = targetPlayer.getMinions().indexOf(origin);
+            targetIndex = targetPlayer.getIndexForCharacter((Minion)origin) - 1;
             toRet.data_.removeMinion((Minion) origin);
         }
 
         int numMinionsToActuallySummon = numMinions_;
-        if (targetPlayer.getMinions().size() + numMinions_ > 7)
-            numMinionsToActuallySummon = 7 - targetPlayer.getMinions().size();
+        if (targetPlayer.isBoardFull()) {
+            numMinionsToActuallySummon = 7 - targetPlayer.getNumMinions();
+        }
 
         for (int index = 0; index < numMinionsToActuallySummon; ++index) {
             try {

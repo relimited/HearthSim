@@ -1,8 +1,8 @@
 package com.hearthsim.test.minion;
 
-import com.hearthsim.card.minion.concrete.ArgentProtector;
-import com.hearthsim.card.minion.concrete.ArgentSquire;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.classic.minion.common.ArgentProtector;
+import com.hearthsim.card.classic.minion.common.ArgentSquire;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
@@ -27,7 +27,7 @@ public class TestArgentProtector {
         BoulderfistOgre ogre = new BoulderfistOgre();
         board.data_.placeMinion(PlayerSide.CURRENT_PLAYER, ogre);
         ArgentProtector protector = new ArgentProtector();
-        protector.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, protector, PlayerSide.CURRENT_PLAYER, 1, board);
+        protector.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, protector, PlayerSide.CURRENT_PLAYER, 1, board);
         assertTrue(ogre.getDivineShield());
     }
 

@@ -1,9 +1,9 @@
 package com.hearthsim.test.minion;
 
 import com.hearthsim.card.Card;
-import com.hearthsim.card.minion.concrete.ColdlightSeer;
-import com.hearthsim.card.minion.concrete.MurlocRaider;
-import com.hearthsim.card.minion.concrete.RaidLeader;
+import com.hearthsim.card.basic.minion.MurlocRaider;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.classic.minion.rare.ColdlightSeer;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -52,13 +52,13 @@ public class TestColdlightSeer {
         assertEquals(waitingPlayer.getMana(), 8);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getTotalHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalHealth(), 1);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getTotalHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalHealth(), 1);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalHealth(), 2);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 3);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 3);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 2);
     }
 
     @Test
@@ -66,7 +66,9 @@ public class TestColdlightSeer {
         Card theCard = currentPlayer.getHand().get(0);
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 2, board);
 
-        assertFalse(ret == null);
+        assertNotNull(ret);
+        currentPlayer = ret.data_.getCurrentPlayer();
+        waitingPlayer = ret.data_.getWaitingPlayer();
 
         assertEquals(currentPlayer.getHand().size(), 0);
         assertEquals(currentPlayer.getNumMinions(), 3);
@@ -75,14 +77,14 @@ public class TestColdlightSeer {
         assertEquals(waitingPlayer.getMana(), 8);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getTotalHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalHealth(), 3);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalHealth(), 3);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getTotalHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalHealth(), 3);
+        assertEquals(currentPlayer.getCharacter(3).getTotalHealth(), 3);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalHealth(), 2);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 3);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalAttack(), 3);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 3);
+        assertEquals(currentPlayer.getCharacter(3).getTotalAttack(), 3);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 2);
     }
 }

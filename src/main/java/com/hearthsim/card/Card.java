@@ -4,12 +4,11 @@ import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
 import com.hearthsim.card.spellcard.SpellCard;
 import com.hearthsim.card.spellcard.SpellRandomInterface;
-import com.hearthsim.event.CharacterFilter;
 import com.hearthsim.event.deathrattle.DeathrattleAction;
-import com.hearthsim.event.effect.CardEffectCharacter;
-import com.hearthsim.event.effect.CardEffectOnResolveAoeInterface;
-import com.hearthsim.event.effect.CardEffectOnResolveRandomCharacterInterface;
-import com.hearthsim.event.effect.CardEffectOnResolveTargetableInterface;
+import com.hearthsim.event.effect.*;
+import com.hearthsim.event.filter.FilterCharacter;
+import com.hearthsim.event.filter.FilterHand;
+import com.hearthsim.event.filter.FilterInterface;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -24,52 +23,33 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Card implements DeepCopyable<Card> {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Name of the card
-     */
-    protected String name_ = "";
-
-    /**
-     * Mana cost of the card
-     */
-    protected byte baseManaCost;
+    private static final Logger log = LoggerFactory.getLogger(Card.class);
 
     protected boolean hasBeenUsed;
     protected boolean isInHand_;
 
-    /**
-     * Overload handling
-     */
-    private byte overload;
-
     protected DeathrattleAction deathrattleAction_;
+
+    protected final ImplementedCardList.ImplementedCard implementedCard;
 
     /**
      * Constructor
-     *
-     * @param name Name of the card
-     * @param baseManaCost Base mana cost of the card
-     * @param hasBeenUsed Has the card been used?
-     * @param isInHand Is the card in your hand?
      */
     public Card() {
         ImplementedCardList cardList = ImplementedCardList.getInstance();
         ImplementedCardList.ImplementedCard implementedCard = cardList.getCardForClass(this.getClass());
+        this.implementedCard = implementedCard;
         this.initFromImplementedCard(implementedCard);
     }
 
     protected void initFromImplementedCard(ImplementedCardList.ImplementedCard implementedCard) {
-        if (implementedCard != null) {
-            this.name_ = implementedCard.name_;
-            this.baseManaCost = (byte) implementedCard.mana_;
-            this.overload = (byte) implementedCard.overload;
-        }
         this.hasBeenUsed = false;
         this.isInHand_ = true;
     }
@@ -80,14 +60,7 @@ public class Card implements DeepCopyable<Card> {
      * @return Name of the card
      */
     public String getName() {
-        return name_;
-    }
-
-    /**
-     * Set the name of the card
-     */
-    public void setName(String value) {
-        name_ = value;
+        return this.implementedCard != null ? this.implementedCard.name_ : null;
     }
 
     /**
@@ -99,16 +72,7 @@ public class Card implements DeepCopyable<Card> {
      * @return Mana cost of the card
      */
     public byte getManaCost(PlayerSide side, BoardModel board) {
-        return baseManaCost;
-    }
-
-    /**
-     * Set the mana cost of the card
-     *
-     * @param mana The new mana cost
-     */
-    public void setBaseManaCost(byte mana) {
-        this.baseManaCost = mana;
+        return this.getBaseManaCost();
     }
 
     /**
@@ -117,7 +81,10 @@ public class Card implements DeepCopyable<Card> {
      * @return Mana cost of the card
      */
     public byte getBaseManaCost() {
-        return baseManaCost;
+        if (this.implementedCard == null) {
+            return 0;
+        }
+        return (byte) this.implementedCard.mana_;
     }
 
 
@@ -147,6 +114,18 @@ public class Card implements DeepCopyable<Card> {
         return isInHand_;
     }
 
+    // Use for bounce (e.g., Brewmaster) or recreate (e.g., Reincarnate)
+    public Card createResetCopy() {
+        try {
+            Constructor<? extends Card> ctor = this.getClass().getConstructor();
+            return ctor.newInstance();
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // This deepCopy pattern is required because we use the class of each card to recreate it under certain circumstances
     @Override
     public Card deepCopy() {
@@ -154,19 +133,16 @@ public class Card implements DeepCopyable<Card> {
         try {
             copy = getClass().newInstance();
         } catch(InstantiationException e) {
-            log.error("instantiation error", e);
+            Card.log.error("instantiation error", e);
         } catch(IllegalAccessException e) {
-            log.error("illegal access error", e);
+            Card.log.error("illegal access error", e);
         }
         if (copy == null) {
             throw new RuntimeException("unable to instantiate card.");
         }
 
-        copy.name_ = this.name_;
-        copy.baseManaCost = this.baseManaCost;
         copy.hasBeenUsed = this.hasBeenUsed;
         copy.isInHand_ = this.isInHand_;
-        copy.overload = this.overload;
 
         return copy;
     }
@@ -182,7 +158,7 @@ public class Card implements DeepCopyable<Card> {
         }
 
         // More logic here to be discuss below...
-        if (baseManaCost != ((Card)other).baseManaCost)
+        if (this.getBaseManaCost() != ((Card)other).getBaseManaCost())
             return false;
 
         if (hasBeenUsed != ((Card)other).hasBeenUsed)
@@ -191,20 +167,21 @@ public class Card implements DeepCopyable<Card> {
         if (isInHand_ != ((Card)other).isInHand_)
             return false;
 
-        if (!name_.equals(((Card)other).name_))
+        if (this.getName() == null) {
+            if (((Card)other).getName() != null) {
+                return false;
+            }
+        } else if (!this.getName().equals(((Card)other).getName())) {
             return false;
-
-        if (overload != ((Card)other).overload)
-            return false;
+        }
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = name_ != null ? name_.hashCode() : 0;
-        result = 31 * result + baseManaCost;
-        result = 31 * result + overload;
+        int result = this.getName() != null ? this.getName().hashCode() : 0;
+        result = 31 * result + this.getBaseManaCost();
         result = 31 * result + (hasBeenUsed ? 1 : 0);
         result = 31 * result + (isInHand_ ? 1 : 0);
         return result;
@@ -229,8 +206,8 @@ public class Card implements DeepCopyable<Card> {
             return false;
         }
 
-        if (this instanceof CardEffectOnResolveTargetableInterface) {
-            if (!((CardEffectOnResolveTargetableInterface)this).getTargetableFilter().targetMatches(PlayerSide.CURRENT_PLAYER, this, playerSide, minion, boardModel)) {
+        if (this instanceof EffectOnResolveTargetable) {
+            if (!((EffectOnResolveTargetable)this).getTargetableFilter().targetMatches(PlayerSide.CURRENT_PLAYER, this, playerSide, minion, boardModel)) {
                 return false;
             }
         } else if (this instanceof SpellCard && playerSide != PlayerSide.CURRENT_PLAYER || !minion.isHero()) { // TODO ignore minion cards for now
@@ -277,8 +254,7 @@ public class Card implements DeepCopyable<Card> {
 
         // Need to record card and target index *before* the board state changes
         int cardIndex = currentPlayer.getHand().indexOf(this);
-        int targetIndex = targetMinion instanceof Hero ? 0 : targetPlayer.getMinions()
-                .indexOf(targetMinion) + 1;
+        int targetIndex = targetPlayer.getIndexForCharacter(targetMinion);
 
         currentPlayer.addNumCardsUsed((byte)1);
 
@@ -336,9 +312,9 @@ public class Card implements DeepCopyable<Card> {
         int originIndex = boardState.data_.modelForSide(PlayerSide.CURRENT_PLAYER).getHand().indexOf(this);
         int targetIndex = boardState.data_.modelForSide(side).getIndexForCharacter(targetMinion);
 
-        CardEffectCharacter targetableEffect = null;
-        if (this instanceof CardEffectOnResolveTargetableInterface) {
-            targetableEffect = ((CardEffectOnResolveTargetableInterface) this).getTargetableEffect();
+        EffectCharacter<Card> targetableEffect = null;
+        if (this instanceof EffectOnResolveTargetable) {
+            targetableEffect = ((EffectOnResolveTargetable) this).getTargetableEffect();
         }
 
         // TODO this is to workaround using super.use_core since we no longer have an accurate reference to the origin card (specifically, Soulfire messes things up)
@@ -348,11 +324,10 @@ public class Card implements DeepCopyable<Card> {
         // different interfaces have different usage patterns
         if (this instanceof SpellRandomInterface) {
             rngChildren = ((SpellRandomInterface) this).createChildren(PlayerSide.CURRENT_PLAYER, originIndex, toRet);
-        } else if (this instanceof CardEffectOnResolveRandomCharacterInterface) {
-            CardEffectOnResolveRandomCharacterInterface that = (CardEffectOnResolveRandomCharacterInterface) this;
-            rngChildren = this.effectRandomCharacterUsingFilter(that.getRandomTargetEffect(), that.getRandomTargetSecondaryEffect(), that.getRandomTargetFilter(), toRet);
-        } else if (this instanceof CardEffectOnResolveAoeInterface) {
-            toRet = this.effectAllUsingFilter(((CardEffectOnResolveAoeInterface) this).getAoeEffect(), ((CardEffectOnResolveAoeInterface) this).getAoeFilter(), toRet);
+        } else if (this instanceof EffectOnResolveRandom) {
+            rngChildren = this.effectRandomUsingFilter((EffectOnResolveRandom) this, toRet);
+        } else if (this instanceof EffectOnResolveAoe) {
+            toRet = this.effectAllUsingFilter(((EffectOnResolveAoe) this).getAoeEffect(), ((EffectOnResolveAoe) this).getAoeFilter(), toRet);
         }
 
         // if we expected rngChildren but none were created, don't let this card be played if it was the only effect
@@ -507,7 +482,7 @@ public class Card implements DeepCopyable<Card> {
         return toRet;
     }
 
-    protected HearthTreeNode effectAllUsingFilter(CardEffectCharacter effect, CharacterFilter filter, HearthTreeNode boardState) {
+    protected final HearthTreeNode effectAllUsingFilter(EffectCharacter<Card> effect, FilterCharacter filter, HearthTreeNode boardState) {
         if (boardState != null && filter != null) {
             for (BoardModel.CharacterLocation location : boardState.data_) {
                 Minion character = boardState.data_.getCharacter(location);
@@ -519,11 +494,32 @@ public class Card implements DeepCopyable<Card> {
         return boardState;
     }
 
-    protected final Collection<HearthTreeNode> effectRandomCharacterUsingFilter(CardEffectCharacter effect, CardEffectCharacter effectOthers, CharacterFilter filter, HearthTreeNode boardState) {
+    protected final Collection<HearthTreeNode> effectRandomUsingFilter(EffectOnResolveRandom randomEffect, HearthTreeNode boardState) {
+        if (randomEffect instanceof EffectOnResolveRandomCharacter) {
+            EffectOnResolveRandomCharacter character = (EffectOnResolveRandomCharacter)randomEffect;
+            return this.effectRandomCharacterUsingFilter(character.getRandomTargetEffect(), character.getRandomTargetSecondaryEffect(), character.getRandomTargetFilter(), boardState);
+        } else if (randomEffect instanceof EffectOnResolveRandomHand) {
+            EffectOnResolveRandomHand hand = (EffectOnResolveRandomHand)randomEffect;
+            return this.effectRandomHandUsingFilter(hand.getRandomTargetEffect(), hand.getRandomTargetSecondaryEffect(), hand.getRandomTargetFilter(), PlayerSide.CURRENT_PLAYER, boardState);
+        }
+
+        return null;
+    }
+
+    protected final Collection<HearthTreeNode> effectRandomCharacterUsingFilter(EffectCharacter<Card> effect, EffectCharacter<Card> effectOthers, FilterCharacter filter, HearthTreeNode boardState) {
         return this.effectRandomCharacterUsingFilter(effect, effectOthers, filter, PlayerSide.CURRENT_PLAYER, boardState);
     }
 
-    protected Collection<HearthTreeNode> effectRandomCharacterUsingFilter(CardEffectCharacter effect, CardEffectCharacter effectOthers, CharacterFilter filter, PlayerSide originSide, HearthTreeNode boardState) {
+    protected final Collection<HearthTreeNode> effectRandomCharacterUsingFilter(EffectCharacter<Card> effect, EffectCharacter<Card> effectOthers, FilterCharacter filter, PlayerSide originSide, HearthTreeNode boardState) {
+        return this.iterateAndEffectRandom(effect, effectOthers, filter, originSide, boardState, boardState.data_.iterator());
+    }
+
+    protected final Collection<HearthTreeNode> effectRandomHandUsingFilter(EffectHand effect, EffectHand effectOthers, FilterHand filter, PlayerSide originSide, HearthTreeNode boardState) {
+        Iterator<BoardModel.CharacterLocation> handIterator = boardState.data_.handIterator();
+        return this.iterateAndEffectRandom(effect, effectOthers, filter, originSide, boardState, handIterator);
+    }
+
+    protected final Collection<HearthTreeNode> iterateAndEffectRandom(EffectInterface<Card> effect, EffectInterface<Card> effectOthers, FilterInterface<Card> filter, PlayerSide originSide, HearthTreeNode boardState, Iterator<BoardModel.CharacterLocation> targetIterator) {
         int originIndex = boardState.data_.modelForSide(originSide).getHand().indexOf(this);
         boolean originInHand = originIndex >= 0;
         if (!originInHand) {
@@ -531,20 +527,22 @@ public class Card implements DeepCopyable<Card> {
         }
 
         ArrayList<HearthTreeNode> children = new ArrayList<>();
-        for (BoardModel.CharacterLocation location : boardState.data_) {
+        while (targetIterator.hasNext()) {
+            BoardModel.CharacterLocation location = targetIterator.next();
             if (filter.targetMatches(originSide, this, location.getPlayerSide(), location.getIndex(), boardState.data_)) {
                 boolean somethingHappened = false;
                 HearthTreeNode newState = new HearthTreeNode(boardState.data_.deepCopy());
                 Card origin;
                 if (originInHand) {
-                    origin = boardState.data_.modelForSide(originSide).getHand().get(originIndex);
+                    origin = newState.data_.modelForSide(originSide).getHand().get(originIndex);
                 } else {
-                    origin = boardState.data_.modelForSide(originSide).getCharacter(originIndex);
+                    origin = newState.data_.modelForSide(originSide).getCharacter(originIndex);
                 }
                 if (effect != null) {
                     newState = effect.applyEffect(originSide, origin, location.getPlayerSide(), location.getIndex(), newState);
                     somethingHappened = newState != null;
                 }
+
                 if (effectOthers != null && newState != null) {
                     for (BoardModel.CharacterLocation childLocation : newState.data_) {
                         if (location.equals(childLocation)) {
@@ -559,7 +557,7 @@ public class Card implements DeepCopyable<Card> {
 
                 if (somethingHappened) {
                     if (originInHand) {
-                        newState.data_.modelForSide(originSide).getHand().remove(originIndex);
+                        newState.data_.modelForSide(originSide).getHand().remove(origin);
                     }
                     children.add(newState);
                 }
@@ -569,13 +567,19 @@ public class Card implements DeepCopyable<Card> {
     }
 
     protected HearthTreeNode createRngNodeWithChildren(HearthTreeNode boardState, Collection<HearthTreeNode> rngChildren) {
-        RandomEffectNode rngNode = new RandomEffectNode(boardState, boardState.getAction());
-        if (rngChildren != null) {
-            if (rngChildren.size() == 1) {
-                boardState = rngChildren.stream().findAny().get();
-            } else if (rngChildren.size() > 1) {
-                rngNode.addChildren(rngChildren);
-                boardState = rngNode;
+        if (rngChildren != null && rngChildren.size() > 0) {
+            RandomEffectNode rngNode = new RandomEffectNode(boardState, boardState.getAction());
+            boardState = this.createNodeWithChildren(rngNode, rngChildren);
+        }
+        return boardState;
+    }
+
+    protected HearthTreeNode createNodeWithChildren(HearthTreeNode boardState, Collection<HearthTreeNode> children) {
+        if (children != null) {
+            if (children.size() == 1) {
+                boardState = children.stream().findAny().get();
+            } else if (children.size() > 1) {
+                boardState.addChildren(children);
             }
         }
         return boardState;
@@ -583,8 +587,8 @@ public class Card implements DeepCopyable<Card> {
 
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
-        json.put("name", name_);
-        json.put("mana", baseManaCost);
+        json.put("name", this.getName());
+        json.put("mana", this.getBaseManaCost());
         if (hasBeenUsed) json.put("hasBeenUsed", hasBeenUsed);
         return json;
     }
@@ -608,15 +612,14 @@ public class Card implements DeepCopyable<Card> {
     }
 
     protected byte getOverload() {
-        return overload;
-    }
-
-    public void setOverload(byte value) {
-        overload = value;
+        if (this.implementedCard == null) {
+            return 0;
+        }
+        return (byte) this.implementedCard.overload;
     }
 
     public boolean triggersOverload() {
-        return overload > 0;
+        return this.getOverload() > 0;
     }
 
     public boolean hasDeathrattle() {
@@ -634,22 +637,18 @@ public class Card implements DeepCopyable<Card> {
 
     @Deprecated
     public Card(String name, byte baseManaCost, boolean hasBeenUsed, boolean isInHand, byte overload) {
-        this.baseManaCost = baseManaCost;
         this.hasBeenUsed = hasBeenUsed;
         isInHand_ = isInHand;
-        name_ = name;
-        this.overload = overload;
+        this.implementedCard = null;
     }
 
     @Deprecated
     public Card(byte baseManaCost, boolean hasBeenUsed, boolean isInHand) {
         ImplementedCardList cardList = ImplementedCardList.getInstance();
         ImplementedCardList.ImplementedCard implementedCard = cardList.getCardForClass(this.getClass());
-        name_ = implementedCard.name_;
-        this.baseManaCost = baseManaCost;
         this.hasBeenUsed = hasBeenUsed;
         isInHand_ = isInHand;
-        this.overload = (byte) implementedCard.overload;
+        this.implementedCard = implementedCard;
     }
 
     @Deprecated

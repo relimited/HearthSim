@@ -2,13 +2,13 @@ package com.hearthsim.test.heroes;
 
 import com.hearthsim.card.Card;
 import com.hearthsim.card.Deck;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.basic.spell.TheCoin;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
 import com.hearthsim.card.minion.heroes.TestHero;
 import com.hearthsim.card.minion.heroes.Warlock;
-import com.hearthsim.card.spellcard.concrete.TheCoin;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -72,7 +72,7 @@ public class TestWarlock {
         assertEquals(currentPlayer.getMana(), 8);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
 
-        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(2).getHealth(), 7);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TestWarlock {
 
         Deck deck = new Deck(cards);
 
-        Minion minion = currentPlayer.getMinions().get(0);
+        Minion minion = currentPlayer.getCharacter(1);
         HearthTreeNode ret = minion.attack(PlayerSide.WAITING_PLAYER, 0, board, false);
         assertEquals(board, ret);
 

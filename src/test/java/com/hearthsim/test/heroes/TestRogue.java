@@ -1,12 +1,12 @@
 package com.hearthsim.test.heroes;
 
 import com.hearthsim.card.Card;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.basic.weapon.AssassinsBlade;
 import com.hearthsim.card.minion.Hero;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
 import com.hearthsim.card.minion.heroes.Rogue;
 import com.hearthsim.card.minion.heroes.TestHero;
-import com.hearthsim.card.weapon.concrete.AssassinsBlade;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -82,8 +82,8 @@ public class TestRogue {
         assertNull(currentPlayer.getHero().getWeapon());
         assertEquals(currentPlayer.getHero().getTotalAttack(), 0);
 
-        assertEquals(currentPlayer.getMinions().get(0).getAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
     }
 
     @Test

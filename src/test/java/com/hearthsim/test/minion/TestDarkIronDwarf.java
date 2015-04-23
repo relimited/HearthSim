@@ -1,7 +1,7 @@
 package com.hearthsim.test.minion;
 
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.DarkIronDwarf;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.classic.minion.common.DarkIronDwarf;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
@@ -25,7 +25,7 @@ public class TestDarkIronDwarf {
         board.data_.placeMinion(PlayerSide.CURRENT_PLAYER, ogre);
 
         DarkIronDwarf darkIronDwarf = new DarkIronDwarf();
-        darkIronDwarf.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, darkIronDwarf, PlayerSide.CURRENT_PLAYER, 1, board);
+        darkIronDwarf.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, darkIronDwarf, PlayerSide.CURRENT_PLAYER, 1, board);
         assertEquals(2, ogre.getExtraAttackUntilTurnEnd());
     }
 
@@ -36,7 +36,7 @@ public class TestDarkIronDwarf {
         board.data_.placeMinion(PlayerSide.CURRENT_PLAYER, ogre);
 
         DarkIronDwarf darkIronDwarf = new DarkIronDwarf();
-        darkIronDwarf.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, darkIronDwarf, PlayerSide.CURRENT_PLAYER, 1, board);
+        darkIronDwarf.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, darkIronDwarf, PlayerSide.CURRENT_PLAYER, 1, board);
         assertEquals(4, ogre.getExtraAttackUntilTurnEnd());
     }
 }

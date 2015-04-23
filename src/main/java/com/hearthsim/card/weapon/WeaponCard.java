@@ -3,16 +3,16 @@ package com.hearthsim.card.weapon;
 import com.hearthsim.card.Card;
 import com.hearthsim.card.ImplementedCardList;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.event.CharacterFilter;
-import com.hearthsim.event.CharacterFilterSummon;
-import com.hearthsim.event.effect.CardEffectCharacter;
-import com.hearthsim.event.effect.CardEffectHeroWeapon;
-import com.hearthsim.event.effect.CardEffectOnResolveTargetableInterface;
+import com.hearthsim.event.effect.EffectCharacter;
+import com.hearthsim.event.effect.EffectHeroWeapon;
+import com.hearthsim.event.effect.EffectOnResolveTargetable;
+import com.hearthsim.event.filter.FilterCharacter;
+import com.hearthsim.event.filter.FilterCharacterSummon;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.tree.HearthTreeNode;
 
-public abstract class WeaponCard extends Card implements CardEffectOnResolveTargetableInterface {
+public abstract class WeaponCard extends Card implements EffectOnResolveTargetable {
 
     protected boolean isImmune() {
         return immune;
@@ -28,13 +28,16 @@ public abstract class WeaponCard extends Card implements CardEffectOnResolveTarg
     private byte weaponDamage;
 
     public WeaponCard() {
-        ImplementedCardList cardList = ImplementedCardList.getInstance();
-        ImplementedCardList.ImplementedCard implementedCard = cardList.getCardForClass(this.getClass());
-        weaponCharge = (byte) implementedCard.durability;
-        weaponDamage = (byte) implementedCard.attack_;
-        name_ = implementedCard.name_;
-        baseManaCost = (byte) implementedCard.mana_;
-        isInHand_ = true;
+        super();
+    }
+
+    @Override
+    protected void initFromImplementedCard(ImplementedCardList.ImplementedCard implementedCard) {
+        super.initFromImplementedCard(implementedCard);
+        if (implementedCard != null) {
+            this.weaponCharge = (byte) implementedCard.durability;
+            this.weaponDamage = (byte) implementedCard.attack_;
+        }
     }
 
     @Override
@@ -75,13 +78,13 @@ public abstract class WeaponCard extends Card implements CardEffectOnResolveTarg
     }
 
     @Override
-    public CardEffectCharacter getTargetableEffect() {
-        return new CardEffectHeroWeapon(this);
+    public EffectCharacter getTargetableEffect() {
+        return new EffectHeroWeapon(this);
     }
 
     @Override
-    public CharacterFilter getTargetableFilter() {
-        return CharacterFilterSummon.SELF;
+    public FilterCharacter getTargetableFilter() {
+        return FilterCharacterSummon.SELF;
     }
 
     public byte getWeaponCharge() {
@@ -90,6 +93,14 @@ public abstract class WeaponCard extends Card implements CardEffectOnResolveTarg
 
     public void setWeaponCharge(byte weaponCharge) {
         this.weaponCharge = weaponCharge;
+    }
+
+    public void addWeaponCharge(byte weaponCharge) {
+        this.weaponCharge += weaponCharge;
+    }
+
+    public void addWeaponDamage(byte weaponDamage) {
+        this.weaponDamage += weaponDamage;
     }
 
     public byte getWeaponDamage() {
@@ -101,8 +112,12 @@ public abstract class WeaponCard extends Card implements CardEffectOnResolveTarg
     }
 
     public void useWeaponCharge() {
+        this.useWeaponCharge(1);
+    }
+
+    public void useWeaponCharge(int durabilityLoss) {
         if (!this.immune) {
-            this.setWeaponCharge((byte) (this.getWeaponCharge() - 1));
+            this.setWeaponCharge((byte) (this.getWeaponCharge() - durabilityLoss));
         }
     }
 

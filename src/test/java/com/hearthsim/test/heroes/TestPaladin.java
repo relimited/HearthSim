@@ -1,9 +1,9 @@
 package com.hearthsim.test.heroes;
 
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.basic.minion.SilverHandRecruit;
 import com.hearthsim.card.minion.Hero;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
-import com.hearthsim.card.minion.concrete.SilverHandRecruit;
 import com.hearthsim.card.minion.heroes.Paladin;
 import com.hearthsim.card.minion.heroes.TestHero;
 import com.hearthsim.exception.HSException;
@@ -47,14 +47,14 @@ public class TestPaladin {
 
         assertEquals(currentPlayer.getNumMinions(), 3);
         assertEquals(currentPlayer.getMana(), 6);
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
-        assertEquals(currentPlayer.getMinions().get(2).getHealth(), 1);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(3).getHealth(), 1);
 
         // buffed by Raid Leader
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 7);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 7);
+        assertEquals(currentPlayer.getCharacter(3).getTotalAttack(), 2);
     }
 
     @Test

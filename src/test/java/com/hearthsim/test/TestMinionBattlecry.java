@@ -1,6 +1,13 @@
 package com.hearthsim.test;
 
-import com.hearthsim.card.minion.concrete.*;
+import com.hearthsim.card.basic.minion.BloodfenRaptor;
+import com.hearthsim.card.basic.minion.ChillwindYeti;
+import com.hearthsim.card.basic.minion.RiverCrocolisk;
+import com.hearthsim.card.classic.minion.common.ArgentProtector;
+import com.hearthsim.card.classic.minion.common.DarkIronDwarf;
+import com.hearthsim.card.classic.minion.common.FaerieDragon;
+import com.hearthsim.card.classic.minion.common.StranglethornTiger;
+import com.hearthsim.card.classic.minion.legendary.Alexstrasza;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -46,8 +53,8 @@ public class TestMinionBattlecry {
         assertEquals(currentPlayer.getNumMinions(), 3);
         assertEquals(waitingPlayer.getNumMinions(), 3);
         assertEquals(currentPlayer.getMana(), 6);
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 4);
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 4);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 4);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 4);
     }
 
     @Test

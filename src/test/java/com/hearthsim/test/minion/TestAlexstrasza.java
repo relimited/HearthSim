@@ -1,12 +1,12 @@
 package com.hearthsim.test.minion;
 
 import com.hearthsim.card.Card;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.classic.minion.common.ArgentSquire;
+import com.hearthsim.card.classic.minion.legendary.Alexstrasza;
 import com.hearthsim.card.minion.Hero;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.Alexstrasza;
-import com.hearthsim.card.minion.concrete.ArgentSquire;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -47,7 +47,7 @@ public class TestAlexstrasza {
     public void testSetsOwnHealth() throws HSException {
         Minion hero = currentPlayer.getCharacter(0);
         Alexstrasza alexstrasza = new Alexstrasza();
-        alexstrasza.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
+        alexstrasza.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(15, hero.getHealth());
     }
 
@@ -55,7 +55,7 @@ public class TestAlexstrasza {
     public void testSetsEnemyHealth() throws HSException {
         Minion hero = waitingPlayer.getCharacter(0);
         Alexstrasza alexstrasza = new Alexstrasza();
-        alexstrasza.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.WAITING_PLAYER, 0, board);
+        alexstrasza.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.WAITING_PLAYER, 0, board);
         assertEquals(15, hero.getHealth());
     }
 
@@ -64,7 +64,7 @@ public class TestAlexstrasza {
         Minion hero = currentPlayer.getCharacter(0);
         hero.setHealth((byte)20);
         Alexstrasza alexstrasza = new Alexstrasza();
-        alexstrasza.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
+        alexstrasza.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(15, hero.getHealth());
     }
 
@@ -73,7 +73,7 @@ public class TestAlexstrasza {
         Hero hero = currentPlayer.getHero();
         hero.setArmor((byte)20);
         Alexstrasza alexstrasza = new Alexstrasza();
-        alexstrasza.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
+        alexstrasza.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(15, hero.getHealth());
         assertEquals(20, hero.getArmor());
     }
@@ -84,7 +84,7 @@ public class TestAlexstrasza {
         Minion hero = currentPlayer.getCharacter(0);
         hero.setHealth((byte)2);
         Alexstrasza alexstrasza = new Alexstrasza();
-        alexstrasza.useTargetableBattlecry_core(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
+        alexstrasza.getBattlecryEffect().applyEffect(PlayerSide.CURRENT_PLAYER, alexstrasza, PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(15, hero.getHealth());
     }
 }

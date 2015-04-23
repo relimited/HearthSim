@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import org.slf4j.MDC;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
 
@@ -28,6 +27,7 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
     private final PlayerModel currentPlayer;
     private final PlayerModel waitingPlayer;
 
+    // this uses identity list because we need exact reference equality and we modified Minion.equals
     private IdentityLinkedList<MinionPlayerPair> allMinionsFIFOList_;
 
     public class MinionPlayerPair {
@@ -168,9 +168,58 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
         }
     }
 
+    private class HandLocationIterator implements Iterator<CharacterLocation> {
+        private PlayerSide playerSide;
+        private PlayerModel.HandIterator handIterator;
+
+        private final BoardModel model;
+
+        public HandLocationIterator(BoardModel model) {
+            this.model = model;
+
+            this.playerSide = PlayerSide.CURRENT_PLAYER;
+            this.handIterator = this.model.modelForSide(this.playerSide).handIterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (this.handIterator.hasNext()) {
+                return true;
+            }
+
+            // check hand size for other player
+            if (this.playerSide == PlayerSide.CURRENT_PLAYER) {
+                return this.model.modelForSide(this.playerSide.getOtherPlayer()).getHand().size() > 0;
+            }
+
+            return false;
+        }
+
+        @Override
+        public CharacterLocation next() {
+            if (this.handIterator.hasNext()) {
+                this.handIterator.next();
+            } else if (this.playerSide == PlayerSide.CURRENT_PLAYER) {
+                this.playerSide = this.playerSide.getOtherPlayer();
+                this.handIterator = this.model.modelForSide(this.playerSide).handIterator();
+                this.handIterator.next();
+            }
+
+            return new CharacterLocation(this.playerSide, this.handIterator.getLocation());
+        }
+    }
+
     @Override
     public Iterator<CharacterLocation> iterator() {
+        return this.characterIterator();
+    }
+
+    public Iterator<CharacterLocation> characterIterator() {
         return new CharacterLocationIterator(this);
+    }
+
+    public Iterator<CharacterLocation> handIterator() {
+        return new HandLocationIterator(this);
     }
 
     public BoardModel() {
@@ -190,11 +239,7 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
     public BoardModel(PlayerModel currentPlayerModel, PlayerModel waitingPlayerModel) {
         this.currentPlayer = currentPlayerModel;
         this.waitingPlayer = waitingPlayerModel;
-        buildModel();
-    }
-
-    private void buildModel() {
-        allMinionsFIFOList_ = new IdentityLinkedList<>();
+        this.allMinionsFIFOList_ = new IdentityLinkedList<>();
     }
 
     public PlayerModel modelForSide(PlayerSide side){
@@ -263,7 +308,7 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
      */
     public void placeMinion(PlayerSide playerSide, Minion minion, int position) {
         PlayerModel playerModel = modelForSide(playerSide);
-        playerModel.getMinions().add(position, minion);
+        playerModel.addMinion(position, minion);
         this.allMinionsFIFOList_.add(new MinionPlayerPair(minion, playerSide));
         minion.isInHand(false);
 
@@ -283,7 +328,7 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
      * @param minion The minion to be placed on the board.  The minion is placed on the right-most space.
      */
     public void placeMinion(PlayerSide playerSide, Minion minion) {
-        this.placeMinion(playerSide, minion, this.modelForSide(playerSide).getMinions().size());
+        this.placeMinion(playerSide, minion, this.modelForSide(playerSide).getNumMinions());
     }
 
     //-----------------------------------------------------------------------------------
@@ -333,7 +378,7 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
     public boolean removeMinion(MinionPlayerPair minionIdPair) {
         this.allMinionsFIFOList_.remove(minionIdPair);
         removeAuraOfMinion(minionIdPair.getPlayerSide(), minionIdPair.minion);
-        return this.modelForSide(minionIdPair.getPlayerSide()).getMinions().remove(minionIdPair.minion);
+        return this.modelForSide(minionIdPair.getPlayerSide()).removeMinion(minionIdPair.minion);
     }
 
     public boolean removeMinion(Minion minion) {
@@ -492,21 +537,22 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
      * @return
      */
     public boolean hasDeadMinions() {
-        for (Minion minion : this.getAllMinions()) {
-            if (minion.getTotalHealth() <= 0)
+        for (MinionPlayerPair pair : this.allMinionsFIFOList_) {
+            if (pair.minion.getTotalHealth() <= 0) {
                 return true;
+            }
         }
         return false;
     }
 
-    public Collection<Minion> getAllMinions() {
-        ArrayList<Minion> minions = new ArrayList<>();
-        minions.addAll(this.modelForSide(PlayerSide.CURRENT_PLAYER).getMinions());
-        minions.addAll(this.modelForSide(PlayerSide.WAITING_PLAYER).getMinions());
-        return minions;
-    }
+//    public Collection<Minion> getAllMinions() {
+//        ArrayList<Minion> minions = new ArrayList<>();
+//        minions.addAll(this.modelForSide(PlayerSide.CURRENT_PLAYER).getMinions());
+//        minions.addAll(this.modelForSide(PlayerSide.WAITING_PLAYER).getMinions());
+//        return minions;
+//    }
 
-    public IdentityLinkedList<MinionPlayerPair> getAllMinionsFIFOList() {
+    public Iterable<MinionPlayerPair> getAllMinionsFIFOList() {
         return allMinionsFIFOList_;
     }
 
@@ -553,7 +599,11 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
         currentPlayer.getHero().hasBeenUsed(false);
         waitingPlayer.getHero().hasAttacked(false);
         waitingPlayer.getHero().hasBeenUsed(false);
-        for (Minion minion : this.getAllMinions()) {
+        for (Minion minion : this.modelForSide(PlayerSide.CURRENT_PLAYER).getMinions()) {
+            minion.hasAttacked(false);
+            minion.hasBeenUsed(false);
+        }
+        for (Minion minion : this.modelForSide(PlayerSide.WAITING_PLAYER).getMinions()) {
             minion.hasAttacked(false);
             minion.hasBeenUsed(false);
         }
@@ -576,10 +626,10 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
 
             PlayerModel oldPlayerModel = this.modelForSide(minionPlayerPair.getPlayerSide());
             Minion oldMinion = minionPlayerPair.getMinion();
-            int indexOfOldMinion = oldPlayerModel.getMinions().indexOf(oldMinion);
+            int indexOfOldMinion = oldPlayerModel.getIndexForCharacter(oldMinion);
 
             PlayerModel newPlayerModel = newBoard.modelForSide(minionPlayerPair.getPlayerSide().getOtherPlayer());
-            newBoard.allMinionsFIFOList_.add(new MinionPlayerPair(newPlayerModel.getMinions().get(indexOfOldMinion), minionPlayerPair.getPlayerSide().getOtherPlayer()));
+            newBoard.allMinionsFIFOList_.add(new MinionPlayerPair(newPlayerModel.getCharacter(indexOfOldMinion), minionPlayerPair.getPlayerSide().getOtherPlayer()));
         }
 
         return newBoard;
@@ -593,10 +643,10 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
 
             PlayerModel oldPlayerModel = this.modelForSide(minionPlayerPair.getPlayerSide());
             Minion oldMinion = minionPlayerPair.getMinion();
-            int indexOfOldMinion = oldPlayerModel.getMinions().indexOf(oldMinion);
+            int indexOfOldMinion = oldPlayerModel.getIndexForCharacter(oldMinion);
 
             PlayerModel newPlayerModel = newBoard.modelForSide(minionPlayerPair.getPlayerSide());
-            newBoard.allMinionsFIFOList_.add(new MinionPlayerPair(newPlayerModel.getMinions().get(indexOfOldMinion), minionPlayerPair.getPlayerSide()));
+            newBoard.allMinionsFIFOList_.add(new MinionPlayerPair(newPlayerModel.getCharacter(indexOfOldMinion), minionPlayerPair.getPlayerSide()));
         }
 
         return newBoard;
@@ -765,14 +815,8 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
     }
 
     @Deprecated
-    public IdentityLinkedList<Minion> getMinions(PlayerSide side) {
-        return modelForSide(side).getMinions();
-    }
-
-    @Deprecated
     private Minion getMinionForCharacter(PlayerSide playerSide, int index) {
-        PlayerModel playerModel = modelForSide(playerSide);
-        return index == 0 ? playerModel.getHero() : playerModel.getMinions().get(index - 1);
+        return modelForSide(playerSide).getCharacter(index);
     }
 
     /**
@@ -795,6 +839,6 @@ public class BoardModel implements DeepCopyable<BoardModel>, Iterable<BoardModel
 
     @Deprecated // use PlayerModel.getCharacter instead
     public Minion getMinion(PlayerSide side, int index) {
-        return modelForSide(side).getMinions().get(index);
+        return modelForSide(side).getCharacter(index + 1);
     }
 }

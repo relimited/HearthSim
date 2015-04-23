@@ -1,12 +1,12 @@
 package com.hearthsim.test
 
-import com.hearthsim.card.minion.concrete.Abomination
-import com.hearthsim.card.minion.concrete.BaineBloodhoof
-import com.hearthsim.card.minion.concrete.CairneBloodhoof
-import com.hearthsim.card.minion.concrete.HauntedCreeper
-import com.hearthsim.card.minion.concrete.SpectralSpider
-import com.hearthsim.card.minion.concrete.SylvanasWindrunner
-import com.hearthsim.card.spellcard.concrete.Hellfire
+import com.hearthsim.card.classic.minion.rare.Abomination
+import com.hearthsim.card.classic.minion.legendary.BaineBloodhoof
+import com.hearthsim.card.classic.minion.legendary.CairneBloodhoof
+import com.hearthsim.card.curseofnaxxramas.minion.common.HauntedCreeper
+import com.hearthsim.card.curseofnaxxramas.minion.common.SpectralSpider
+import com.hearthsim.card.classic.minion.legendary.SylvanasWindrunner
+import com.hearthsim.card.basic.spell.Hellfire
 import com.hearthsim.model.BoardModel
 import com.hearthsim.test.groovy.card.CardSpec
 import com.hearthsim.test.helpers.BoardModelBuilder
@@ -15,7 +15,6 @@ import spock.lang.Ignore
 
 import static com.hearthsim.model.PlayerSide.CURRENT_PLAYER
 import static com.hearthsim.model.PlayerSide.WAITING_PLAYER
-import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertFalse
 
 class DeathrattleOrderSpec extends CardSpec {
@@ -140,7 +139,6 @@ class DeathrattleOrderSpec extends CardSpec {
         }
     }
 
-    @Ignore("Existing bug")
     def "Sylvanas played after Cairne will steal Baine"() {
         startingBoard = new BoardModelBuilder().make {
             currentPlayer {
@@ -154,8 +152,8 @@ class DeathrattleOrderSpec extends CardSpec {
         root = new HearthTreeNode(startingBoard)
         SylvanasWindrunner syl = new SylvanasWindrunner();
         syl.setHealth((byte) 1)
-        root.data_.placeMinion(CURRENT_PLAYER, syl);
         root.data_.placeMinion(WAITING_PLAYER, new CairneBloodhoof());
+        root.data_.placeMinion(CURRENT_PLAYER, syl);
         def copiedBoard = startingBoard.deepCopy()
 
         def attacker = root.data_.modelForSide(CURRENT_PLAYER).getCharacter(1)

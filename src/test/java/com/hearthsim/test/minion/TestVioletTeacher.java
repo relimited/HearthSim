@@ -1,10 +1,10 @@
 package com.hearthsim.test.minion;
 
 import com.hearthsim.card.Card;
-import com.hearthsim.card.minion.concrete.BoulderfistOgre;
-import com.hearthsim.card.minion.concrete.RaidLeader;
-import com.hearthsim.card.minion.concrete.VioletTeacher;
-import com.hearthsim.card.spellcard.concrete.HolySmite;
+import com.hearthsim.card.basic.minion.BoulderfistOgre;
+import com.hearthsim.card.basic.minion.RaidLeader;
+import com.hearthsim.card.basic.spell.HolySmite;
+import com.hearthsim.card.classic.minion.rare.VioletTeacher;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -54,15 +54,15 @@ public class TestVioletTeacher {
         assertEquals(waitingPlayer.getMana(), 8);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
-        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getHealth(), 7);
+        assertEquals(waitingPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(waitingPlayer.getCharacter(2).getHealth(), 7);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 7);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(waitingPlayer.getMinions().get(1).getTotalAttack(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 7);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(waitingPlayer.getCharacter(2).getTotalAttack(), 7);
     }
 
     @Test
@@ -79,17 +79,17 @@ public class TestVioletTeacher {
         assertEquals(waitingPlayer.getMana(), 8);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
-        assertEquals(currentPlayer.getMinions().get(2).getHealth(), 5);
-        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(3).getHealth(), 5);
+        assertEquals(waitingPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(waitingPlayer.getCharacter(2).getHealth(), 7);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 7);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalAttack(), 4);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(waitingPlayer.getMinions().get(1).getTotalAttack(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 7);
+        assertEquals(currentPlayer.getCharacter(3).getTotalAttack(), 4);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(waitingPlayer.getCharacter(2).getTotalAttack(), 7);
 
         //----------------------------------------------------------
         // Use a spell now... p0 should get a Violet Apprentice
@@ -104,17 +104,17 @@ public class TestVioletTeacher {
         assertEquals(waitingPlayer.getMana(), 8);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getHealth(), 7);
-        assertEquals(currentPlayer.getMinions().get(2).getHealth(), 5);
-        assertEquals(currentPlayer.getMinions().get(3).getHealth(), 1);
-        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getHealth(), 7);
+        assertEquals(currentPlayer.getCharacter(3).getHealth(), 5);
+        assertEquals(currentPlayer.getCharacter(4).getHealth(), 1);
+        assertEquals(waitingPlayer.getCharacter(1).getHealth(), 7);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 2);
-        assertEquals(currentPlayer.getMinions().get(1).getTotalAttack(), 7);
-        assertEquals(currentPlayer.getMinions().get(2).getTotalAttack(), 4);
-        assertEquals(currentPlayer.getMinions().get(3).getTotalAttack(), 2);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 6);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 2);
+        assertEquals(currentPlayer.getCharacter(2).getTotalAttack(), 7);
+        assertEquals(currentPlayer.getCharacter(3).getTotalAttack(), 4);
+        assertEquals(currentPlayer.getCharacter(4).getTotalAttack(), 2);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 6);
 
         //----------------------------------------------------------
         // flipped, p1 should not get a Violet Apprentice
@@ -135,14 +135,14 @@ public class TestVioletTeacher {
         assertEquals(waitingPlayer.getMana(), 3);
         assertEquals(currentPlayer.getHero().getHealth(), 30);
         assertEquals(waitingPlayer.getHero().getHealth(), 30);
-        assertEquals(currentPlayer.getMinions().get(0).getHealth(), 7);
-        assertEquals(waitingPlayer.getMinions().get(0).getHealth(), 7);
-        assertEquals(waitingPlayer.getMinions().get(1).getHealth(), 5);
-        assertEquals(waitingPlayer.getMinions().get(2).getHealth(), 1);
+        assertEquals(currentPlayer.getCharacter(1).getHealth(), 7);
+        assertEquals(waitingPlayer.getCharacter(1).getHealth(), 7);
+        assertEquals(waitingPlayer.getCharacter(2).getHealth(), 5);
+        assertEquals(waitingPlayer.getCharacter(3).getHealth(), 1);
 
-        assertEquals(currentPlayer.getMinions().get(0).getTotalAttack(), 6);
-        assertEquals(waitingPlayer.getMinions().get(0).getTotalAttack(), 6);
-        assertEquals(waitingPlayer.getMinions().get(1).getTotalAttack(), 3);
-        assertEquals(waitingPlayer.getMinions().get(2).getTotalAttack(), 1);
+        assertEquals(currentPlayer.getCharacter(1).getTotalAttack(), 6);
+        assertEquals(waitingPlayer.getCharacter(1).getTotalAttack(), 6);
+        assertEquals(waitingPlayer.getCharacter(2).getTotalAttack(), 3);
+        assertEquals(waitingPlayer.getCharacter(3).getTotalAttack(), 1);
     }
 }

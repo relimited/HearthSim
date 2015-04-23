@@ -1,8 +1,10 @@
 package com.hearthsim.test;
 
 import com.hearthsim.card.Card;
+import com.hearthsim.card.basic.minion.*;
+import com.hearthsim.card.classic.minion.common.FaerieDragon;
+import com.hearthsim.card.classic.minion.common.StranglethornTiger;
 import com.hearthsim.card.minion.Minion;
-import com.hearthsim.card.minion.concrete.*;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
@@ -50,7 +52,7 @@ public class TestMinionAttacking {
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(board, ret);
 
-        Minion theAttacker = currentPlayer.getMinions().get(0);
+        Minion theAttacker = currentPlayer.getCharacter(1);
         assertTrue(theAttacker.canAttack());
 
         ret = theAttacker.attack(PlayerSide.WAITING_PLAYER, 0, board, false);
@@ -69,7 +71,7 @@ public class TestMinionAttacking {
         HearthTreeNode ret = theCard.useOn(PlayerSide.CURRENT_PLAYER, 0, board);
         assertEquals(board, ret);
 
-        Minion theAttacker = currentPlayer.getMinions().get(0);
+        Minion theAttacker = currentPlayer.getCharacter(1);
         assertFalse(theAttacker.canAttack());
 
         ret = theAttacker.attack(PlayerSide.WAITING_PLAYER, 0, board, false);

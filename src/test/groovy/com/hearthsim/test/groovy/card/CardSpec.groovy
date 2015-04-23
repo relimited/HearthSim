@@ -8,7 +8,6 @@ import com.hearthsim.model.BoardModel
 import com.hearthsim.model.PlayerModel
 import com.hearthsim.test.helpers.BoardModelBuilder
 import com.hearthsim.util.IdentityLinkedList
-import org.junit.Assert
 import spock.lang.Specification
 
 class CardSpec extends Specification {
@@ -87,10 +86,9 @@ class CardSpec extends Specification {
     
     void assertMinionEquals(Minion oldMinion, Minion newMinion) {
         assert oldMinion.attack == newMinion.attack
-        assert oldMinion.baseAttack_ == newMinion.baseAttack_
+        assert oldMinion.baseAttack == newMinion.baseAttack
         assert oldMinion.auraAttack == newMinion.auraAttack
         assert oldMinion.health == newMinion.health
-        assert oldMinion.baseHealth == newMinion.baseHealth
         assert oldMinion.maxHealth == newMinion.maxHealth
         assert oldMinion.auraHealth == newMinion.auraHealth
         assert oldMinion.charge == newMinion.charge

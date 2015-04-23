@@ -460,7 +460,7 @@ public class GameCustomRecord implements GameRecord {
 	private JSONObject getBoard(BoardModel board, boolean flip) {
 		JSONObject ret = new JSONObject();
 		
-		IdentityLinkedList<MinionPlayerPair> minionPlayerPairs = board.getAllMinionsFIFOList();
+		Iterable<MinionPlayerPair> minionPlayerPairs = board.getAllMinionsFIFOList();
 		List<Minion> p0Minions = new ArrayList<Minion>();
 		List<Minion> p1Minions = new ArrayList<Minion>();
 		
