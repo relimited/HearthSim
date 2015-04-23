@@ -773,17 +773,13 @@
         "class": "com.hearthsim.card.classic.minion.legendary.KingKrush"
     },
     {
-<<<<<<< HEAD
-	"name": "King Mukla",
-        "class": "com.hearthsim.card.minion.concrete.KingMukla"
-=======
+
         "name": "King Mukla",
         "class": "com.hearthsim.card.classic.minion.legendary.KingMukla"
     },
     {
         "name": "King of Beasts",
         "class": "com.hearthsim.card.goblinsvsgnomes.minion.rare.KingOfBeasts"
->>>>>>> master
     },
     {
         "name": "Knife Juggler",
