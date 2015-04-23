@@ -3,6 +3,8 @@ package com.hearthsim.results;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthActionBoardPair;
+import com.hearthsim.util.record.HearthActionRecord;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -106,4 +108,11 @@ public class GameDetailedRecord implements GameRecord {
             return PlayerSide.WAITING_PLAYER;
         }
     }
+
+	@Override
+	public void put(int turn, PlayerSide activePlayerSide, BoardModel board,
+			List<HearthActionBoardPair> plays, List<HearthActionRecord> record) {
+		// TODO Auto-generated method stub
+		
+	}
 }

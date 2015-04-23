@@ -90,7 +90,7 @@ public class TestArcaneGolem {
         currentPlayer.getCharacter(2).hasAttacked(true);
 
         BruteForceSearchAI ai0 = BruteForceSearchAI.buildStandardAI1();
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertEquals(resBoard.getCurrentPlayer().getHand().size(), 0);

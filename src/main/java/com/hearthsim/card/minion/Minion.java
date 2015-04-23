@@ -15,7 +15,9 @@ import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
+import com.hearthsim.util.record.HearthActionRecord;
 import com.hearthsim.util.tree.HearthTreeNode;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -543,6 +545,7 @@ public class Minion extends Card implements EffectOnResolveTargetable<Card>, Car
                 int originCharacterIndex = boardState.data_.modelForSide(PlayerSide.CURRENT_PLAYER).getIndexForCharacter(this);
                 boardState = BoardStateFactoryBase.handleDeadMinions(boardState, singleRealizationOnly);
                 boardState.setAction(new HearthAction(Verb.TARGETABLE_BATTLECRY, PlayerSide.CURRENT_PLAYER, originCharacterIndex, side, targetCharacterIndex));
+                boardState.setRecord(new HearthActionRecord(Verb.TARGETABLE_BATTLECRY, this.deepCopy(), boardState.data_.modelForSide(side).getCharacter(targetCharacterIndex).deepCopy()));
             }
         }
 
@@ -718,6 +721,7 @@ public class Minion extends Card implements EffectOnResolveTargetable<Card>, Car
         if (toRet != null) {
             toRet.setAction(new HearthAction(Verb.ATTACK, PlayerSide.CURRENT_PLAYER, attackerIndex,
                     targetMinionPlayerSide, targetIndex));
+            toRet.setRecord(new HearthActionRecord(Verb.ATTACK, this.deepCopy(), targetMinion.deepCopy()));
             toRet = BoardStateFactoryBase.handleDeadMinions(toRet, singleRealizationOnly);
         }
 

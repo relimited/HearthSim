@@ -2,10 +2,13 @@ package com.hearthsim.player.playercontroller;
 
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
+import com.hearthsim.util.AbstractPair;
 import com.hearthsim.util.DeepCopyable;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
+import com.hearthsim.util.record.HearthActionRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ArtificialPlayer extends DeepCopyable<ArtificialPlayer> {
@@ -21,7 +24,7 @@ public interface ArtificialPlayer extends DeepCopyable<ArtificialPlayer> {
      * @return A list of HearthActionBoardPair that the AI has performed, starting from the earliest play to the last.
      * @throws HSException
      */
-    public List<HearthActionBoardPair> playTurn(int turn, BoardModel board) throws HSException;
+    public AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>> playTurn(int turn, BoardModel board) throws HSException;
 
 
     /**
@@ -36,7 +39,7 @@ public interface ArtificialPlayer extends DeepCopyable<ArtificialPlayer> {
      * @return A list of HearthActionBoardPair that the AI has performed, starting from the earliest play to the last.
      * @throws HSException
      */
-    public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException;
+    public AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException;
 
     public int getMaxThinkTime();
 }

@@ -137,7 +137,7 @@ public class TestArcaneIntellect {
         waitingPlayer.setMaxMana((byte) 3);
 
         BruteForceSearchAI ai0 = BruteForceSearchAI.buildStandardAI1();
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertFalse(resBoard == null);
@@ -158,7 +158,7 @@ public class TestArcaneIntellect {
         waitingPlayer.setMaxMana((byte)6);
 
         BruteForceSearchAI ai0 = BruteForceSearchAI.buildStandardAI1();
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertFalse(resBoard == null);
@@ -179,7 +179,7 @@ public class TestArcaneIntellect {
         waitingPlayer.setMaxMana((byte)9);
 
         BruteForceSearchAI ai0 = BruteForceSearchAI.buildStandardAI1();
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertFalse(resBoard == null);

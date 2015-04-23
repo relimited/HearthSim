@@ -18,10 +18,12 @@ import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.BoardModel.MinionPlayerPair;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
+import com.hearthsim.util.AbstractPair;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.IdentityLinkedList;
+import com.hearthsim.util.record.HearthActionRecord;
 
 import org.json.JSONObject;
 
@@ -38,7 +40,7 @@ public class GameCustomRecord implements GameRecord {
 	byte[][][] numCards_;
 	byte[][][] heroHealth_;
 	byte[][][] heroArmor_;
-	List<Map<Integer, List<HearthActionBoardPair>>> state_;
+	List<Map<Integer, AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>>>> state_;
 	List<BoardModel> boardStateOnTurn;
 	
 	BoardModel turn0Model;		//special place to store information on turn 0, which normally gets ignored.
@@ -55,8 +57,70 @@ public class GameCustomRecord implements GameRecord {
 		heroHealth_ = new byte[2][maxTurns][2];
 		heroArmor_ = new byte[2][maxTurns][2];
 		
-		state_ = new ArrayList<Map<Integer, List<HearthActionBoardPair>>>();
+		state_ = new ArrayList<Map<Integer, AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>>>>();
 		boardStateOnTurn = new ArrayList<BoardModel>();
+	}
+	
+	
+	/**
+	 * Now with extra information!
+	 * The record has actual card information
+	 */
+	@Override
+	public void put(int turn, PlayerSide activePlayerSide, BoardModel board,
+			List<HearthActionBoardPair> plays, List<HearthActionRecord> record) {
+		PlayerModel playerModel = board.modelForSide(activePlayerSide);
+
+        int currentPlayerId = playerModel.getPlayerId();
+        int waitingPlayerId = board.modelForSide(activePlayerSide.getOtherPlayer()).getPlayerId();
+        
+        //New and improved state logging
+        if(turn == 0){
+        	turn0Model = board; 
+        }
+        
+        //standard logging strategy
+        Map<Integer, AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>>> turnInformation;
+        if(state_.size() <= turn || state_.get(turn) == null){
+        	turnInformation = new HashMap<Integer, AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>>>();
+        }else{
+        	turnInformation = state_.get(turn);
+        }
+        
+        List<HearthActionBoardPair> actionLog;
+        List<HearthActionRecord> actionRecord;
+        
+        //there is already an element for this turn.  Add any additional info to this element
+        if(turnInformation.containsKey(currentPlayerId)){
+        	actionLog = turnInformation.get(currentPlayerId).getFirst();
+        	if(actionLog != null){
+        		actionLog.addAll(plays);
+        	}
+        	
+        	actionRecord = turnInformation.get(currentPlayerId).getSecond();
+        	
+        	if(actionRecord != null){
+        		actionRecord.addAll(record);
+        	}
+        	
+        	if(actionLog != null || actionRecord != null){
+        		turnInformation.put(currentPlayerId, new AbstractPair(actionLog, actionRecord));
+        	}
+        }else{
+        	actionLog = plays;
+        	actionRecord = record;
+        	turnInformation.put(currentPlayerId, new AbstractPair(actionLog, actionRecord));
+        }
+        
+        if(state_.size() != 0 && state_.size() > turn){
+        	//replace
+        	state_.remove(turn);
+        	state_.add(turn, turnInformation);
+        }else{
+        	state_.add(turn, turnInformation);
+        }
+        
+        recordResourceValues(currentPlayerId, waitingPlayerId, turn, board);
 	}
 	
 	@Override
@@ -119,9 +183,9 @@ public class GameCustomRecord implements GameRecord {
         }
         
         //standard logging strategy
-        Map<Integer, List<HearthActionBoardPair>> turnInformation;
+        Map<Integer, AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>>> turnInformation;
         if(state_.size() <= turn || state_.get(turn) == null){
-        	turnInformation = new HashMap<Integer, List<HearthActionBoardPair>>();
+        	turnInformation = new HashMap<Integer, AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>>>();
         }else{
         	turnInformation = state_.get(turn);
         }
@@ -129,12 +193,12 @@ public class GameCustomRecord implements GameRecord {
         List<HearthActionBoardPair> actionLog;
         
         if(turnInformation.containsKey(currentPlayerId)){
-        	actionLog = turnInformation.get(currentPlayerId);
+        	actionLog = turnInformation.get(currentPlayerId).getFirst();
         	actionLog.addAll(plays);
-        	turnInformation.put(currentPlayerId, actionLog);
+        	turnInformation.put(currentPlayerId, new AbstractPair(actionLog, null));
         }else{
         	actionLog = plays;
-        	turnInformation.put(currentPlayerId, actionLog);
+        	turnInformation.put(currentPlayerId, new AbstractPair(actionLog, null));
         }
         
         if(state_.size() != 0 && state_.size() > turn){
@@ -145,20 +209,26 @@ public class GameCustomRecord implements GameRecord {
         	state_.add(turn, turnInformation);
         }
         
-        numMinions_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getNumMinions();
-        numMinions_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getNumMinions();
-
-        numCards_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getHand().size();
-        numCards_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getHand().size();
-
-        Hero currentPlayerHero = board.getCurrentPlayer().getHero();
-        heroHealth_[currentPlayerId][turn][currentPlayerId] = currentPlayerHero.getHealth();
-        Hero waitingPlayerHero = board.getWaitingPlayer().getHero();
-        heroHealth_[currentPlayerId][turn][waitingPlayerId] = waitingPlayerHero.getHealth();
-
-        heroArmor_[currentPlayerId][turn][currentPlayerId] = currentPlayerHero.getArmor();
-        heroArmor_[currentPlayerId][turn][waitingPlayerId] = waitingPlayerHero.getArmor();
+        recordResourceValues(currentPlayerId, waitingPlayerId, turn, board);
+       
     }
+
+	private void recordResourceValues(int currentPlayerId, int waitingPlayerId,
+			int turn, BoardModel board) {
+		 numMinions_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getNumMinions();
+	     numMinions_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getNumMinions();
+
+	     numCards_[currentPlayerId][turn][currentPlayerId] = (byte)board.getCurrentPlayer().getHand().size();
+	     numCards_[currentPlayerId][turn][waitingPlayerId] = (byte)board.getWaitingPlayer().getHand().size();
+
+	     Hero currentPlayerHero = board.getCurrentPlayer().getHero();
+	     heroHealth_[currentPlayerId][turn][currentPlayerId] = currentPlayerHero.getHealth();
+	     Hero waitingPlayerHero = board.getWaitingPlayer().getHero();
+	     heroHealth_[currentPlayerId][turn][waitingPlayerId] = waitingPlayerHero.getHealth();
+
+	     heroArmor_[currentPlayerId][turn][currentPlayerId] = currentPlayerHero.getArmor();
+	     heroArmor_[currentPlayerId][turn][waitingPlayerId] = waitingPlayerHero.getArmor();
+	}
 
 	@Override
 	public int getRecordLength(int playerId) {
@@ -193,18 +263,28 @@ public class GameCustomRecord implements GameRecord {
 		JSONObject enclosingObj = new JSONObject();
 		
 		//get the state list for this turn
-		List<HearthActionBoardPair> states = state_.get(turn).get(playerId);
+		List<HearthActionBoardPair> states = state_.get(turn).get(playerId).getFirst();
+		List<HearthActionRecord> recordedActions = state_.get(turn).get(playerId).getSecond();
+		
+		log.debug("Recorded Actions This Turn: ");
+		if(recordedActions != null){
+			for(HearthActionRecord element : recordedActions){
+				log.debug(element.getActionVerb().toString());
+				log.debug(element.getPerformer().toString());
+				log.debug(element.getTarget().toString());
+			}
+		}
 		List<HearthActionBoardPair> previousTurn = null;
 		List<HearthActionBoardPair> opponentPreviousTurn = null;
 		
 		if(turn != 0){
-			previousTurn = state_.get(turn-1).get(playerId);
+			previousTurn = state_.get(turn-1).get(playerId).getFirst();
 			int opponentId = playerId == 0 ? 1 : 0;
 			
 			if(playerId == firstPlayer){
-				opponentPreviousTurn = state_.get(turn - 1).get(opponentId);
+				opponentPreviousTurn = state_.get(turn - 1).get(opponentId).getFirst();
 			}else{
-				opponentPreviousTurn = state_.get(turn).get(opponentId);
+				opponentPreviousTurn = state_.get(turn).get(opponentId).getFirst();
 			}
 		}
 		
@@ -240,13 +320,29 @@ public class GameCustomRecord implements GameRecord {
 		//log the actual turn as states
 		JSONArray statesJSON = new JSONArray();
 		
+		//the ofset between the state list and the recorded actions.  This happens due to the fact that we don't record _everything_ but stuff
+		//should still roughly be in the same order
+		int listOffset = 0;
+		
 		//for each state in the state array...
 		for(int i = 0; i < states.size(); i++){
 			JSONObject json = new JSONObject();
 			HearthActionBoardPair state = states.get(i);
+			HearthActionRecord actRecord = null;
 			
 			//get the action for this state
 			HearthAction act = state.action;
+			
+			//if this action has a history component, get it.  Otherwise, don't.
+			if(!recordedActions.isEmpty() && 
+					i + listOffset < recordedActions.size() && 
+					state.action.verb_ == recordedActions.get(i + listOffset).getActionVerb()){
+				
+				actRecord = recordedActions.get(i + listOffset);
+			}else{
+				//decriment the offset (the action list should always be longer than the recorded state list) to keep the lists aligned
+				listOffset = listOffset - 1;
+			}
 			
 			//get the board for this state (this is the board right after the state has occurred)
 			BoardModel boardState = state.board;
@@ -255,17 +351,17 @@ public class GameCustomRecord implements GameRecord {
 			
 			JSONObject actJSON = new JSONObject();
 			
-			if(act != null){
+			if(actRecord != null){
 				//actions can now generate JSON objects that describe them, but we still need to convert the indexes that they present to 
 				//names
 				//Joe is picky.
-				ActionDescription actData = ActionDescription.fromJSON(act.toJSON()); //TODO: this is pretty slow.
+				//ActionDescription actData = ActionDescription.fromJSON(act.toJSON()); //TODO: this is pretty slow.
 				
 				//log the verb associated with this action
-				actJSON.put("verb", actData.verb.toString());
+				actJSON.put("verb", actRecord.getActionVerb().toString());
 				try {
 					
-					actJSON = recordEvent(actData, actJSON, previousBoardState, i, turn);
+					actJSON = recordEvent(actRecord, actJSON, previousBoardState, i, turn);
 					
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -301,12 +397,14 @@ public class GameCustomRecord implements GameRecord {
 	 * This... this is intense.  Get ready.
 	 * TODO: this needs to get updated.  Essentally, if both players just stop doing things for more than a turn, the model will cry
 	 * 		as it tries to get the last state for the pre-action logging
-	 * @param i
-	 * @param states
-	 * @param turn
-	 * @param previousTurn
-	 * @param opponentPreviousTurn
+	 * @param i interal location in this turn
+	 * @param states states that occured in this turn
+	 * @param turn current turn
+	 * @param previousTurn states that occured in our previous turn
+	 * @param opponentPreviousTurn states that occured in the opponent's previous turn
 	 * @return
+	 * 
+	 * @FIXME (at some point tonight, or maybe very early tomorrow morning) --> set this up to recursively look at past turns until we have turn info
 	 */
 	private BoardModel getPreviousBoardState(int i,
 			List<HearthActionBoardPair> states, int turn,
@@ -347,106 +445,50 @@ public class GameCustomRecord implements GameRecord {
 		return returnState;
 	}
 
-	/**
-	 * Get the minions on the board for a particular side
-	 * @param board a board model to extract minions from
-	 * @param side a side to extract minions from
-	 * 
-	 * @return a list of minions, the list can be empty
-	 * 
-	 * TODO I'm assuming that minion placement will be correct in the
-	 
-	private List<Minion> extractMinions(BoardModel board, PlayerSide side){
-		IdentityLinkedList<MinionPlayerPair> minionPlayerPairs = board.getAllMinionsFIFOList();
-		List<Minion> minions = new ArrayList<Minion>(); //using array lists for O(1) indexing
-		for(MinionPlayerPair pair : minionPlayerPairs){
-			if(pair.getPlayerSide() == side){
-				minions.add(pair.getMinion());
-			}
-		}
-		
-		return minions;
-	}
-	*/
-	
-	private JSONObject recordEvent(ActionDescription actData, JSONObject actJSON, BoardModel pastBoardState, int i, int turn){
-		if(actData.verb == Verb.ATTACK){
-			actJSON = recordAttack(actData, actJSON, pastBoardState);
-		}else if(actData.verb == Verb.USE_CARD){
-			actJSON = recordUseCard(actData, actJSON, pastBoardState, i, turn);
+	private JSONObject recordEvent(HearthActionRecord actRecord, JSONObject actJSON, BoardModel pastBoardState, int i, int turn){
+		if(actRecord.getActionVerb() == Verb.ATTACK){
+			actJSON = recordAttack(actRecord, actJSON, pastBoardState);
+		}else if(actRecord.getActionVerb() == Verb.USE_CARD){
+			actJSON = recordUseCard(actRecord, actJSON, pastBoardState, i, turn);
 		}else{
-			log.debug(actData.verb.toString() + " currently is unlogged.");
+			log.debug(actRecord.getActionVerb().toString() + " currently is unlogged.");
 		}
 		
 		return actJSON;
 	}
 	
 	/**
+	 * Record the target and performer of the USE_CARD action
 	 * 
-	 * @param actData
-	 * @param actJSON
-	 * @param pastBoardState
-	 * @return
+	 * @param actRecord the action description of the USE_CARD action.  Contains indexes for target and performer
+	 * @param actJSON the JSON object to write the record too
+	 * @param boardState the board state that maps to the indexes
+	 * @param i error reporting index
+	 * @param turn error reporting turn
+	 * 
+	 * @return actJSON, modified with the correct writes
+	 * 
+	 * This abuses a try-catch block to handle the fact that top decking information gets lost in this model
+	 * The obvious fix is to log the actual targets (minions / cards) in logging objects, but that'll take a serious rewrite.
+	 * s
 	 */
-	private JSONObject recordUseCard(ActionDescription actData, JSONObject actJSON, BoardModel boardState, int i, int turn) {
-		try{
-			actJSON.put("target", boardState.getCharacter(actData.targetPlayerSide, 
-					actData.targetCharacterIndex).getName() + "-" + actData.targetCharacterIndex);
-		}catch(Exception e){
-			//if that doesn't work, fall back on indexes
-			log.debug(e.toString());
-			log.debug(e.getLocalizedMessage());
-			actJSON.put("target_index", actData.targetCharacterIndex);
-		}
-		
-		try{
-			actJSON.put("performer", boardState.getCard_hand(actData.actionPerformerPlayerSide,
-					actData.cardOrCharacterIndex).getName() + "-" + actData.cardOrCharacterIndex);
-		}catch(Exception e){
-			//if that doesn't work, fall back on indexes
-			log.debug(e.toString());
-			log.debug(e.getLocalizedMessage());
-			//FIXME: There is a case where, if top-decking, a card just straight up doesn't get logged in hand.  The fix is to go to the previous state
-			//and draw the card.
-			
-			//FIXME: This is gross, and I hate it, but it works.
-			boardState.drawCardFromCurrentPlayerDeck(1);
-			actJSON.put("performer", boardState.getCard_hand(actData.actionPerformerPlayerSide, actData.cardOrCharacterIndex).getName() + "-" + actData.cardOrCharacterIndex);
-			actJSON.put("performer_index", actData.cardOrCharacterIndex);
-		}
+	private JSONObject recordUseCard(HearthActionRecord actRecord, JSONObject actJSON, BoardModel boardState, int i, int turn) {
+		actJSON.put("target", actRecord.getTarget().getName());
+		actJSON.put("performer", actRecord.getPerformer().getName());
 		
 		return actJSON;
 	}
 
 	/**
 	 * 
-	 * @param actData
+	 * @param actRecord
 	 * @param actJSON
 	 * @param pastBoardState
 	 * @return
 	 */
-	private JSONObject recordAttack(ActionDescription actData, JSONObject actJSON, BoardModel boardState){
-		try{
-			actJSON.put("target", boardState.getCharacter(actData.targetPlayerSide, 
-					actData.targetCharacterIndex).getName() + "-" + actData.targetCharacterIndex);
-		}catch(Exception e){
-			e.printStackTrace();
-			//if that doesn't work, fall back on indexes
-			log.debug(e.toString());
-			log.debug(e.getLocalizedMessage());
-			actJSON.put("target_index", actData.targetCharacterIndex);
-		}
-		
-		try{
-			actJSON.put("performer", boardState.getCharacter(actData.actionPerformerPlayerSide,
-					actData.cardOrCharacterIndex).getName() + "-" + actData.cardOrCharacterIndex);
-		}catch(Exception e){
-			e.printStackTrace();
-			//if that doesn't work, fall back on indexes
-			log.debug(e.toString());
-			log.debug(e.getLocalizedMessage());
-			actJSON.put("performer_index", actData.cardOrCharacterIndex);
-		}
+	private JSONObject recordAttack(HearthActionRecord actRecord, JSONObject actJSON, BoardModel boardState){		
+		actJSON.put("target", actRecord.getTarget().getName());
+		actJSON.put("performer", actRecord.getPerformer().getName());
 		
 		return actJSON;
 	}
@@ -551,5 +593,4 @@ public class GameCustomRecord implements GameRecord {
 	public void setFirstPlayer(int firstPlayerId) {
 		firstPlayer = firstPlayerId;
 	}
-
 }

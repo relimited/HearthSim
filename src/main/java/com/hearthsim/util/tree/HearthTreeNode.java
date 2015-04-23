@@ -6,6 +6,7 @@ import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.player.playercontroller.BoardScorer;
 import com.hearthsim.util.HearthAction;
+import com.hearthsim.util.record.HearthActionRecord;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,8 @@ public class HearthTreeNode {
     List<HearthTreeNode> children_;
 
     private HearthTreeNode parent;
+
+	private HearthActionRecord record;
 
     public HearthTreeNode getParent() {
         return parent;
@@ -272,4 +275,28 @@ public class HearthTreeNode {
 
         return toRet;
     }
+
+    //April 23
+    //adding in an extra 'record' object that contains copies of actual card data
+    //this will slow down the system by a lot (all the cards here are deep copies)
+    //but it'll help me keep my sanity
+	public void setRecord(HearthActionRecord hearthActionRecord) {
+		this.record = hearthActionRecord;
+	}
+	
+	public boolean checkRecord(){
+		if(this.record != null){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public HearthActionRecord getRecord(){
+		if(this.record != null){
+			return this.record;
+		}else{
+			return null;
+		}
+	}
 }

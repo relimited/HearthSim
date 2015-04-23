@@ -122,7 +122,7 @@ public class TestGnomishInventor {
         waitingPlayer.setMana((byte) 5);
 
         BruteForceSearchAI ai0 = BruteForceSearchAI.buildStandardAI1();
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertEquals(resBoard.getCurrentPlayer().getHand().size(), 1); //1 card drawn from GnomishInventor, not enough mana to play it
@@ -138,7 +138,7 @@ public class TestGnomishInventor {
     public void test4() throws HSException {
 
         BruteForceSearchAI ai0 = BruteForceSearchAI.buildStandardAI1();
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertEquals(resBoard.getCurrentPlayer().getHand().size(), 0); //1 card drawn from GnomishInventor, and had enough mana to play it

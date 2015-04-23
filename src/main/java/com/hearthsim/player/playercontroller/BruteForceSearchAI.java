@@ -8,11 +8,13 @@ import com.hearthsim.exception.HSParamNotFoundException;
 import com.hearthsim.io.ParamFile;
 import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
+import com.hearthsim.util.AbstractPair;
 import com.hearthsim.util.CardFactory;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
 import com.hearthsim.util.factory.DepthBoardStateFactory;
 import com.hearthsim.util.factory.SparseBoardStateFactory;
+import com.hearthsim.util.record.HearthActionRecord;
 import com.hearthsim.util.tree.HearthTreeNode;
 import com.hearthsim.util.tree.StopNode;
 
@@ -161,7 +163,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     }
 
     @Override
-    public List<HearthActionBoardPair> playTurn(int turn, BoardModel board) throws HSException {
+    public AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>> playTurn(int turn, BoardModel board) throws HSException {
         PlayerModel playerModel0 = board.getCurrentPlayer();
         PlayerModel playerModel1 = board.getWaitingPlayer();
 
@@ -175,7 +177,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     }
 
     @Override
-    public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory)
+    public AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory)
             throws HSException {
         PlayerModel playerModel0 = board.getCurrentPlayer();
 
@@ -186,6 +188,9 @@ public class BruteForceSearchAI implements ArtificialPlayer {
 
         HearthTreeNode allMoves = factory.doMoves(toRet, this.scorer);
         ArrayList<HearthActionBoardPair> retList = new ArrayList<>();
+        ArrayList<HearthActionRecord> histList = new ArrayList<>();
+        AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>> returnData;
+        
         HearthTreeNode curMove = allMoves;
 
         while(curMove.getChildren() != null) {
@@ -193,24 +198,43 @@ public class BruteForceSearchAI implements ArtificialPlayer {
             if (curMove instanceof StopNode) {
                 // Add the initial step that created the StopNode
                 retList.add(new HearthActionBoardPair(curMove.getAction(), curMove.data_.deepCopy()));
+                if(curMove.checkRecord()){
+                	histList.add(curMove.getRecord());
+                }
                 // Force the step to resolve
                 HearthTreeNode allEffectsDone = ((StopNode)curMove).finishAllEffects();
                 // Add the resolution to action list
                 retList.add(new HearthActionBoardPair(allEffectsDone.getAction(), allEffectsDone.data_.deepCopy()));
-
+                if(allEffectsDone.checkRecord()){
+                	histList.add(allEffectsDone.getRecord());
+                }
+                
                 // Continue the turn
-                List<HearthActionBoardPair> nextMoves = this.playTurn(turn, allEffectsDone.data_);
+                List<HearthActionBoardPair> nextMoves = this.playTurn(turn, allEffectsDone.data_).getFirst();
+                List<HearthActionRecord> nextHistory = this.playTurn(turn, allEffectsDone.data_).getSecond();
                 if (nextMoves.size() > 0) {
                     for ( HearthActionBoardPair actionBoard : nextMoves) {
                         retList.add(actionBoard);
                     }
                 }
+                
+                if(nextHistory.size() > 0){
+                	for(HearthActionRecord record : nextHistory){
+                		histList.add(record);
+                	}
+                }
+                
                 break;
             } else {
                 retList.add(new HearthActionBoardPair(curMove.getAction(), curMove.data_));
+                if(curMove.checkRecord()){
+                	histList.add(curMove.getRecord());
+                }
             }
         }
-        return retList;
+        
+        returnData = new AbstractPair<>(retList, histList);
+        return returnData;
     }
 
     @Override

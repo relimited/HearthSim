@@ -59,7 +59,7 @@ public class TestLootHorder {
         currentPlayer.setMana((byte) 1);
         waitingPlayer.setMana((byte) 1);
 
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertEquals(resBoard.getCurrentPlayer().getHand().size(), 1); //1 card drawn from Loot Horder attacking and dying, no mana left to play the card
@@ -79,7 +79,7 @@ public class TestLootHorder {
         currentPlayer.setMana((byte) 3);
         waitingPlayer.setMana((byte) 3);
 
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertEquals(resBoard.getCurrentPlayer().getHand().size(), 0); //1 card drawn from Loot Horder attacking and dying, then played the drawn card
@@ -107,7 +107,7 @@ public class TestLootHorder {
         currentPlayer.setMana((byte) 3);
         waitingPlayer.setMana((byte) 3);
 
-        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_);
+        List<HearthActionBoardPair> ab = ai0.playTurn(0, board.data_).getFirst();
         BoardModel resBoard = ab.get(ab.size() - 1).board;
 
         assertEquals(resBoard.getCurrentPlayer().getHand().size(), 0); //no cards in hand

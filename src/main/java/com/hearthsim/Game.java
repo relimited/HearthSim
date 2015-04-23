@@ -12,10 +12,12 @@ import com.hearthsim.results.GameCustomRecord;
 import com.hearthsim.results.GameRecord;
 import com.hearthsim.results.GameResult;
 import com.hearthsim.results.GameSimpleRecord;
+import com.hearthsim.util.AbstractPair;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
+import com.hearthsim.util.record.HearthActionRecord;
 import com.hearthsim.util.tree.HearthTreeNode;
 
 import java.util.ArrayList;
@@ -120,7 +122,12 @@ public class Game {
         if (gameResult != null)
             return gameResult;
 
-        List<HearthActionBoardPair> allMoves = ai.playTurn(turnCount, boardModel);
+        AbstractPair<List<HearthActionBoardPair>, List<HearthActionRecord>> turnResult = ai.playTurn(turnCount, boardModel);
+        List<HearthActionBoardPair> allMoves = turnResult.getFirst();
+        List<HearthActionRecord> choiceRecord = turnResult.getSecond();
+        
+        //List<HearthActionBoardPair> allMoves = ai.playTurn(turnCount, boardModel).getFirst();
+        
         if (allMoves.size() > 0) {
             // If allMoves is empty, it means that there was absolutely nothing the AI could do
             boardModel = allMoves.get(allMoves.size() - 1).board;
@@ -129,7 +136,7 @@ public class Game {
 
         boardModel = Game.endTurn(boardModel);
 
-        record.put(turnCount + 1, PlayerSide.CURRENT_PLAYER, boardModel.deepCopy(), allMoves);
+        record.put(turnCount + 1, PlayerSide.CURRENT_PLAYER, boardModel.deepCopy(), allMoves, choiceRecord);
 
         gameResult = checkGameOver(turnCount, record);
         if (gameResult != null)

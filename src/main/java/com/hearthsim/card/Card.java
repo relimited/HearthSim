@@ -17,8 +17,10 @@ import com.hearthsim.util.DeepCopyable;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
+import com.hearthsim.util.record.HearthActionRecord;
 import com.hearthsim.util.tree.HearthTreeNode;
 import com.hearthsim.util.tree.RandomEffectNode;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -246,7 +248,8 @@ public class Card implements DeepCopyable<Card> {
      * @return The boardState is manipulated and returned
      */
     private HearthTreeNode useOn(PlayerSide side, Minion targetMinion, HearthTreeNode boardState, boolean singleRealizationOnly) throws HSException {
-        if (!this.canBeUsedOn(side, targetMinion, boardState.data_))
+    	
+    	if (!this.canBeUsedOn(side, targetMinion, boardState.data_))
             return null;
 
         PlayerModel currentPlayer = boardState.data_.getCurrentPlayer();
@@ -276,6 +279,10 @@ public class Card implements DeepCopyable<Card> {
 
         if (toRet != null) {
             toRet.setAction(new HearthAction(Verb.USE_CARD, PlayerSide.CURRENT_PLAYER, cardIndex, side, targetIndex));
+            //April 23: adding in the extra level of record keeping
+        	//this WILL SLOW DOWN everything a ton.
+            toRet.setRecord(new HearthActionRecord(Verb.USE_CARD, this.deepCopy(), targetMinion.deepCopy()));
+            
         }
 
         return toRet;

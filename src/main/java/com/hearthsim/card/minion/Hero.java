@@ -9,7 +9,9 @@ import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthAction;
 import com.hearthsim.util.HearthAction.Verb;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
+import com.hearthsim.util.record.HearthActionRecord;
 import com.hearthsim.util.tree.HearthTreeNode;
+
 import org.json.JSONObject;
 
 public abstract class Hero extends Minion implements MinionSummonedInterface {
@@ -140,6 +142,7 @@ public abstract class Hero extends Minion implements MinionSummonedInterface {
             int targetIndex = targetPlayer.getIndexForCharacter(targetMinion);
             toRet.setAction(new HearthAction(Verb.HERO_ABILITY, PlayerSide.CURRENT_PLAYER, 0, targetPlayerSide,
                 targetIndex));
+            toRet.setRecord(new HearthActionRecord(Verb.HERO_ABILITY, this.deepCopy(), targetMinion.deepCopy()));
             toRet = BoardStateFactoryBase.handleDeadMinions(toRet, singleRealizationOnly);
         }
         return toRet;

@@ -5,6 +5,8 @@ import com.hearthsim.model.BoardModel;
 import com.hearthsim.model.PlayerModel;
 import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.HearthActionBoardPair;
+import com.hearthsim.util.record.HearthActionRecord;
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -90,6 +92,13 @@ public class GameSimpleRecord implements GameRecord {
 
 	@Override
 	public void setFirstPlayer(int firstPlayerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void put(int turn, PlayerSide activePlayerSide, BoardModel board,
+			List<HearthActionBoardPair> plays, List<HearthActionRecord> record) {
 		// TODO Auto-generated method stub
 		
 	}
