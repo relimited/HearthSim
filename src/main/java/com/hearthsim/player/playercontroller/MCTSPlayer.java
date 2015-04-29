@@ -1,4 +1,3 @@
-
 package com.hearthsim.player.playercontroller;
 
 import com.hearthsim.card.minion.Minion;
@@ -26,6 +25,12 @@ import java.util.List;
 import java.nio.file.Path;
 import java.io.IOException;
 
+/**
+ * An MCTS AI for hearthsim
+ * @author Johnathan
+ * @author Dylan
+ *
+ */
 public class MCTSPlayer implements ArtificialPlayer {
     private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
     private final static int MAX_THINK_TIME = 20000;
@@ -35,6 +40,7 @@ public class MCTSPlayer implements ArtificialPlayer {
 
     public WeightedScorer scorer = new WeightedScorer();
 
+    private MCTSTreeNode baseNode = null;
     public MCTSPlayer() {}
 
     public MCTSPlayer(Path aiParamFile) throws IOException, HSInvalidParamFileException {
@@ -54,8 +60,20 @@ public class MCTSPlayer implements ArtificialPlayer {
      */
     @Override
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board) throws HSException {
-return null;
+    	//we need some way to create potential board states (aka a board state factory)
+    	//copied from BruteForceSearchAI.java
+    	
+    	//Under the current implementation, almost all of this gets ignored.  Which is probably not what we want eventually.
+    	 PlayerModel playerModel0 = board.getCurrentPlayer();
+         PlayerModel playerModel1 = board.getWaitingPlayer();
 
+         BoardStateFactoryBase factory;
+         if (useSparseBoardStateFactory_) {
+             factory = new SparseBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME, useDuplicateNodePruning);
+         } else {
+             factory = new DepthBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME, useDuplicateNodePruning);
+         }
+         return this.playTurn(turn, board, factory);
     }
 
 
@@ -73,7 +91,24 @@ return null;
      */
     @Override
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException {
-return null;
+    	//if the baseNode is null, use this board as a base
+    	//or, if the baseNode's board model doesn't match the board state, then start a new tree with this board
+    	if(baseNode == null || !baseNode.turn.data_.equals(board)){
+    		baseNode = new MCTSTreeNode(new HearthTreeNode(board));
+    	}
+    	
+    	//MCTS! MCTS! MCTS!
+    	log.info("MCTS TURN: ");
+    	log.info(baseNode.turn.toString());
+    	MCTSTreeNode retNode = baseNode.selectAction();
+    	log.info("NODE STATE:  ");
+    	log.info(retNode.turn.toString());
+    	
+    	//update the board
+    	board = retNode.turn.data_;
+    	log.info("Node to return:  ");
+    	log.info(retNode.toString());
+    	return retNode.getTurnResults();
     }
 
     @Override
@@ -84,6 +119,7 @@ return null;
         copied.useDuplicateNodePruning = useDuplicateNodePruning;
         return copied;
     }
+    
     @Override
     public int getMaxThinkTime() {
       return MAX_THINK_TIME;

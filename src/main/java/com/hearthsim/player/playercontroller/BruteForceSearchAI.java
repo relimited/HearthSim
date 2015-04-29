@@ -159,6 +159,11 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     public void setUseDuplicateNodePruning(boolean value) {
         useDuplicateNodePruning = value;
     }
+    
+    //added to be able to score nodes outside the AI with the same scorer
+    public BoardScorer getScorer(){
+    	return this.scorer;
+    }
 
     @Override
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board) throws HSException {
