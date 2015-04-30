@@ -98,16 +98,8 @@ public class MCTSPlayer implements ArtificialPlayer {
     	}
     	
     	//MCTS! MCTS! MCTS!
-    	//log.info("MCTS TURN: ");
-    	//log.info(baseNode.turn.toString());
     	MCTSTreeNode retNode = baseNode.selectAction();
-    	//log.info("NODE STATE:  ");
-    	//log.info(retNode.turn.toString());
     	
-    	//update the board
-    	board = retNode.turn.data_;
-    	//log.info("Node to return:  ");
-    	//log.info(retNode.toString());
     	return retNode.getTurnResults();
     }
 
