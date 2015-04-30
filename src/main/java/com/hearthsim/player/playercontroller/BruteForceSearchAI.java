@@ -183,7 +183,6 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory)
             throws HSException {
         PlayerModel playerModel0 = board.getCurrentPlayer();
-
         log.debug("playing turn for " + playerModel0.getName());
         // The goal of this ai is to maximize his board score
         log.debug("start turn board state is {}", board);

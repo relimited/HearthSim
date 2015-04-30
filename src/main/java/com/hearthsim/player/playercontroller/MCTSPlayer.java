@@ -93,21 +93,21 @@ public class MCTSPlayer implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException {
     	//if the baseNode is null, use this board as a base
     	//or, if the baseNode's board model doesn't match the board state, then start a new tree with this board
-    	if(baseNode == null || !baseNode.turn.data_.equals(board)){
-    		baseNode = new MCTSTreeNode(new HearthTreeNode(board));
+    	if(baseNode == null || (!baseNode.turn.data_.equals(board) && baseNode.turnNum != turn)){
+    		baseNode = new MCTSTreeNode(new HearthTreeNode(board), turn);
     	}
     	
     	//MCTS! MCTS! MCTS!
-    	log.info("MCTS TURN: ");
-    	log.info(baseNode.turn.toString());
+    	//log.info("MCTS TURN: ");
+    	//log.info(baseNode.turn.toString());
     	MCTSTreeNode retNode = baseNode.selectAction();
-    	log.info("NODE STATE:  ");
-    	log.info(retNode.turn.toString());
+    	//log.info("NODE STATE:  ");
+    	//log.info(retNode.turn.toString());
     	
     	//update the board
     	board = retNode.turn.data_;
-    	log.info("Node to return:  ");
-    	log.info(retNode.toString());
+    	//log.info("Node to return:  ");
+    	//log.info(retNode.toString());
     	return retNode.getTurnResults();
     }
 

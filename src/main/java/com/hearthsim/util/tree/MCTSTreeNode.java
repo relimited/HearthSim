@@ -35,7 +35,7 @@ public class MCTSTreeNode {
     static int numPotentialTurns = 5;
     static double epsilon = 1e-6;
 
-    static public HearthTreeNode turn;  //the hearthnode tree of how to play out this turn.  
+    public HearthTreeNode turn;  //the hearthnode tree of how to play out this turn.  
     
     MCTSTreeNode[] children;
     double nVisits, nodeValue;
@@ -44,16 +44,18 @@ public class MCTSTreeNode {
     //essentally, we need to mirror what the BFS AI would have so we can play out a turn
     private ArtificialPlayer ai;
 	private List<HearthActionBoardPair> turnResults;
-
-    public MCTSTreeNode(HearthTreeNode turn){
-    	this(turn, BruteForceSearchAI.buildStandardAI1());
+	public int turnNum;
+	
+    public MCTSTreeNode(HearthTreeNode turn, int turnNum){
+    	this(turn, turnNum, BruteForceSearchAI.buildStandardAI1());
     }
     
-    public MCTSTreeNode(HearthTreeNode turn, ArtificialPlayer ai){
+    public MCTSTreeNode(HearthTreeNode turn, int turnNum, ArtificialPlayer ai){
     	this.turn = turn;
     	nodeValue = ((BruteForceSearchAI)ai).getScorer().boardScore(this.turn.data_);  //initialize new MCTS tree scores to the internal score from the HearthTreeNodes
     	nVisits = 0;						//initialize visits to 0
     	this.ai = ai;
+    	this.turnNum = turnNum;
     }
     
     public MCTSTreeNode selectAction() {	//updated selectAction to return the high scoring hearthsim tree
@@ -61,8 +63,6 @@ public class MCTSTreeNode {
         List<MCTSTreeNode> visited = new LinkedList<MCTSTreeNode>();
         MCTSTreeNode cur = this;
         visited.add(this);
-        log.info("visited nodes: ");
-        log.info(visited.toString());
         //also, this is one round of the MCTS loop
         while (!cur.isLeaf()) {
             cur = cur.select();
@@ -73,8 +73,6 @@ public class MCTSTreeNode {
         MCTSTreeNode newNode = cur.select();
         visited.add(newNode);
         double value = rollOut(newNode);
-        log.info("visited nodes: ");
-        log.info(visited.toString());
         for (MCTSTreeNode node : visited) {
             // would need extra logic for n-player game
             // System.out.println(node);
@@ -93,29 +91,37 @@ public class MCTSTreeNode {
         			bestScore = child.nodeValue;
         		}
         	}
-        	log.info("Best node was: ");
-        	log.info(bestChild.toString());
+        	
         	return bestChild;
         }else{
         	//assume that this turn ends in lethal or fuck it yolo, etc.
-        	log.info("Best node was this one, no future action taken");
-        	log.info(this.toString());
         	return this;
         }
     }
 
     public void expand() {
         children = new MCTSTreeNode[numPotentialTurns];
+        //right now, all children will be the same (because they're a BFS AI turn away from their parent)
+    	HearthTreeNode nextTurn = null;
+    	BoardModel state = this.turn.data_.deepCopy(); //an AI taking its turn will destroy the current board, so we need to pass it a copy
+    	
+    	log.info("MCTS turn num {}", turnNum);
+    	log.info("MCTS start state {}", state);
+    	
         for (int i=0; i<numPotentialTurns; i++) {
-        	//right now, all children will be the same (because they're a BFS AI turn away from their parent)
-        	HearthTreeNode nextTurn;
-        	BoardModel state = this.turn.data_.deepCopy(); //an AI taking its turn will destroy the current board, so we need to pass it a copy
-        	
         	try {
-				turnResults = ai.playTurn(1, state);				//the turn number isn't actually used in the BFS playing AI
-				nextTurn = new HearthTreeNode(state);
-	            children[i] = new MCTSTreeNode(nextTurn, ai);  //we need to provide a hearthsim turn tree here.  This is where some logic would go to play a turn out
-	            										   		//in some manner
+        		//This is where some logic would go to play a turn ou in some varying manner
+				turnResults = ai.playTurn(turnNum, state);
+				
+				if(turnResults.size() > 0){
+					nextTurn = new HearthTreeNode(turnResults.get(turnResults.size() - 1).board);
+					children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, ai);
+					children[i].turnResults = turnResults;	
+				}else{
+					//we didn't change the board state at all, so just use this board again.
+					children[i] = new MCTSTreeNode(new HearthTreeNode(state), turnNum + 1, ai);
+					children[i].turnResults = null; //explicitly setting what should be implictly set-- there were no actions performed to get to this board  state
+				}
 			} catch (HSException e) {
 				e.printStackTrace();
 			}  
@@ -125,21 +131,19 @@ public class MCTSTreeNode {
     private MCTSTreeNode select() {
         MCTSTreeNode selected = null;
         double bestValue = Double.NEGATIVE_INFINITY;
-        log.info("startMin: " + bestValue);
         for (MCTSTreeNode c : children) {
             double uctValue =
                     	c.nodeValue / (c.nVisits + epsilon) +				
                         Math.sqrt(Math.log(nVisits+1) / (c.nVisits + epsilon)) +
                         r.nextDouble() * epsilon;
             // small random number to break ties randomly in unexpanded nodes
-            log.info("UCT value = " + uctValue);
+            //log.info("UCT value = " + uctValue);
             if (uctValue > bestValue) {
-            	log.info("Swappin'");
                 selected = c;
                 bestValue = uctValue;
             }
         }
-        log.info("Returning: " + selected);
+        //log.info("Returning: " + selected);
         return selected;
     }
 
@@ -166,13 +170,17 @@ public class MCTSTreeNode {
         return children == null ? 0 : children.length;
     }
 
+    /**
+     * Turn results is a bit of a misnomer and needs to be renamed.  Turn results is a set of action / board state pairs that are how we got
+     * to this particular node.
+     * 
+     * @return turnResults or an empty list if the parameter is null
+     */
 	public List<HearthActionBoardPair> getTurnResults() {
 		if(turnResults == null){
-			log.info("Returning a null value for what an AI did for a turn!");
+			log.info("Returning a null value for what an MCTS AI did for a turn!");
 			return new ArrayList<HearthActionBoardPair>();
 		}else{
-			log.info("Returning:  ");
-			log.info(turnResults.toString());
 			return turnResults;
 		}
 	}
