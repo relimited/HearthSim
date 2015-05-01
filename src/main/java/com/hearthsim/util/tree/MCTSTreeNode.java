@@ -77,7 +77,11 @@ public class MCTSTreeNode {
      * @return
      */
     private ArtificialPlayer[] createBoardGenerators() {
-		// TODO Auto-generated method stub
+		ArtificialPlayer[] generators = new ArtificialPlayer[3];
+		
+		//set up some differing AIs
+		generators[0] = new 
+    	// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -130,8 +134,7 @@ public class MCTSTreeNode {
 
     public void expand() {
         children = new MCTSTreeNode[this.boardGenerators.length];
-        //right now, all children will be the same (because they're a BFS AI turn away from their parent)
-    	BoardModel nextTurn = null;					//placeholder for state
+    	BoardModel nextTurn = null; 
     	
     	int i = 0;
     	for(ArtificialPlayer generator : this.boardGenerators){
