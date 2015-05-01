@@ -32,7 +32,7 @@ import java.util.Random;
 public class MCTSTreeNode {
 	protected final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
     static Random r = new Random();
-    static int numPotentialTurns = 5;
+    //static int numPotentialTurns = 5;  this is now dynamically dependent on the number of different ways we can generate new boards
     static double epsilon = 1e-6;
 
     public HearthTreeNode turn;  //the hearthnode tree of how to play out this turn.  
@@ -42,28 +42,57 @@ public class MCTSTreeNode {
     
     //FIXME: this is a little gross, but I think it'll work for the short term
     //essentally, we need to mirror what the BFS AI would have so we can play out a turn
-    private ArtificialPlayer ai;
+    private ArtificialPlayer[] boardGenerators;
 	private List<HearthActionBoardPair> turnResults;
 	public int turnNum;
+	private BoardScorer scorer;
+	private BoardModel boardState;
 	
-    public MCTSTreeNode(HearthTreeNode turn, int turnNum){
-    	this(turn, turnNum, BruteForceSearchAI.buildStandardAI1());
+	/**
+	 * Creates a new MCTS Tree Node.
+	 * 
+	 * @param turn a BoardModel that is the board state this MCTS node wraps
+	 * @param turnNum the turn number.
+	 * 				@FIXME: this is a hold-over from using ArificialPlayers to generate new board states from the provided one.
+	 */
+    public MCTSTreeNode(BoardModel boardState, int turnNum){
+    	this(boardState, turnNum, BruteForceSearchAI.buildStandardAI1().getScorer());
     }
     
-    public MCTSTreeNode(HearthTreeNode turn, int turnNum, ArtificialPlayer ai){
-    	this.turn = turn;
-    	nodeValue = ((BruteForceSearchAI)ai).getScorer().boardScore(this.turn.data_);  //initialize new MCTS tree scores to the internal score from the HearthTreeNodes
+    public MCTSTreeNode(BoardModel boardState, int turnNum, BoardScorer scorer){
+    	this.boardState = boardState;
+    	this.scorer = scorer;
+    	nodeValue = this.scorer.boardScore(this.boardState);  //initialize new MCTS tree scores to the internal score from the HearthTreeNodes
     	nVisits = 0;						//initialize visits to 0
-    	this.ai = ai;
     	this.turnNum = turnNum;
+    	
+    	this.boardGenerators = this.createBoardGenerators();
     }
     
-    public MCTSTreeNode selectAction() {	//updated selectAction to return the high scoring hearthsim tree
-    	
+    /**
+     * This method creates an array of board generators that take a turn.
+     * A board generator takes a starting board state and plays a turn to transform it to an ending board state
+     * 
+     * Right now, these genators are implmented as HearthSim's BFS AIs with different weights.
+     * @return
+     */
+    private ArtificialPlayer[] createBoardGenerators() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    /**
+     * Go through the MCTS action loop to get the best child, and then return it.
+     * 
+     * @return the highest scored child, according to the MCTS algorithm
+     */
+	public MCTSTreeNode selectAction() {
         List<MCTSTreeNode> visited = new LinkedList<MCTSTreeNode>();
         MCTSTreeNode cur = this;
         visited.add(this);
-        //also, this is one round of the MCTS loop
+        
+        //START MCTS LOOP
+        //which currently doesn't loop
         while (!cur.isLeaf()) {
             cur = cur.select();
             // System.out.println("Adding: " + cur);
@@ -78,12 +107,12 @@ public class MCTSTreeNode {
             // System.out.println(node);
             node.updateStats(value);
         }
-        //end MCTS loop
+        //END MCTS LOOP
         
         //select final node to use
         if(this.children.length > 0){
         	//get best child node
-        	MCTSTreeNode bestChild = null;	//I feel like such a shity person when I work on trees
+        	MCTSTreeNode bestChild = null;	//I feel like such a shitty person when I work on trees
         	double bestScore = Double.NEGATIVE_INFINITY;
         	for(MCTSTreeNode child : this.children){
         		if(child.nodeValue > bestScore){
@@ -100,31 +129,29 @@ public class MCTSTreeNode {
     }
 
     public void expand() {
-        children = new MCTSTreeNode[numPotentialTurns];
+        children = new MCTSTreeNode[this.boardGenerators.length];
         //right now, all children will be the same (because they're a BFS AI turn away from their parent)
-    	HearthTreeNode nextTurn = null;
-    	BoardModel state = this.turn.data_.deepCopy(); //an AI taking its turn will destroy the current board, so we need to pass it a copy
+    	BoardModel nextTurn = null;					//placeholder for state
     	
-    	log.info("MCTS turn num {}", turnNum);
-    	log.info("MCTS start state {}", state);
-    	
-        for (int i=0; i<numPotentialTurns; i++) {
+    	int i = 0;
+    	for(ArtificialPlayer generator : this.boardGenerators){
         	try {
-        		//This is where some logic would go to play a turn ou in some varying manner
-				turnResults = ai.playTurn(turnNum, state);
+        		//This is where some logic would go to play a turn out in some varying manner
+				List<HearthActionBoardPair> localResults = generator.playTurn(turnNum, boardState);
 				
 				if(turnResults.size() > 0){
-					nextTurn = new HearthTreeNode(turnResults.get(turnResults.size() - 1).board);
-					children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, ai);
-					children[i].turnResults = turnResults;	
+					nextTurn = turnResults.get(turnResults.size() - 1).board;
+					children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, this.scorer);
+					children[i].turnResults = localResults;	//and this is how we got here, so that when we bounce back out to the game, we can modify the board appropriately
 				}else{
 					//we didn't change the board state at all, so just use this board again.
-					children[i] = new MCTSTreeNode(new HearthTreeNode(state), turnNum + 1, ai);
-					children[i].turnResults = null; //explicitly setting what should be implictly set-- there were no actions performed to get to this board  state
+					children[i] = new MCTSTreeNode(boardState, turnNum + 1, this.scorer);
+					children[i].turnResults = null; //explicitly setting what should be implicitly set-- there were no actions performed to get to this board  state
 				}
 			} catch (HSException e) {
 				e.printStackTrace();
-			}  
+			} 
+        	i++;
         }
     }
 

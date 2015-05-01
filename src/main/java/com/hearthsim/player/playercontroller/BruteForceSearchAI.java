@@ -160,6 +160,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
         useDuplicateNodePruning = value;
     }
     
+    //FIXME: This is a modification to the standard harthsim base that's not licenced.
     //added to be able to score nodes outside the AI with the same scorer
     public BoardScorer getScorer(){
     	return this.scorer;
