@@ -44,6 +44,8 @@ public class MCTSTreeNode {
 	public int turnNum;
 	private BoardScorer scorer;
 	public BoardModel boardState;
+	int numberOfTurnsToPlay = 2;
+	int MCTSloops = 5;
 	
 	/**
 	 * Creates a new MCTS Tree Node.
@@ -59,6 +61,7 @@ public class MCTSTreeNode {
     public MCTSTreeNode(BoardModel boardState, int turnNum, BoardScorer scorer){
     	this.boardState = boardState;
     	this.scorer = scorer;
+    	
     	nodeValue = this.scorer.boardScore(this.boardState);  //initialize new MCTS tree scores to the internal score from the HearthTreeNodes
     	nVisits = 0;						//initialize visits to 0
     	this.turnNum = turnNum;
@@ -67,9 +70,7 @@ public class MCTSTreeNode {
     													//		To be really good: this should be wrapped in an alternate constructor so a parent
     													//		node can just provide it's children with generator references
     	
-    	this.opponentModel = RandomAI.buildRandomAI(); // one of the standard AIs that hearthsim comes with
-    																//as we'll be explicitly passing a random scorer to it's	
-    																//play turn function, the weights don't really matter
+    	this.opponentModel = RandomAI.buildRandomAI();
     }
     
     /**
@@ -100,37 +101,39 @@ public class MCTSTreeNode {
      */
 	public MCTSTreeNode selectAction() {
         List<MCTSTreeNode> visited = new LinkedList<MCTSTreeNode>();
-        MCTSTreeNode cur = this;
         visited.add(this);
         
         //START MCTS LOOP
-        //which currently doesn't loop, but this is where the loop code would go
-        //selection
-        while (!cur.isLeaf()) {
-            cur = cur.select();
-            // System.out.println("Adding: " + cur);
-            visited.add(cur);
-        }
-        //expansion
-        cur.expand();
-        MCTSTreeNode newNode = cur.select();
-        visited.add(newNode);
-        //simulation
-        double value = rollOut(newNode);
-        //back-prop
-        for (MCTSTreeNode node : visited) {
-            // would need extra logic for n-player game
-            // System.out.println(node);
-            node.updateStats(value);
+        for(int i = 0; i < MCTSloops; i++){
+        	MCTSTreeNode cur = this;
+        	while (!cur.isLeaf()) {
+            	cur = cur.select();
+            	// System.out.println("Adding: " + cur);
+            	visited.add(cur);
+        	}
+        	//expansion
+        	cur.expand();
+        	MCTSTreeNode newNode = cur.select();
+        	visited.add(newNode);
+        	//simulation
+        	double value = rollOut(newNode);
+        	//back-prop
+        	for (MCTSTreeNode node : visited) {
+            	// would need extra logic for n-player game
+            	// System.out.println(node);
+            	node.updateStats(value);
+        	}
         }
         //END MCTS LOOP
         
         //select final node to use
+        log.info("----- FINAL NODE SCORES -----");
         if(this.children.length > 0){
         	//get best child node
         	MCTSTreeNode bestChild = null;	//I feel like such a shitty person when I work on trees
         	double bestScore = Double.NEGATIVE_INFINITY;
         	for(MCTSTreeNode child : this.children){
+        		log.info(child + " value = " + child.nodeValue);
         		if(child.nodeValue > bestScore){
         			bestChild = child;
         			bestScore = child.nodeValue;
@@ -196,8 +199,7 @@ public class MCTSTreeNode {
             double uctValue =
                     	c.nodeValue / (c.nVisits + epsilon) +				
                         Math.sqrt(Math.log(nVisits+1) / (c.nVisits + epsilon)) +
-                        r.nextDouble() * epsilon;
-            // small random number to break ties randomly in unexpanded nodes
+                        r.nextDouble() * epsilon; // small random number to break ties randomly in unexpanded nodes
             log.info("UCT value = " + uctValue);
             if (uctValue > bestValue) {
                 selected = c;
@@ -214,10 +216,9 @@ public class MCTSTreeNode {
 
     public double rollOut(MCTSTreeNode tn) {
       //check-- start by copying the tn node so rollout doesn't get 'double counted'
+    	log.info("----- FUTURE STATS ----");
     	MCTSTreeNode future = new MCTSTreeNode(tn.boardState, tn.turnNum);
     	future.boardGenerators = this.boardGenerators; //FIXME THIS REALLY NEEDS TO BE IN A CONSTRUCTOR, YOU HALFWIT
-    	int numberOfTurnsToPlay = 1;
-    	log.info("----- FUTURE STATS ----");
     	while(numberOfTurnsToPlay > 0){
     		future.expand();
     		future = future.select();
