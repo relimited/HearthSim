@@ -22,6 +22,7 @@ import com.hearthsim.util.tree.MCTSTreeNode;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
 
 import java.util.List;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.io.IOException;
 
@@ -41,10 +42,21 @@ public class MCTSPlayer implements ArtificialPlayer {
     public WeightedScorer scorer = new WeightedScorer();
 
     private MCTSTreeNode baseNode = null;
+    
+    private Path[] generatorParams;   //FIXME: a temp solution where we can provide the MCTS tree a way to play turns
     public MCTSPlayer() {}
 
+    /**
+     * Using the provided AI param files we made for the class project to get several board generators (to get different board states)
+     * @param aiParamFile
+     * @throws IOException
+     * @throws HSInvalidParamFileException
+     */
     public MCTSPlayer(Path aiParamFile) throws IOException, HSInvalidParamFileException {
-      //Ignore param file
+    	generatorParams = new Path[3];
+    	generatorParams[0] = FileSystems.getDefault().getPath(aiParamFile.toString(), "aggroAi.hsai");
+    	generatorParams[1] = FileSystems.getDefault().getPath(aiParamFile.toString(), "controlAi.hsai");
+    	generatorParams[2] = FileSystems.getDefault().getPath(aiParamFile.toString(), "tempoAi.hsai");
     }
 
     /**
@@ -93,9 +105,12 @@ public class MCTSPlayer implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException {
     	//if the baseNode is null, use this board as a base
     	//or, if the baseNode's board model doesn't match the board state, then start a new tree with this board
-    	if(baseNode == null || (!baseNode.turn.data_.equals(board) && baseNode.turnNum != turn)){
-    		baseNode = new MCTSTreeNode(new HearthTreeNode(board), turn);
+    	if(baseNode == null || (!baseNode.boardState.equals(board) && baseNode.turnNum != turn)){
+    		baseNode = new MCTSTreeNode(board, turn);
+    		//Before using the node, make sure it has board generators
+        	baseNode.createBoardGenerators(generatorParams);
     	}
+    	
     	
     	//MCTS! MCTS! MCTS!
     	MCTSTreeNode retNode = baseNode.selectAction();

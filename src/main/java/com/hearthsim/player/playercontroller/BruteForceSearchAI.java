@@ -30,7 +30,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     private boolean useSparseBoardStateFactory_ = true;
     private boolean useDuplicateNodePruning = true;
 
-    public WeightedScorer scorer = new WeightedScorer();
+   private WeightedScorer scorer = new WeightedScorer();
 
     protected BruteForceSearchAI() {
     }
