@@ -19,9 +19,6 @@ import com.hearthsim.util.HearthActionBoardPair;
 
 /**
  * This is a node for an MCTS tree
- * 
- * @todo: Add in some real simulation logic
- * 			Some sort of opponent modeling so we can MCTS loop for more than one chunk at a time
  * 							
  * @author Johnathan
  *
