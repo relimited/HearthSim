@@ -46,8 +46,8 @@ public class HearthSimConstructed extends HearthSimBase {
         Deck deck1 = deckList1.getDeck();
 
         //passing in the MCTS player a root path to extract the playing AI parameters because I'm fucking hella lazy
-        ArtificialPlayer ai0 = new MCTSPlayer(this.rootPath_);
-        ArtificialPlayer ai1 = new BruteForceSearchAI(this.aiParamFilePath1_);
+        ArtificialPlayer ai0 = new BruteForceSearchAI(this.aiParamFilePath0_);
+        ArtificialPlayer ai1 = new MCTSPlayer(this.aiParamFilePath1_);
 
         return super.runSingleGame(ai0, hero0, deck0, ai1, hero1, deck1, gameId % 2);
     }

@@ -44,56 +44,141 @@ public class MCTSTreeNode {
 	public int turnNum;
 	private BoardScorer scorer;
 	public BoardModel boardState;
-	int numberOfTurnsToPlay = 2;
-	int MCTSloops = 5;
+	int numberOfTurnsToPlay;
+	int MCTSloops;
+	int numChildren;
+	
+	 
+    /**
+     * Create a new MCTS node with arguments setting all parameters, and the path to a file that has weights for a board scorer
+     * 
+     * @param board board state for this node
+     * @param turn turn number
+     * @param numMCTSIterations number of iterations for the MCTS loop
+     * @param numSimulateTurns number of turns to simulate during the simulation step of MCTS
+     * @param generatorParams paths to parameter files for each board generator
+     * @param scorerWeights path to parameters for a scorer for the MCTS algorithm
+     * 
+     * @throws IOException 
+     * @throws HSInvalidParamFileException 
+     */
+    public MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations, int numSimulateTurns, Path[] generatorParams, Path scorerWeights) throws HSInvalidParamFileException, IOException{
+    	this(board, turn, numMCTSIterations, numSimulateTurns, createBoardGenerators(generatorParams),  new BruteForceSearchAI(scorerWeights).getScorer());
+    	
+    }
+
+    /**
+     * Creates an MCTS node with several board generators
+     * Intermediate constructor, not for outside use
+     * 
+     * @param board board state for this node
+     * @param turn turn number
+     * @param numMCTSIterations number of iterations for the MCTS loop
+     * @param numSimulateTurns number of turns to simulate during the simulation step of MCTS
+     * @param createBoardGenerators several ArtificalPlayers to generate various board states
+     * @param scorer
+     */
+	private MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations, int numSimulateTurns, ArtificialPlayer[] createBoardGenerators, BoardScorer scorer) {
+		this(board, turn, numMCTSIterations, numSimulateTurns, createBoardGenerators.length, createBoardGenerators, scorer);
+	}
 	
 	/**
-	 * Creates a new MCTS Tree Node.
+	 * Creates an MCTS node with a random board generator
 	 * 
-	 * @param turn a BoardModel that is the board state this MCTS node wraps
-	 * @param turnNum the turn number.
-	 * 				@FIXME: this is a hold-over from using ArificialPlayers to generate new board states from the provided one.
+	 * @param board
+	 * @param turn
+	 * @param numMCTSIterations
+	 * @param numSimulateTurns
+	 * @param numChildrenPerGeneration
+	 * @param scorerWeights
+	 * @throws HSInvalidParamFileException
+	 * @throws IOException
 	 */
-    public MCTSTreeNode(BoardModel boardState, int turnNum){
-    	this(boardState, turnNum, BruteForceSearchAI.buildStandardAI1().getScorer()); //haxs!  Because I didn't want to write my own, just use one already configured in the system somewhere.
-    }
-    
-    public MCTSTreeNode(BoardModel boardState, int turnNum, BoardScorer scorer){
-    	this.boardState = boardState;
-    	this.scorer = scorer;
-    	
-    	nodeValue = this.scorer.boardScore(this.boardState);  //initialize new MCTS tree scores to the internal score from the HearthTreeNodes
-    	nVisits = 0;						//initialize visits to 0
-    	this.turnNum = turnNum;
-    	
-    	this.boardGenerators = new ArtificialPlayer[3]; //FIXME: this should really be a call to 'createGenerators'
-    													//		To be really good: this should be wrapped in an alternate constructor so a parent
-    													//		node can just provide it's children with generator references
-    	
-    	this.opponentModel = RandomAI.buildRandomAI();
-    }
-    
-    /**
-     * This method creates an array of board generators that take a turn.
-     * A board generator takes a starting board state and plays a turn to transform it to an ending board state
-     * 
-     * Right now, these genators are implmented as HearthSim's BFS AIs with different weights.
-     * @param generatorParams -- the paths to get the config files for the generators.  This, again, isn't the best way to do things
-     */
-    public void createBoardGenerators(Path[] generatorParams) {
-		
-		//set up some differing AIs
-		try {
-			this.boardGenerators[0] = new BruteForceSearchAI(generatorParams[0]);
-			this.boardGenerators[1] = new BruteForceSearchAI(generatorParams[1]);
-			this.boardGenerators[2] = new BruteForceSearchAI(generatorParams[2]);
-		} catch (HSInvalidParamFileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations, int numSimulateTurns, int numChildrenPerGeneration, Path scorerWeights) throws HSInvalidParamFileException, IOException{
+		this(board, turn, numMCTSIterations, numSimulateTurns, numChildrenPerGeneration, new BruteForceSearchAI(scorerWeights).getScorer());
 	}
 
+	/**
+	 * Creates an MCTS node with a random board generator
+	 *  Intermediate constructor, not for outside use
+	 *  
+	 * @param board
+	 * @param turn
+	 * @param numMCTSIterations
+	 * @param numSimulateTurns
+	 * @param numChildrenPerGeneration
+	 * @param scorer
+	 */
+	private MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations, int numSimulateTurns, int numChildrenPerGeneration,BoardScorer scorer) {
+		this(board, turn, numMCTSIterations, numSimulateTurns, numChildrenPerGeneration, convertTolist(RandomAI.buildRandomAI()), scorer);
+	}
+
+	/**
+	 * Creates an MCTS node with all parameters
+	 *
+	 * Used by parents to make children exact copies of themselves
+	 * 
+	 * @param board
+	 * @param turn
+	 * @param numMCTSIterations
+	 * @param numSimulateTurns
+	 * @param numChildrenPerGeneration
+	 * @param createBoardGenerators
+	 * @param scorer
+	 */
+	private MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations,
+			int numSimulateTurns, int numChildrenPerGeneration,
+			ArtificialPlayer[] createBoardGenerators, BoardScorer scorer) {
+		this.turnNum = turn;
+		this.scorer = scorer;
+		this.boardState = board;
+		this.numberOfTurnsToPlay = numSimulateTurns;
+		this.MCTSloops = numMCTSIterations;
+		this.boardGenerators = createBoardGenerators;
+		this.numChildren = numChildrenPerGeneration;
+		
+		this.opponentModel = RandomAI.buildRandomAI();
+		
+		//and score the node
+		this.nodeValue = this.scorer.boardScore(this.boardState);
+	}
+
+	/**
+     * private static method creates an array of board generators that take a turn.
+     * A board generator takes a starting board state and plays a turn to transform it to an ending board state
+     * 
+     * Right now, these generators are implemented as HearthSim's BFS AIs with different weights.
+     * @param generatorParams -- the paths to get the config files for the generators.
+     * @return a list of generators
+     */
+    private static BruteForceSearchAI[] createBoardGenerators(Path[] generatorParams) {
+		BruteForceSearchAI[] generators = new BruteForceSearchAI[generatorParams.length];
+		for(int i = 0; i < generatorParams.length; i++){
+			//set up some differing AIs
+			try {
+				generators[i] = new BruteForceSearchAI(generatorParams[i]);
+			
+			} catch (HSInvalidParamFileException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return generators;
+	}
+
+    /**
+     * Private conversion method to take a RandomAI and return a list of one element of a random AI
+     * @param ai
+     * @return
+     */
+    private static RandomAI[] convertTolist(RandomAI ai){
+    	RandomAI[] list = new RandomAI[1];
+    	list[0] = ai;
+    	return list;
+    }
+    
     /**
      * Go through the MCTS action loop to get the best child, and then return it.
      * 
@@ -148,12 +233,18 @@ public class MCTSTreeNode {
     }
 
     public void expand() {
-        children = new MCTSTreeNode[this.boardGenerators.length];
+        children = new MCTSTreeNode[numChildren];
     	BoardModel nextTurn = null; 
     	
-    	int i = 0;
-		//This is where some logic would go to play a turn out in some varying manner
-    	for(ArtificialPlayer generator : this.boardGenerators){
+		for(int i = 0; i < this.numChildren; i++){
+			ArtificialPlayer generator;
+			//if we have less generators than the number of children we need to generate, just use the last generator again
+			if(i >= boardGenerators.length){
+				generator = boardGenerators[boardGenerators.length - 1];
+			}else{
+				generator = boardGenerators[i];
+			}
+			
         	try {
 				List<HearthActionBoardPair> localResults = generator.playTurn(turnNum, boardState);
 				if(localResults.size() > 0){
@@ -180,14 +271,12 @@ public class MCTSTreeNode {
 				nextTurn = nextTurn.flipPlayers();
 				
 				//now children are a full opponent turn away from their parents
-				children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, this.scorer);
-				children[i].boardGenerators = this.boardGenerators;
+				children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, this.MCTSloops, this.numberOfTurnsToPlay, this.numChildren, this.boardGenerators, this.scorer);
 				children[i].turnResults = localResults;	//and this is how we got here, so that when we bounce back out to the game, we can modify the board appropriately
 				
 			} catch (HSException e) {
 				e.printStackTrace();
 			} 
-        	i++;
         }
     }
 
@@ -216,15 +305,17 @@ public class MCTSTreeNode {
 
     public double rollOut(MCTSTreeNode tn) {
       //check-- start by copying the tn node so rollout doesn't get 'double counted'
+    	//also, this means we need to copy numberOfTurnsToPlay
+    	int turns = this.numberOfTurnsToPlay;
     	log.info("----- FUTURE STATS ----");
-    	MCTSTreeNode future = new MCTSTreeNode(tn.boardState, tn.turnNum);
-    	future.boardGenerators = this.boardGenerators; //FIXME THIS REALLY NEEDS TO BE IN A CONSTRUCTOR, YOU HALFWIT
-    	while(numberOfTurnsToPlay > 0){
+    	MCTSTreeNode future = new MCTSTreeNode(tn.boardState, tn.turnNum, tn.MCTSloops, tn.numberOfTurnsToPlay, tn.numChildren, tn.boardGenerators, tn.scorer);
+    	while(turns > 0){
+    		log.info("Simulated turns left: " + turns);
     		future.expand();
     		future = future.select();
-    		numberOfTurnsToPlay--;
+    		turns--;
     	}
-    	
+    	log.info("----- END FUTURE STATS ----");
     	return future.nodeValue;
     }
 

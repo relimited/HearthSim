@@ -41,22 +41,58 @@ public class MCTSPlayer implements ArtificialPlayer {
 
     public WeightedScorer scorer = new WeightedScorer();
 
-    private MCTSTreeNode baseNode = null;
+    //MCTS parameters.  Read in from a param file
+    //defaults!
+    private int numMCTSIterations = 1;
+    private int numChildrenPerGeneration = 1;
+    private int numSimulateTurns = 1;
+    private Path[] generatorParams = null;
+    private Path paramFile = null;
     
-    private Path[] generatorParams;   //FIXME: a temp solution where we can provide the MCTS tree a way to play turns
+    private MCTSTreeNode baseNode = null;
     public MCTSPlayer() {}
 
     /**
      * Using the provided AI param files we made for the class project to get several board generators (to get different board states)
-     * @param aiParamFile
+     * This also gets the tunable constants for MCTS:
+     * 		C value (Not Implemented)
+     * 		Number of times to perform MCTS loop (numMCTSIterations)
+     * 		Number of child nodes ot create (numChildrenPerGeneration)
+     * 			Not used if generators are used
+     * 		Number of turns to play in the future (numSimulateTurns)
+     * 		Generator file paths (generatorFiles)
+     * @param aiParamFile the param file with the above information
+     * 
      * @throws IOException
      * @throws HSInvalidParamFileException
      */
     public MCTSPlayer(Path aiParamFile) throws IOException, HSInvalidParamFileException {
-    	generatorParams = new Path[3];
-    	generatorParams[0] = FileSystems.getDefault().getPath(aiParamFile.toString(), "aggroAi.hsai");
-    	generatorParams[1] = FileSystems.getDefault().getPath(aiParamFile.toString(), "controlAi.hsai");
-    	generatorParams[2] = FileSystems.getDefault().getPath(aiParamFile.toString(), "tempoAi.hsai");
+    	this.paramFile = aiParamFile;
+    	try{
+    		ParamFile pFile = new ParamFile(aiParamFile);
+    		numMCTSIterations = pFile.getInt("numMCTSIterations");
+    		numSimulateTurns = pFile.getInt("numSimulateTurns");
+    		
+    		//optional parameters
+    		if(!pFile.getKeysContaining("numChildrenPerGeneration").isEmpty()){
+    			numChildrenPerGeneration = pFile.getInt("numChildrenPerGeneration");
+    		}
+    		if(!pFile.getKeysContaining("generatorFiles").isEmpty()){
+    			String[] generatorPaths = pFile.getString("generatorFiles").split(",");
+    			generatorParams = new Path[generatorPaths.length];
+    			for(int i = 0; i < generatorPaths.length; i++){
+    				generatorParams[i] = FileSystems.getDefault().getPath(aiParamFile.getParent().toString(), generatorPaths[i]);
+    			}
+    		}
+    		
+    		//if nothing is specified for the optional params, a randomAI is used, that creates one child
+    		
+    	} catch(HSParamNotFoundException e) {
+            log.error(e.getMessage());
+            System.exit(1);
+        }
+    	
+    	log.info("MCTS PLAYER INFO\nNumber of MCTS cycles: " + numMCTSIterations + "\nNumber of simulation turns: " + numSimulateTurns + "\nNumber of children per generation: " + numChildrenPerGeneration + "\n");
     }
 
     /**
@@ -105,12 +141,21 @@ public class MCTSPlayer implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException {
     	//if the baseNode is null, use this board as a base
     	//or, if the baseNode's board model doesn't match the board state, then start a new tree with this board
+    	//TODO: reveal the fully formed constructor, allow baseNode to create a new node with all the same machinery as baseNode, with a new board state / turn
+    			//or write a new constructor where that happens.  Whatever.
     	if(baseNode == null || (!baseNode.boardState.equals(board) && baseNode.turnNum != turn)){
-    		baseNode = new MCTSTreeNode(board, turn);
-    		//Before using the node, make sure it has board generators
-        	baseNode.createBoardGenerators(generatorParams);
+    		try {
+    			//if we don't have any generator params (that line of the param file is blank), then we're using a random board generator
+    			//with a specifed number of children
+    			if(generatorParams != null){
+    				baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, generatorParams, paramFile);
+    			}else{
+    				baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, numChildrenPerGeneration, paramFile);
+    			}
+    		} catch (IOException e) {
+				e.printStackTrace();
+			}
     	}
-    	
     	
     	//MCTS! MCTS! MCTS!
     	MCTSTreeNode retNode = baseNode.selectAction();
