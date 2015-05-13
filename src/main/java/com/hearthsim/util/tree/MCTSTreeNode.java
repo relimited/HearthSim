@@ -225,8 +225,10 @@ public class MCTSTreeNode {
         	cur.expand();
         	MCTSTreeNode newNode = cur.select();
         	visited.add(newNode);
+        	
         	//simulation
         	double value = rollOut(newNode);
+        	
         	//back-prop
         	for (MCTSTreeNode node : visited) {
             	// would need extra logic for n-player game
