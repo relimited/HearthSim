@@ -141,12 +141,10 @@ public class MCTSPlayer implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException {
     	//if the baseNode is null, use this board as a base
     	//or, if the baseNode's board model doesn't match the board state, then start a new tree with this board
-    	//TODO: reveal the fully formed constructor, allow baseNode to create a new node with all the same machinery as baseNode, with a new board state / turn
-    			//or write a new constructor where that happens.  Whatever.
-    	if(baseNode == null || (!baseNode.boardState.equals(board) && baseNode.turnNum != turn)){
+    	if(baseNode == null){
     		try {
     			//if we don't have any generator params (that line of the param file is blank), then we're using a random board generator
-    			//with a specifed number of children
+    			//with a specified number of children
     			if(generatorParams != null){
     				baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, generatorParams, paramFile);
     			}else{
@@ -155,6 +153,10 @@ public class MCTSPlayer implements ArtificialPlayer {
     		} catch (IOException e) {
 				e.printStackTrace();
 			}
+    	//we have a base node, it's just not the right board state.  Make a new base node with all of this base node's parameters
+    	//cuts down on file reads
+    	}else if(!baseNode.boardState.equals(board) && baseNode.turnNum != turn){
+    		baseNode = new MCTSTreeNode(board, turn, baseNode);
     	}
     	
     	//MCTS! MCTS! MCTS!
@@ -169,6 +171,13 @@ public class MCTSPlayer implements ArtificialPlayer {
         copied.scorer = this.scorer.deepCopy();
         copied.useSparseBoardStateFactory_ = useSparseBoardStateFactory_;
         copied.useDuplicateNodePruning = useDuplicateNodePruning;
+        copied.numMCTSIterations = this.numMCTSIterations;
+        copied.numChildrenPerGeneration = this.numChildrenPerGeneration;
+        copied.numSimulateTurns = this.numSimulateTurns;
+        copied.generatorParams = this.generatorParams;
+        copied.paramFile = this.paramFile;
+        copied.baseNode = this.baseNode;
+        
         return copied;
     }
     

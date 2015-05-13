@@ -144,6 +144,29 @@ public class MCTSTreeNode {
 	}
 
 	/**
+	 * Creates a new MCTS node using the parameters from another MCTS node, and a provided board state and turn
+	 * 
+	 * @param board
+	 * @param turn
+	 * @param baseNode
+	 */
+	public MCTSTreeNode(BoardModel board, int turn, MCTSTreeNode baseNode) {
+		this.turnNum = turn;
+		
+		this.scorer = baseNode.scorer;
+		this.boardState = board;
+		this.numberOfTurnsToPlay = baseNode.numberOfTurnsToPlay;
+		this.MCTSloops = baseNode.MCTSloops;
+		this.boardGenerators = baseNode.boardGenerators;
+		this.numChildren = baseNode.numChildren;
+		
+		this.opponentModel = baseNode.opponentModel;
+		
+		//and score the node
+		this.nodeValue = this.scorer.boardScore(this.boardState);
+	}
+
+	/**
      * private static method creates an array of board generators that take a turn.
      * A board generator takes a starting board state and plays a turn to transform it to an ending board state
      * 
@@ -185,6 +208,8 @@ public class MCTSTreeNode {
      * @return the highest scored child, according to the MCTS algorithm
      */
 	public MCTSTreeNode selectAction() {
+		log.info("----- START MCTS TURN -----");
+		log.info("===========================");
         List<MCTSTreeNode> visited = new LinkedList<MCTSTreeNode>();
         visited.add(this);
         
@@ -225,6 +250,8 @@ public class MCTSTreeNode {
         		}
         	}
         	
+        	log.info("=========================");
+        	log.info("----- END MCTS TURN -----");
         	return bestChild;
         }else{
         	//assume that this turn ends in lethal or fuck it yolo, etc.
@@ -282,6 +309,7 @@ public class MCTSTreeNode {
 
     //Look at this node's children and select the one with the best UCB
     private MCTSTreeNode select() {
+    	log.info("----- SELECTING A NODE -----");
         MCTSTreeNode selected = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSTreeNode c : children) {
