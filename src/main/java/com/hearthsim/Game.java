@@ -111,7 +111,7 @@ public class Game {
     }
 
     private GameResult playTurn(int turnCount, GameRecord record, ArtificialPlayer ai) throws HSException {
-        log.info("Starting turnct {}", turnCount);
+        //log.info("Starting turnct {}", turnCount);
     	boardModel = Game.beginTurn(boardModel.deepCopy()); // Deep copy here to make sure history is preserved properly
         gameHistory.add(new HearthActionBoardPair(new HearthAction(Verb.START_TURN), boardModel.deepCopy()));
 
@@ -123,7 +123,7 @@ public class Game {
         List<HearthActionBoardPair> allMoves = ai.playTurn(turnCount, boardModel);
         
         if (allMoves.size() > 0) {
-        	log.info("AI has done something.");
+        	//log.info("AI has done something.");
             // If allMoves is empty, it means that there was absolutely nothing the AI could do
             boardModel = allMoves.get(allMoves.size() - 1).board;
             gameHistory.addAll(allMoves);

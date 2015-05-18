@@ -50,7 +50,7 @@ public class MCTSPlayer implements ArtificialPlayer {
     private Path paramFile = null;
     
     private MCTSTreeNode baseNode = null;
-    public MCTSPlayer() {}
+    protected MCTSPlayer() {}
 
     /**
      * Using the provided AI param files we made for the class project to get several board generators (to get different board states)
@@ -68,8 +68,17 @@ public class MCTSPlayer implements ArtificialPlayer {
      */
     public MCTSPlayer(Path aiParamFile) throws IOException, HSInvalidParamFileException {
     	this.paramFile = aiParamFile;
+    	this.createPlayer();
+    }
+    
+    /**
+     * Private helper method to synchronize the creation of new MCTS players.
+     * @throws IOException 
+     * @throws HSInvalidParamFileException 
+     */
+    private synchronized void createPlayer() throws HSInvalidParamFileException, IOException{
     	try{
-    		ParamFile pFile = new ParamFile(aiParamFile);
+    		ParamFile pFile = new ParamFile(this.paramFile);
     		numMCTSIterations = pFile.getInt("numMCTSIterations");
     		numSimulateTurns = pFile.getInt("numSimulateTurns");
     		
@@ -81,7 +90,7 @@ public class MCTSPlayer implements ArtificialPlayer {
     			String[] generatorPaths = pFile.getString("generatorFiles").split(",");
     			generatorParams = new Path[generatorPaths.length];
     			for(int i = 0; i < generatorPaths.length; i++){
-    				generatorParams[i] = FileSystems.getDefault().getPath(aiParamFile.getParent().toString(), generatorPaths[i]);
+    				generatorParams[i] = FileSystems.getDefault().getPath(this.paramFile.getParent().toString(), generatorPaths[i]);
     			}
     		}
     		
@@ -92,7 +101,17 @@ public class MCTSPlayer implements ArtificialPlayer {
             System.exit(1);
         }
     	
-    	log.info("MCTS PLAYER INFO\nNumber of MCTS cycles: " + numMCTSIterations + "\nNumber of simulation turns: " + numSimulateTurns + "\nNumber of children per generation: " + numChildrenPerGeneration + "\n");
+    	String MCTS_info = "\nMCTS PLAYER INFO\nNumber of MCTS cycles: " + numMCTSIterations + "\nNumber of simulation turns: " + numSimulateTurns + "\n";
+    	if(generatorParams != null){
+    		MCTS_info = MCTS_info + "generators: \n";
+    		for(Path genPath : generatorParams){
+    			MCTS_info = MCTS_info + genPath.toString() + "\n";
+    		}
+    	}else{
+    		MCTS_info = MCTS_info + "Number of children to generate: " + numChildrenPerGeneration + "\n";
+    	}
+    	
+    	//log.info(MCTS_info);
     }
 
     /**

@@ -13,6 +13,6 @@ w_num_minions   =       0.5
 wt_num_minions  =       0.5
 
 numMCTSIterations		=	5
-numChildrenPerGeneration	=	5
-numSimulateTurns		=	2
+numChildrenPerGeneration	=	20
+numSimulateTurns		=	1
 #generatorFiles			=	aggroAI.hsai,controlAi.hsai,tempoAi.hsai

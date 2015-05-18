@@ -26,7 +26,6 @@ import com.hearthsim.util.HearthActionBoardPair;
 public class MCTSTreeNode {
 	protected final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
     static Random r = new Random();
-    //static int numPotentialTurns = 5;  this is now dynamically dependent on the number of different ways we can generate new boards
     static double epsilon = 1e-6;
 
     public HearthTreeNode turn;  //the hearthnode tree of how to play out this turn.  
@@ -129,6 +128,7 @@ public class MCTSTreeNode {
 	private MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations,
 			int numSimulateTurns, int numChildrenPerGeneration,
 			ArtificialPlayer[] createBoardGenerators, BoardScorer scorer) {
+		
 		this.turnNum = turn;
 		this.scorer = scorer;
 		this.boardState = board;
@@ -141,6 +141,7 @@ public class MCTSTreeNode {
 		
 		//and score the node
 		this.nodeValue = this.scorer.boardScore(this.boardState);
+		//log.info(this.toString() + " init score: " + this.nodeValue);
 	}
 
 	/**
@@ -164,6 +165,7 @@ public class MCTSTreeNode {
 		
 		//and score the node
 		this.nodeValue = this.scorer.boardScore(this.boardState);
+		//log.info(this.toString() + " initial score: " + this.nodeValue); 
 	}
 
 	/**
@@ -208,8 +210,8 @@ public class MCTSTreeNode {
      * @return the highest scored child, according to the MCTS algorithm
      */
 	public MCTSTreeNode selectAction() {
-		log.info("----- START MCTS TURN -----");
-		log.info("===========================");
+		//log.info("----- START MCTS TURN -----");
+		//log.info("===========================");
         List<MCTSTreeNode> visited = new LinkedList<MCTSTreeNode>();
         visited.add(this);
         
@@ -221,6 +223,7 @@ public class MCTSTreeNode {
             	// System.out.println("Adding: " + cur);
             	visited.add(cur);
         	}
+        	
         	//expansion
         	cur.expand();
         	MCTSTreeNode newNode = cur.select();
@@ -237,25 +240,32 @@ public class MCTSTreeNode {
         	}
         }
         //END MCTS LOOP
-        
+        //this.print();
         //select final node to use
-        log.info("----- FINAL NODE SCORES -----");
+        //log.info("----- FINAL NODE SCORES -----");
         if(this.children.length > 0){
         	//get best child node
         	MCTSTreeNode bestChild = null;	//I feel like such a shitty person when I work on trees
         	double bestScore = Double.NEGATIVE_INFINITY;
         	for(MCTSTreeNode child : this.children){
-        		log.info(child + " value = " + child.nodeValue);
+        		//log.info(child + " value = " + child.nodeValue);
         		if(child.nodeValue > bestScore){
         			bestChild = child;
         			bestScore = child.nodeValue;
         		}
         	}
         	
-        	log.info("=========================");
-        	log.info("----- END MCTS TURN -----");
+        	//log.info("Returning: ");
+        	//log.info(bestChild.toString() + " score: " + bestChild.nodeValue);
+        	//log.info("Plays: ");
+        	for(HearthActionBoardPair action : bestChild.getTurnResults()){
+        		//log.info(action.action.verb_.toString());
+        	}
+        	//log.info("=========================");
+        	//log.info("----- END MCTS TURN -----");
         	return bestChild;
         }else{
+        	//log.info("Constantly returning the same node, you twat");
         	//assume that this turn ends in lethal or fuck it yolo, etc.
         	return this;
         }
@@ -281,8 +291,14 @@ public class MCTSTreeNode {
 				}else{
 					nextTurn = boardState;
 				}
+				
 				//end the turn and flip the players
 				nextTurn = Game.endTurn(nextTurn);
+				
+				//new plan: score the board here.
+				double childInitScore = this.scorer.boardScore(nextTurn);
+				
+				///*
 				nextTurn = nextTurn.flipPlayers();
 				//pass the state off to our opponent model
 				nextTurn = Game.beginTurn(nextTurn);
@@ -298,10 +314,13 @@ public class MCTSTreeNode {
 				nextTurn = Game.endTurn(nextTurn);
 				//and flip the players one more time
 				nextTurn = nextTurn.flipPlayers();
+				nextTurn = Game.beginTurn(nextTurn);
 				
 				//now children are a full opponent turn away from their parents
 				children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, this.MCTSloops, this.numberOfTurnsToPlay, this.numChildren, this.boardGenerators, this.scorer);
 				children[i].turnResults = localResults;	//and this is how we got here, so that when we bounce back out to the game, we can modify the board appropriately
+				children[i].nodeValue = childInitScore;  //override the child score with this score
+															//FIXME: there might be a smarter way to do this
 				
 			} catch (HSException e) {
 				e.printStackTrace();
@@ -311,7 +330,7 @@ public class MCTSTreeNode {
 
     //Look at this node's children and select the one with the best UCB
     private MCTSTreeNode select() {
-    	log.info("----- SELECTING A NODE -----");
+    	//log.info("----- SELECTING A NODE -----");
         MCTSTreeNode selected = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSTreeNode c : children) {
@@ -319,13 +338,13 @@ public class MCTSTreeNode {
                     	c.nodeValue / (c.nVisits + epsilon) +				
                         Math.sqrt(Math.log(nVisits+1) / (c.nVisits + epsilon)) +
                         r.nextDouble() * epsilon; // small random number to break ties randomly in unexpanded nodes
-            log.info("UCT value = " + uctValue);
+            //log.info("UCT value = " + uctValue);
             if (uctValue > bestValue) {
                 selected = c;
                 bestValue = uctValue;
             }
         }
-        log.info("Returning: " + selected);
+        //log.info("Returning: " + selected);
         return selected;
     }
 
@@ -334,19 +353,25 @@ public class MCTSTreeNode {
     }
 
     public double rollOut(MCTSTreeNode tn) {
+    	//return tn.nodeValue;
+    	
       //check-- start by copying the tn node so rollout doesn't get 'double counted'
     	//also, this means we need to copy numberOfTurnsToPlay
     	int turns = this.numberOfTurnsToPlay;
-    	log.info("----- FUTURE STATS ----");
+    	//log.info("----- FUTURE STATS ----");
     	MCTSTreeNode future = new MCTSTreeNode(tn.boardState, tn.turnNum, tn.MCTSloops, tn.numberOfTurnsToPlay, tn.numChildren, tn.boardGenerators, tn.scorer);
     	while(turns > 0){
-    		log.info("Simulated turns left: " + turns);
+    		//log.info("Simulated turns left: " + turns);
     		future.expand();
     		future = future.select();
     		turns--;
     	}
-    	log.info("----- END FUTURE STATS ----");
+    	//log.info("----- END FUTURE STATS ----");
+    	//log.info("Node used for future propigation: " + tn.toString());
+    	//log.info("Score to propagate back: ");
+    	//log.info(String.valueOf(future.nodeValue));
     	return future.nodeValue;
+    	
     }
 
     //back prop-- go through and update this node's stats
@@ -367,10 +392,36 @@ public class MCTSTreeNode {
      */
 	public List<HearthActionBoardPair> getTurnResults() {
 		if(turnResults == null){
-			log.info("Returning a null value for what an MCTS AI did for a turn!");
+			//log.info("Returning a null value for what an MCTS AI did for a turn!");
 			return new ArrayList<HearthActionBoardPair>();
 		}else{
 			return turnResults;
 		}
 	}
+	
+	
+	
+	/**
+	 * Now we're getting to the weird shit.
+	 * This prints an ASCII representation of the tree.  I need to see the goddamn thing to try and understand how we're picking / using
+	 * nodes.  Because something is fucked up, I just goddamn know it.
+	 */
+	public void print() {
+        print("", true);
+    }
+
+	/**
+	 * Prints the MCTS tree
+	 * @param prefix the current graph
+	 * @param isTail is this a tail?
+	 */
+    private void print(String prefix, boolean isTail) {
+        log.info(prefix + (isTail ? "└── " : "├── ") + this.hashCode() + ": " + this.nodeValue);
+        for (int i = 0; i < this.arity() - 1; i++) {
+            children[i].print(prefix + (isTail ? "    " : "│   "), false);
+        }
+        if (this.arity() > 0) {
+            children[children.length - 1].print(prefix + (isTail ?"    " : "│   "), true);
+        }
+    }
 }

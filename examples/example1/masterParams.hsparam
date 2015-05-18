@@ -1,5 +1,5 @@
-num_simulations           =   1
-num_threads               =   1
+num_simulations           =   5
+num_threads               =   2
 
 output_file               =   example1.hsres
 

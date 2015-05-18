@@ -115,6 +115,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
             useSparseBoardStateFactory_ = pFile.getBoolean("use_sparse_board_state_factory", true);
             useDuplicateNodePruning = pFile.getBoolean("use_duplicate_node_pruning", true);
 
+            //TODO: this is neat: we can actually tune around a single card in hand or on the board.  I mean, we're not... but we could.
             // Look for a pattern: card_in_hand_value_*
             Set<String> keys = pFile.getKeysContaining("card_in_hand_score_");
             for (String key : keys) {
