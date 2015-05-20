@@ -176,7 +176,7 @@ public class MCTSTreeNode {
      * @param generatorParams -- the paths to get the config files for the generators.
      * @return a list of generators
      */
-    private static BruteForceSearchAI[] createBoardGenerators(Path[] generatorParams) {
+    private static synchronized BruteForceSearchAI[] createBoardGenerators(Path[] generatorParams) {
 		BruteForceSearchAI[] generators = new BruteForceSearchAI[generatorParams.length];
 		for(int i = 0; i < generatorParams.length; i++){
 			//set up some differing AIs
