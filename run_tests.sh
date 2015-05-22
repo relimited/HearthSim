@@ -66,8 +66,8 @@ function add () {
 			entry=${aiWeights[$i]}
 			##break down into name / value
 			name=`expr "$entry" : '\([a-zA-Z_]*\)'`
-			val=`expr "$entry" : '.*\([0-9]\.[0-9]\)'`
-		
+			val=`expr "$entry" : '.*\([0-9]\.[0-9][0-9]\)'`
+
 			## do a rollover op, don't add (someone down the future will handle the addition
 			if [ "$val" == "0.75" ]; then
 				val="0.25"
@@ -76,7 +76,7 @@ function add () {
 				##trust me, it'll be less than one.  TRUST ME, BRO
 				##if we haven't added it in yet, add it in
 				eqn=$val"+"$updateAmt
-				
+
 				#we need two seperate add ops, because sometimes fuck you, bash (not right now)
 				if [ "$val" == $rolloverAmt ]; then
 					val=0$(bc <<< "scale=2;$eqn")
@@ -88,6 +88,7 @@ function add () {
 			fi
 		fi 
 	done
+	print
 }
 
 #echo the AI weight vector
@@ -129,10 +130,10 @@ mkdir -p "./$baseTestDir"
 while [ "${!ref}" != "${!end}" ]; do
 	runSim
 	add
-	numGames=$(($numGames+1))
-	if [ $numGames -gt 1024 ]; then
-		exit -1
-	fi
+	#numGames=$(($numGames+1))
+	#if [ $numGames -gt 1024 ]; then
+		#exit -1
+	#fi
 done
 
 #some quick testing before we fire this off on a server
