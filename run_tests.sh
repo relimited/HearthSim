@@ -1,6 +1,4 @@
 
-#JAVA + init configuration setup here
-
 #Basic script procedure
 #	1) make new run directory for tests
 #	2) move required files to run directory
@@ -67,7 +65,7 @@ function add () {
 			##break down into name / value
 			name=`expr "$entry" : '\([a-zA-Z_]*\)'`
 			val=`expr "$entry" : '.*\([0-9]\.[0-9][0-9]\)'`
-
+			
 			## do a rollover op, don't add (someone down the future will handle the addition
 			if [ "$val" == "0.75" ]; then
 				val="0.25"
@@ -109,11 +107,12 @@ function runTest(){
 	aiFileStr="w_a = "$w_a"\nw_h = "$w_h"\nwt_a = "$wt_a"\nwt_h = "$wt_h"\n\nw_taunt = "$w_taunt"\nw_health = "$w_health"\nwt_health = "$wt_health"\n\nw_mana = "$w_mana"\nw_num_minions = "$w_num_minions"\nwt_num_minions = "$wt_num_minions"\n\nnumMCTSIterations = 5\nnumChildrenPerGeneration = 20\nnumSimulateTurns = 1"
 
 	echo -e "$aiFileStr" >> "$dirPath/ai1.hsai"
-	#cat ./gradle.properties > "$dirPath/gradle.properties.bak"
-	#rm ./gradle.properties
-	#echo -e "hsparam=$dirPath/masterParams.hsparam\norg.gradle.daemon=true\norg.gradle.parallel=true" > ./gradle.properties
-	#./gradlew runSim
-	java -jar $jarDir "$dirPath/masterParams.hsparam" &
+	cat ./gradle.properties > "$dirPath/gradle.properties.bak"
+	rm ./gradle.properties
+	echo -e "hsparam=$dirPath/masterParams.hsparam\norg.gradle.daemon=true\norg.gradle.parallel=true" > ./gradle.properties
+	./gradlew runSim
+	wait
+	#java -jar $jarDir "$dirPath/masterParams.hsparam" &
 
 }
 
@@ -128,41 +127,10 @@ mkdir -p "./$baseTestDir"
 
 #CHECK TO MAKE SURE THIS INVARIANT WORKS
 while [ "${!ref}" != "${!end}" ]; do
-	runSim
+	runTest
 	add
 	#numGames=$(($numGames+1))
 	#if [ $numGames -gt 1024 ]; then
 		#exit -1
 	#fi
 done
-
-#some quick testing before we fire this off on a server
-#The loop to end all loops
-# yeah, this is gonna get gross
-
-#testDir="tests/test-"$testNumber 
-#echo "Test Dir: "
-#echo "./"$testDir
-
-#echo "source file regex: "
-#echo "./"$fileSourceDir"/*"
-
-#mkdir -p "./"$testDir
-
-#
-
-#### work in progress below this line ####
-
-
-#edit the masterParams file
-#cat ./gradle.properties | sed -e '1s#.*#hsparam=$testDir/masterParams.hsparam#' > ./gradle.properties
-
-#edit the AI file
-#some sed call here
-
-#run the tests
-#./gradlew runSim
-
-#LOOP
-
-

@@ -1,0 +1,9 @@
+cd $HOME/HearthstoneAI/HearthSim
+
+bash -c "export JAVA_HOME=\"$HOME/jdk/jdk1.8.0_05/\";
+ export PATH=\"$JAVA_HOME/bin:$PATH\";
+ echo \$JAVA_HOME;
+ echo \$PATH;
+ ./gradlew runSimJar
+ ./run_tests.sh & "
+
