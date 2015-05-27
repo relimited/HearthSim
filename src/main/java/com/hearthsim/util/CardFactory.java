@@ -45,7 +45,7 @@ public class CardFactory {
         }
     }
 
-    public static Card getCard(String cardName) throws HSInvalidCardException {
+    public static synchronized Card getCard(String cardName) throws HSInvalidCardException {
         if (cardCache == null)
             loadCardData();
         String cleanedString = cardName.trim();

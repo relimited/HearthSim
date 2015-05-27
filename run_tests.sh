@@ -107,12 +107,12 @@ function runTest(){
 	aiFileStr="w_a = "$w_a"\nw_h = "$w_h"\nwt_a = "$wt_a"\nwt_h = "$wt_h"\n\nw_taunt = "$w_taunt"\nw_health = "$w_health"\nwt_health = "$wt_health"\n\nw_mana = "$w_mana"\nw_num_minions = "$w_num_minions"\nwt_num_minions = "$wt_num_minions"\n\nnumMCTSIterations = 5\nnumChildrenPerGeneration = 20\nnumSimulateTurns = 1"
 
 	echo -e "$aiFileStr" >> "$dirPath/ai1.hsai"
-	cat ./gradle.properties > "$dirPath/gradle.properties.bak"
-	rm ./gradle.properties
-	echo -e "hsparam=$dirPath/masterParams.hsparam\norg.gradle.daemon=true\norg.gradle.parallel=true" > ./gradle.properties
-	./gradlew runSim
-	wait
-	#java -jar $jarDir "$dirPath/masterParams.hsparam" &
+	#cat ./gradle.properties > "$dirPath/gradle.properties.bak"
+	#rm ./gradle.properties
+	#echo -e "hsparam=$dirPath/masterParams.hsparam\norg.gradle.daemon=true\norg.gradle.parallel=true" > ./gradle.properties
+	#./gradlew runSim
+	#wait
+	java -jar $jarDir "$dirPath/masterParams.hsparam" &
 
 }
 
