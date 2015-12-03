@@ -109,7 +109,7 @@ function runTest(){
 	cat ./gradle.properties > "$dirPath/gradle.properties.bak"
 	rm ./gradle.properties
 	echo -e "hsparam=$dirPath/masterParams.hsparam\norg.gradle.daemon=true\norg.gradle.parallel=true" > ./gradle.properties
-	./gradlew runSim
+	./run_hearthsim
 	wait
 	#java -jar $jarDir "$dirPath/masterParams.hsparam" &
 
