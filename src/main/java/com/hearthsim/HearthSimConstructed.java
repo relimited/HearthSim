@@ -9,6 +9,7 @@ import com.hearthsim.io.DeckListFile;
 import com.hearthsim.io.ParamFile;
 import com.hearthsim.player.playercontroller.ArtificialPlayer;
 import com.hearthsim.player.playercontroller.BruteForceSearchAI;
+import com.hearthsim.player.playercontroller.MCTSPlayer;
 import com.hearthsim.results.GameResult;
 
 import java.io.IOException;
@@ -44,8 +45,9 @@ public class HearthSimConstructed extends HearthSimBase {
         Deck deck0 = deckList0.getDeck();
         Deck deck1 = deckList1.getDeck();
 
+        //passing in the MCTS player a root path to extract the playing AI parameters because I'm fucking hella lazy
         ArtificialPlayer ai0 = new BruteForceSearchAI(this.aiParamFilePath0_);
-        ArtificialPlayer ai1 = new BruteForceSearchAI(this.aiParamFilePath1_);
+        ArtificialPlayer ai1 = new MCTSPlayer(this.aiParamFilePath1_);
 
         return super.runSingleGame(ai0, hero0, deck0, ai1, hero1, deck1, gameId % 2);
     }

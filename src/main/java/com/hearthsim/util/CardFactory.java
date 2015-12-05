@@ -63,7 +63,7 @@ public class CardFactory {
             Constructor<?> ctor = clazz.getConstructor();
             Object object = ctor.newInstance();
             return (Card)object;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | NullPointerException e) {
             throw new HSInvalidCardException("Unknown card: " + cleanedString);
         }
     }

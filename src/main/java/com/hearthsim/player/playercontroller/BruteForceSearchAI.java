@@ -30,7 +30,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     private boolean useSparseBoardStateFactory_ = true;
     private boolean useDuplicateNodePruning = true;
 
-    public WeightedScorer scorer = new WeightedScorer();
+   private WeightedScorer scorer = new WeightedScorer();
 
     protected BruteForceSearchAI() {
     }
@@ -115,6 +115,7 @@ public class BruteForceSearchAI implements ArtificialPlayer {
             useSparseBoardStateFactory_ = pFile.getBoolean("use_sparse_board_state_factory", true);
             useDuplicateNodePruning = pFile.getBoolean("use_duplicate_node_pruning", true);
 
+            //TODO: this is neat: we can actually tune around a single card in hand or on the board.  I mean, we're not... but we could.
             // Look for a pattern: card_in_hand_value_*
             Set<String> keys = pFile.getKeysContaining("card_in_hand_score_");
             for (String key : keys) {
@@ -159,6 +160,12 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     public void setUseDuplicateNodePruning(boolean value) {
         useDuplicateNodePruning = value;
     }
+    
+    //FIXME: This is a modification to the standard harthsim base that's not licenced.
+    //added to be able to score nodes outside the AI with the same scorer
+    public BoardScorer getScorer(){
+    	return this.scorer;
+    }
 
     @Override
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board) throws HSException {
@@ -178,7 +185,6 @@ public class BruteForceSearchAI implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory)
             throws HSException {
         PlayerModel playerModel0 = board.getCurrentPlayer();
-
         log.debug("playing turn for " + playerModel0.getName());
         // The goal of this ai is to maximize his board score
         log.debug("start turn board state is {}", board);
