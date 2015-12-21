@@ -12,8 +12,7 @@ w_mana          =       0.25
 w_num_minions   =       0.25
 wt_num_minions  =       0.25
 
-numMCTSIterations		=	5
-numChildrenPerGeneration	= 6
-numSimulateTurns		=	1
-generatorFiles			=	aggroAI.hsai,controlAi.hsai,tempoAi.hsai, ai0.hsai
-
+numMCTSIterations		=	10
+numChildrenPerGeneration	=	12
+numSimulateTurns		=	5
+generatorFiles			=	ai0.hsai, Portfolio1.hsai, Portfolio2.hsai, Portfolio3.hsai, Portfolio4.hsai, Portfolio5.hsai, Portfolio6.hsai

@@ -7,6 +7,7 @@ import com.hearthsim.exception.HSInvalidParamFileException;
 import com.hearthsim.exception.HSParamNotFoundException;
 import com.hearthsim.io.ParamFile;
 import com.hearthsim.model.PlayerModel;
+import com.hearthsim.model.PlayerSide;
 import com.hearthsim.util.CardFactory;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.factory.BoardStateFactoryBase;
@@ -16,6 +17,7 @@ import com.hearthsim.util.tree.HearthTreeNode;
 import com.hearthsim.util.tree.StopNode;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.model.BoardModel;
+import com.hearthsim.model.DeckModel;
 import com.hearthsim.util.DeepCopyable;
 import com.hearthsim.util.HearthActionBoardPair;
 import com.hearthsim.util.tree.MCTSTreeNode;
@@ -133,7 +135,6 @@ public class MCTSPlayer implements ArtificialPlayer {
     	//Under the current implementation, almost all of this gets ignored.  Which is probably not what we want eventually.
     	 PlayerModel playerModel0 = board.getCurrentPlayer();
          PlayerModel playerModel1 = board.getWaitingPlayer();
-
          BoardStateFactoryBase factory;
          if (useSparseBoardStateFactory_) {
              factory = new SparseBoardStateFactory(playerModel0.getDeck(), playerModel1.getDeck(), MAX_THINK_TIME, useDuplicateNodePruning);
@@ -160,12 +161,14 @@ public class MCTSPlayer implements ArtificialPlayer {
     public List<HearthActionBoardPair> playTurn(int turn, BoardModel board, BoardStateFactoryBase factory) throws HSException {
     	//if the baseNode is null, use this board as a base
     	//or, if the baseNode's board model doesn't match the board state, then start a new tree with this board
+    	
     	if(baseNode == null){
     		try {
     			//if we don't have any generator params (that line of the param file is blank), then we're using a random board generator
     			//with a specified number of children
     			if(generatorParams != null){
-    				baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, generatorParams, paramFile);
+    				//baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, generatorParams, paramFile);
+    				baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, numChildrenPerGeneration, generatorParams, paramFile);
     			}else{
     				baseNode = new MCTSTreeNode(board, turn, numMCTSIterations, numSimulateTurns, numChildrenPerGeneration, paramFile);
     			}
@@ -179,9 +182,9 @@ public class MCTSPlayer implements ArtificialPlayer {
     	}
     	
     	//MCTS! MCTS! MCTS!
-    	MCTSTreeNode retNode = baseNode.selectAction();
+    	baseNode = baseNode.selectAction();
     	
-    	return retNode.getTurnResults();
+    	return baseNode.getTurnResults();
     }
 
     @Override

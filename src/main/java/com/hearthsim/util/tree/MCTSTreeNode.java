@@ -11,6 +11,7 @@ import com.hearthsim.Game;
 import com.hearthsim.exception.HSException;
 import com.hearthsim.exception.HSInvalidParamFileException;
 import com.hearthsim.model.BoardModel;
+import com.hearthsim.model.DeckModel;
 import com.hearthsim.player.playercontroller.ArtificialPlayer;
 import com.hearthsim.player.playercontroller.BoardScorer;
 import com.hearthsim.player.playercontroller.BruteForceSearchAI;
@@ -63,6 +64,11 @@ public class MCTSTreeNode {
      */
     public MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations, int numSimulateTurns, Path[] generatorParams, Path scorerWeights) throws HSInvalidParamFileException, IOException{
     	this(board, turn, numMCTSIterations, numSimulateTurns, createBoardGenerators(generatorParams),  new BruteForceSearchAI(scorerWeights).getScorer());
+    	
+    }
+    
+    public MCTSTreeNode(BoardModel board, int turn, int numMCTSIterations, int numSimulateTurns, int numChildrenPerGeneration, Path[] generatorParams, Path scorerWeights) throws HSInvalidParamFileException, IOException{
+    	this(board, turn, numMCTSIterations, numSimulateTurns, numChildrenPerGeneration, createBoardGenerators(generatorParams),  new BruteForceSearchAI(scorerWeights).getScorer());
     	
     }
 
@@ -137,7 +143,8 @@ public class MCTSTreeNode {
 		this.boardGenerators = createBoardGenerators;
 		this.numChildren = numChildrenPerGeneration;
 		
-		this.opponentModel = RandomAI.buildRandomAI();
+		//this.opponentModel = RandomAI.buildRandomAI();
+		this.opponentModel = BruteForceSearchAI.buildStandardAI1();
 		
 		//and score the node
 		this.nodeValue = this.scorer.boardScore(this.boardState);
@@ -214,13 +221,14 @@ public class MCTSTreeNode {
 		//log.info("===========================");
         List<MCTSTreeNode> visited = new LinkedList<MCTSTreeNode>();
         visited.add(this);
+        this.expand();
         
         //START MCTS LOOP
         for(int i = 0; i < MCTSloops; i++){
         	MCTSTreeNode cur = this;
         	while (!cur.isLeaf()) {
             	cur = cur.select();
-            	// System.out.println("Adding: " + cur);
+            	//log.info("Adding: " + cur);
             	visited.add(cur);
         	}
         	
@@ -241,6 +249,7 @@ public class MCTSTreeNode {
         }
         //END MCTS LOOP
         //this.print();
+        
         //select final node to use
         //log.info("----- FINAL NODE SCORES -----");
         if(this.children.length > 0){
@@ -248,18 +257,21 @@ public class MCTSTreeNode {
         	MCTSTreeNode bestChild = null;	//I feel like such a shitty person when I work on trees
         	double bestScore = Double.NEGATIVE_INFINITY;
         	for(MCTSTreeNode child : this.children){
-        		//log.info(child + " value = " + child.nodeValue);
+        		//log.info(child.hashCode() + " value = " + child.nodeValue);
         		if(child.nodeValue > bestScore){
         			bestChild = child;
         			bestScore = child.nodeValue;
         		}
+        		for(HearthActionBoardPair action : child.getTurnResults()){
+            		//log.info(action.action.toJSON().toString());
+            	}
         	}
         	
         	//log.info("Returning: ");
-        	//log.info(bestChild.toString() + " score: " + bestChild.nodeValue);
+        	//log.info(bestChild.hashCode() + " score: " + bestChild.nodeValue);
         	//log.info("Plays: ");
         	for(HearthActionBoardPair action : bestChild.getTurnResults()){
-        		//log.info(action.action.verb_.toString());
+        		//log.info(action.action.toJSON().toString());
         	}
         	//log.info("=========================");
         	//log.info("----- END MCTS TURN -----");
@@ -269,6 +281,7 @@ public class MCTSTreeNode {
         	//assume that this turn ends in lethal or fuck it yolo, etc.
         	return this;
         }
+        
     }
 
     public void expand() {
@@ -277,15 +290,21 @@ public class MCTSTreeNode {
     	
 		for(int i = 0; i < this.numChildren; i++){
 			ArtificialPlayer generator;
-			//if we have less generators than the number of children we need to generate, just use the last generator again
+			//if we have less generators than the number of children we need to generate, just do a random play
+			//This allows for a possibly good action that isn't covered by our board generators.
 			if(i >= boardGenerators.length){
-				generator = boardGenerators[boardGenerators.length - 1];
+				//generator = boardGenerators[i % boardGenerators.length];
+				generator = RandomAI.buildRandomAI();
 			}else{
 				generator = boardGenerators[i];
 			}
 			
         	try {
+        		//Get our play for the turn
 				List<HearthActionBoardPair> localResults = generator.playTurn(turnNum, boardState);
+				//I want to see these for each node that's output!
+				//More importantly, if we get a duplicate result... why bother distinguishing them?
+				//We only get one reroll (to prevent infinite cycles)
 				if(localResults.size() > 0){
 					nextTurn = localResults.get(localResults.size() - 1).board;
 				}else{
@@ -297,18 +316,26 @@ public class MCTSTreeNode {
 				
 				//new plan: score the board here.
 				double childInitScore = this.scorer.boardScore(nextTurn);
-				
-				///*
+        		
 				nextTurn = nextTurn.flipPlayers();
 				//pass the state off to our opponent model
 				nextTurn = Game.beginTurn(nextTurn);
 				//don't bother checking for a game over state.
+				
+				//Since our opponent is a RandomAI, we can run a few turns of theirs to get ideas of possible plays and pick the worst-case 
+				//scenario for us (Aaaaaaactually, that's not entirely true at the moment. But, hey, #CheatToWin)
+				//When we finally stop cheating (and just do predictive measures on what our opponent can do)
+				//We can just loop over all considered actions to see what gets picked and roll with that.
+				BoardModel tempTurn = nextTurn.deepCopy();
+				//BoardModel tempTurn2 = nextTurn.deepCopy();
 				List<HearthActionBoardPair> opponentTurnResults = opponentModel.playTurn(turnNum, nextTurn);
 				
 				if(opponentTurnResults.size() > 0){
 					//update the 'next turn' to include changes from your opponent
-					nextTurn = opponentTurnResults.get(opponentTurnResults.size() - 1).board;
+					tempTurn = opponentTurnResults.get(opponentTurnResults.size() - 1).board;
 				}
+
+				nextTurn = tempTurn;
 				
 				//and clean the board if it needs it
 				nextTurn = Game.endTurn(nextTurn);
@@ -316,11 +343,32 @@ public class MCTSTreeNode {
 				nextTurn = nextTurn.flipPlayers();
 				nextTurn = Game.beginTurn(nextTurn);
 				
+				//double childInitScore = this.scorer.boardScore(nextTurn);
+				
+				
 				//now children are a full opponent turn away from their parents
 				children[i] = new MCTSTreeNode(nextTurn, turnNum + 1, this.MCTSloops, this.numberOfTurnsToPlay, this.numChildren, this.boardGenerators, this.scorer);
 				children[i].turnResults = localResults;	//and this is how we got here, so that when we bounce back out to the game, we can modify the board appropriately
-				children[i].nodeValue = childInitScore;  //override the child score with this score
-															//FIXME: there might be a smarter way to do this
+				
+				//We want to check to see if our state is already represented in the tree
+				//If it isn't... well, that's an issue, because if we roll out on this state and it's crappy
+				//We might pick this state anyway and that's a Problem.
+				boolean isNewState = true; 
+				for (int j = 0; j < i; j++)
+				{
+					if (children[j].boardState.equals(nextTurn))
+					{
+						//We dun goofed! We have a repeat state
+						//There's probably a smarter way to do this, but this works for now, maybe.
+						isNewState = false;
+						children[i].nodeValue = Double.NEGATIVE_INFINITY; //Eventually, I want to replace this with a 'new' node so that we have more of the state explored, but this at least kills the duplicates
+					}
+				}
+				if (isNewState)
+				{
+					children[i].nodeValue = childInitScore;  //override the child score with this score
+																//FIXME: there might be a smarter way to do this
+				}
 				
 			} catch (HSException e) {
 				e.printStackTrace();
@@ -344,7 +392,7 @@ public class MCTSTreeNode {
                 bestValue = uctValue;
             }
         }
-        //log.info("Returning: " + selected);
+        //log.info("Returning: " + selected.hashCode());
         return selected;
     }
 
@@ -356,20 +404,31 @@ public class MCTSTreeNode {
     	//return tn.nodeValue;
     	
       //check-- start by copying the tn node so rollout doesn't get 'double counted'
+    	//Again, I changed this too, because if we're doing all this work to get information about a leaf
+    	//Why not save that information for future use
+    	//Looking Wikipedia, we're supposed to rollout to the end of game using random moves.
+    	//But that's currently future work.
     	//also, this means we need to copy numberOfTurnsToPlay
     	int turns = this.numberOfTurnsToPlay;
     	//log.info("----- FUTURE STATS ----");
-    	MCTSTreeNode future = new MCTSTreeNode(tn.boardState, tn.turnNum, tn.MCTSloops, tn.numberOfTurnsToPlay, tn.numChildren, tn.boardGenerators, tn.scorer);
+    	MCTSTreeNode future = tn;
+    	//MCTSTreeNode future = new MCTSTreeNode(tn.boardState, tn.turnNum, tn.MCTSloops, tn.numberOfTurnsToPlay, tn.numChildren, tn.boardGenerators, tn.scorer);
     	while(turns > 0){
     		//log.info("Simulated turns left: " + turns);
+    		
     		future.expand();
     		future = future.select();
+    		if (future.nodeValue > 100000.0 || future.nodeValue < -100000.0)
+    		{
+    			turns = 0;
+    		}
     		turns--;
     	}
     	//log.info("----- END FUTURE STATS ----");
-    	//log.info("Node used for future propigation: " + tn.toString());
+    	//log.info("Node used for future propigation: " + tn.hashCode());
     	//log.info("Score to propagate back: ");
     	//log.info(String.valueOf(future.nodeValue));
+    	//this.print();
     	return future.nodeValue;
     	
     }
@@ -377,7 +436,10 @@ public class MCTSTreeNode {
     //back prop-- go through and update this node's stats
     public void updateStats(double value) {
         nVisits++;
-        nodeValue += value;
+        //nodeValue += value;
+        //Given the way we propagate through the tree, this feels like it might be better for now
+        //If we update how we rollOut, probably would make sense to go back to the other method
+        nodeValue = Math.max(nodeValue, value);
     }
 
     public int arity() {

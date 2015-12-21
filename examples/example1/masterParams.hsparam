@@ -1,4 +1,4 @@
-num_simulations           =   20
+num_simulations           =   50
 num_threads               =   1
 
 output_file               =   example1.hsres
@@ -7,4 +7,4 @@ deckListFilePath0         =       deck0.hsdeck
 deckListFilePath1         =       deck1.hsdeck
 
 aiParamFilePath0          =       ai0.hsai
-aiParamFilePath1          =       ai1.hsai
+aiParamFilePath1          =       ai2.hsai
